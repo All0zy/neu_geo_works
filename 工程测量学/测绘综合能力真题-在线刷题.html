@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>工程测量 · 刷题</title>
+<style>
+:root {
+  --clr-bg: #f3f1ec;
+  --clr-surface: #ffffff;
+  --clr-primary: #1a365d;
+  --clr-primary-light: #eef2f8;
+  --clr-accent: #dd6b20;
+  --clr-accent-light: #fef3e7;
+  --clr-success: #276749;
+  --clr-success-light: #eafaf1;
+  --clr-error: #c53030;
+  --clr-error-light: #fef0ef;
+  --clr-text: #1a202c;
+  --clr-muted: #718096;
+  --clr-border: #e2e8f0;
+  --clr-bar: #d69e2e;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.08);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--clr-bg);color:var(--clr-text);min-height:100vh;line-height:1.6;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.app{max-width:740px;margin:0 auto;padding:16px 12px 32px}
+
+/* header */
+.header{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 12px;flex-wrap:wrap;gap:4px}
+.header h1{font-size:22px;font-weight:700;color:var(--clr-primary);letter-spacing:-.3px}
+.header .sub{font-size:13px;font-weight:400;color:var(--clr-muted);margin-left:2px}
+.header .count{font-size:13px;color:var(--clr-muted);background:var(--clr-primary-light);padding:2px 12px;border-radius:20px}
+
+/* home */
+#homeView{padding-top:8px}
+.home-heading{font-size:17px;font-weight:600;color:var(--clr-primary);padding:12px 4px 8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.home-heading .diamond{color:var(--clr-accent);font-size:14px}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin:6px 0 20px}
+.card{
+  background:var(--clr-surface);border-radius:var(--radius-lg);padding:22px 16px;
+  cursor:pointer;border:1.5px solid var(--clr-border);box-shadow:var(--shadow-sm);
+  transition:all .2s;position:relative;overflow:hidden;text-align:center;
+}
+.card:active{transform:scale(.97)}
+.card:hover{border-color:var(--clr-accent);box-shadow:0 2px 8px rgba(221,107,32,.12)}
+.card .num{font-size:30px;font-weight:700;color:var(--clr-primary);line-height:1;letter-spacing:-.5px}
+.card .name{font-size:14px;color:var(--clr-text);margin-top:6px;line-height:1.4}
+.card .badge{font-size:12px;color:var(--clr-muted);background:var(--clr-primary-light);padding:2px 12px;border-radius:10px;display:inline-block;margin-top:10px}
+.card .bar{position:absolute;bottom:0;left:0;height:3px;background:var(--clr-accent);transition:width .4s}
+
+.home-actions{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 16px}
+.btn-action{
+  flex:1;min-width:130px;padding:14px 18px;border:none;border-radius:var(--radius-md);
+  font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-action:active{transform:scale(.97)}
+.btn-random{background:var(--clr-accent);color:#fff}
+.btn-random:hover{background:#c95f1c}
+.btn-all{background:var(--clr-primary);color:#fff}
+.btn-all:hover{background:#142c4d}
+.btn-review{background:var(--clr-success);color:#fff}
+.btn-review:hover{background:#1f5c38}
+
+.home-footer{font-size:13px;color:var(--clr-muted);text-align:center;border-top:1px solid var(--clr-border);padding-top:14px;margin-top:4px}
+.home-footer span{background:var(--clr-primary-light);padding:0 10px;border-radius:10px;display:inline-block}
+
+/* quiz view */
+#quizView{display:none}
+#quizView.active{display:block;animation:slideUp .25s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.nav-bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.nav-btn{padding:7px 16px;border:none;border-radius:24px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;background:var(--clr-primary-light);color:var(--clr-primary);flex:0 1 auto}
+.nav-btn:active{transform:scale(.96)}
+.nav-btn.primary{background:var(--clr-accent);color:#fff}
+.nav-btn.outline{border:1.5px solid var(--clr-border);background:transparent;color:var(--clr-muted)}
+
+.stats-bar{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--clr-muted);padding:6px 0;gap:6px;flex-wrap:wrap}
+.stats-bar .tag{background:var(--clr-primary-light);padding:2px 12px;border-radius:12px;font-size:12px}
+.stats-bar .tag.done{background:var(--clr-success-light);color:var(--clr-success)}
+
+.progress-strip{position:relative;height:6px;background:var(--clr-border);border-radius:3px;margin:4px 0 12px;overflow:hidden}
+.progress-strip .fill{height:100%;background:var(--clr-accent);border-radius:3px;transition:width .4s;min-width:0}
+.progress-strip .dot{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid var(--clr-border);transform:translate(-50%,-50%);transition:left .4s;z-index:1}
+.progress-strip .dot.active{border-color:var(--clr-accent);background:var(--clr-accent)}
+
+/* question */
+.question-area{background:var(--clr-surface);border-radius:var(--radius-md);padding:20px;box-shadow:var(--shadow-sm);border:1px solid var(--clr-border);margin-top:4px}
+.q-header{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.q-number{font-weight:700;color:var(--clr-primary);font-size:14px}
+.q-type{font-size:11px;font-weight:600;padding:2px 12px;border-radius:10px;letter-spacing:.3px}
+.q-type.single{background:#e8f0fe;color:#1a56db}
+.q-type.multi{background:#fef3e7;color:var(--clr-accent)}
+
+.q-label{font-size:14px;font-weight:500;color:var(--clr-muted);margin-bottom:6px}
+
+.q-text{font-size:16px;line-height:1.7;margin-bottom:18px;padding:2px 0;color:var(--clr-text)}
+
+/* options */
+.options{display:flex;flex-direction:column;gap:8px}
+.opt{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:11px 14px;border:2px solid var(--clr-border);border-radius:var(--radius-sm);
+  font-size:15px;line-height:1.5;cursor:pointer;transition:all .12s;
+  background:var(--clr-surface);user-select:none;word-break:break-word;
+  -webkit-tap-highlight-color:transparent;
+}
+.opt:active{transform:scale(.98)}
+.opt .marker{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:2px solid var(--clr-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--clr-muted);transition:all .12s;margin-top:1px}
+.opt.selected{border-color:var(--clr-primary)}
+.opt.selected .marker{border-color:var(--clr-primary);background:var(--clr-primary);color:#fff}
+.opt.correct{border-color:var(--clr-success);background:var(--clr-success-light)}
+.opt.correct .marker{border-color:var(--clr-success);background:var(--clr-success);color:#fff}
+.opt.wrong{border-color:var(--clr-error);background:var(--clr-error-light)}
+.opt.wrong .marker{border-color:var(--clr-error);background:var(--clr-error);color:#fff}
+.opt.disabled{cursor:default;pointer-events:none}
+.opt .text{flex:1;padding-top:1px}
+
+/* explanation */
+.explain{
+  margin-top:16px;padding:16px 18px;border-radius:var(--radius-sm);
+  background:#fafafa;border-left:4px solid var(--clr-primary);
+  font-size:14px;line-height:1.7;display:none;
+}
+.explain.show{display:block;animation:fadeIn .2s}
+.explain .correct{color:var(--clr-success);font-weight:700}
+.explain .wrong{color:var(--clr-error);font-weight:700}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* buttons */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;justify-content:center}
+.btn-row .spacer{flex:1}
+.btn{padding:10px 22px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;min-width:80px;flex:0 1 auto}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-primary{background:var(--clr-primary);color:#fff}
+.btn-primary:hover:not(:disabled){background:#142c4d}
+.btn-accent{background:var(--clr-accent);color:#fff}
+.btn-accent:hover:not(:disabled){background:#c95f1c}
+.btn-ghost{background:var(--clr-primary-light);color:var(--clr-primary)}
+.btn-ghost:hover{background:#dce4ef}
+.btn-sm{padding:6px 14px;font-size:13px}
+.btn-success{background:var(--clr-success);color:#fff}
+
+/* result banner */
+.banner{
+  margin-top:12px;padding:14px 18px;border-radius:var(--radius-md);
+  text-align:center;font-weight:600;display:none;font-size:15px;
+}
+.banner.show{display:block;animation:fadeIn .25s}
+.banner.pass{background:var(--clr-success-light);color:var(--clr-success);border:1px solid var(--clr-success)}
+.banner.fail{background:var(--clr-error-light);color:var(--clr-error);border:1px solid var(--clr-error)}
+.banner .detail{font-weight:400;font-size:13px;margin-top:4px}
+
+/* review panel */
+#reviewView{display:none;padding:16px 0}
+#reviewView.active{display:block;animation:slideUp .25s}
+
+.review-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.review-header h2{font-size:18px;color:var(--clr-primary)}
+.review-score{text-align:center;padding:20px;background:var(--clr-surface);border-radius:var(--radius-md);border:1px solid var(--clr-border);margin-bottom:18px}
+.review-score .pct{font-size:40px;font-weight:700;line-height:1}
+.review-score .pct.pass{color:var(--clr-success)}
+.review-score .pct.fail{color:var(--clr-error)}
+.review-score .label{font-size:14px;color:var(--clr-muted);margin-top:4px}
+.review-score .sub{font-size:13px;color:var(--clr-muted);margin-top:6px}
+.review-score .stat-row{display:flex;justify-content:center;gap:24px;margin-top:12px;font-size:13px}
+.review-score .stat-row span{color:var(--clr-muted)}
+.review-score .stat-row strong{color:var(--clr-text)}
+
+.review-filter{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.filter-btn{padding:6px 16px;border:1.5px solid var(--clr-border);border-radius:20px;font-size:13px;cursor:pointer;background:var(--clr-surface);color:var(--clr-muted);transition:all .15s}
+.filter-btn:active{transform:scale(.96)}
+.filter-btn.active{border-color:var(--clr-primary);color:var(--clr-primary);background:var(--clr-primary-light);font-weight:600}
+
+.review-item{
+  background:var(--clr-surface);border-radius:var(--radius-md);padding:16px 18px;
+  border:1px solid var(--clr-border);margin-bottom:10px;box-shadow:var(--shadow-sm);
+}
+.review-item .r-header{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.review-item .r-num{font-weight:600;font-size:14px;color:var(--clr-text)}
+.review-item .r-status{padding:2px 10px;border-radius:10px;font-size:12px;font-weight:600}
+.review-item .r-status.right{background:var(--clr-success-light);color:var(--clr-success)}
+.review-item .r-status.wrong{background:var(--clr-error-light);color:var(--clr-error)}
+.review-item .r-text{font-size:14px;line-height:1.6;margin-bottom:8px;color:var(--clr-text)}
+.review-item .r-answer{font-size:13px;color:var(--clr-muted);margin-bottom:4px}
+.review-item .r-answer .highlight{color:var(--clr-success);font-weight:600}
+.review-item .r-answer .highlight.wrong{color:var(--clr-error)}
+.review-item .r-explain{font-size:13px;color:var(--clr-muted);padding:10px 12px;background:#fafafa;border-radius:var(--radius-sm);margin-top:6px;border-left:3px solid var(--clr-primary);line-height:1.6}
+.review-item .r-type{font-size:11px;color:var(--clr-muted);background:var(--clr-primary-light);padding:1px 8px;border-radius:8px}
+
+.scroll-top{
+  position:fixed;bottom:24px;right:16px;width:40px;height:40px;border-radius:50%;
+  background:var(--clr-primary);color:#fff;border:none;font-size:18px;cursor:pointer;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);display:none;transition:all .2s;z-index:100;
+  align-items:center;justify-content:center;
+}
+.scroll-top.show{display:flex}
+.scroll-top:active{transform:scale(.9)}
+
+@media(max-width:520px){
+  .app{padding:12px 8px 24px}
+  .header h1{font-size:19px}
+  .home-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .card{padding:16px 12px}
+  .card .num{font-size:26px}
+  .home-actions{gap:8px}
+  .question-area{padding:14px 12px}
+  .q-text{font-size:15px}
+  .opt{font-size:14px;padding:10px 12px}
+  .opt .marker{width:20px;height:20px;font-size:11px}
+  .btn{padding:8px 16px;font-size:13px}
+  .btn-action{font-size:14px;padding:12px 14px;min-width:0}
+  .review-item{padding:12px 14px}
+  .review-score .pct{font-size:32px}
+}
+@media(max-width:380px){
+  .home-grid{grid-template-columns:1fr 1fr}
+  .home-actions{flex-direction:column}
+  .btn-action{min-width:0}
+  .nav-bar .nav-btn{font-size:12px;padding:5px 12px}
+}
+@media(min-width:740px){
+  .app{padding:24px 16px 40px}
+  .question-area{padding:28px}
+  .home-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <div class="header">
+    <h1>工程测量 <span class="sub">刷题</span></h1>
+    <span class="count" id="totalInfo">共 0 题</span>
+  </div>
+
+  <!-- home -->
+  <div id="homeView">
+    <div class="home-heading"><span class="diamond">◆</span> 选择章节</div>
+    <div class="home-grid" id="chapterGrid"></div>
+    <div class="home-actions">
+      <button class="btn-action btn-random" id="btnRandom">◆ 随机组卷 20 题</button>
+      <button class="btn-action btn-all" id="btnAll">◆ 全部题目</button>
+    </div>
+    <div class="home-footer"><span>点击章节进入练习 · 组卷从各章随机抽取</span></div>
+  </div>
+
+  <!-- quiz -->
+  <div id="quizView">
+    <div class="nav-bar">
+      <button class="nav-btn" id="btnBackHome">← 返回</button>
+      <button class="nav-btn primary" id="btnToggleMode">章节模式</button>
+      <button class="nav-btn outline" id="btnResetProgress">↺ 重置</button>
+    </div>
+
+    <div class="stats-bar">
+      <span class="tag" id="progressText">0 / 0</span>
+      <span class="tag" id="statusText">◆ 答题中</span>
+    </div>
+    <div class="progress-strip" id="progressStrip">
+      <div class="fill" id="progressBar" style="width:0%"></div>
+      <div class="dot" id="progressDot" style="left:0%"></div>
+    </div>
+
+    <div class="question-area" id="questionArea">
+      <div class="q-header">
+        <span class="q-type" id="qType">单选题</span>
+        <span class="q-number" id="qNumber">第 1 题</span>
+      </div>
+      <div class="q-label" id="qChapterLabel"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="optionsContainer"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-accent" id="btnSubmit" disabled>确认答案</button>
+        <button class="btn btn-primary" id="btnNext">下一题 →</button>
+      </div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-ghost btn-sm" id="btnPrev">← 上一题</button>
+        <span class="spacer"></span>
+        <button class="btn btn-ghost btn-sm" id="btnShowAnswer">显示答案</button>
+      </div>
+      <div class="explain" id="explanation"></div>
+    </div>
+
+    <div class="banner" id="resultBanner"></div>
+  </div>
+
+  <!-- review -->
+  <div id="reviewView">
+    <div class="review-header">
+      <h2>◆ 答题报告</h2>
+      <button class="nav-btn primary" id="btnReviewHome">← 返回首页</button>
+    </div>
+
+    <div class="review-score" id="reviewScore">
+      <div class="pct" id="reviewPct">0%</div>
+      <div class="label">正确率</div>
+      <div class="sub" id="reviewSub">已完成 0 题</div>
+      <div class="stat-row">
+        <span>正确 <strong id="reviewCorrect">0</strong></span>
+        <span>错误 <strong id="reviewWrong">0</strong></span>
+      </div>
+    </div>
+
+    <div class="review-filter">
+      <button class="filter-btn active" data-filter="all">全部</button>
+      <button class="filter-btn" data-filter="wrong">仅错题</button>
+      <button class="filter-btn" data-filter="right">仅正确</button>
+    </div>
+
+    <div id="reviewList"></div>
+  </div>
+
+</div>
+
+<button class="scroll-top" id="scrollTop">↑</button>
+
+<script>
+// ============================================================
+// 题库 - 6 考点
+// ============================================================
+const CHAPTERS = [{
+  id:'ch1',name:'考点一：工程控制网',questions:[{
+    id:1,type:'single',question:'工程测量工作应遵循的原则是（　）。',
+    options:['A. 必要观测原则','B. 多余观测原则','C. 从整体到局部的原则','D. 并列原则'],
+    answer:'C',explanation:'无论是工程测量还是其他测量都要遵循测量工作的两条基本原则：①从整体到局部；②逐步检查。故选C。'
+  },{
+    id:2,type:'single',question:'下列不属于工程控制网布网原则的是（　）。',
+    options:['A. 分级布网，逐级控制','B. 控制网精度高，控制范围小','C. 要有足够的精度和可靠性','D. 要有足够的密度'],
+    answer:'B',explanation:'工程控制网的布网原则：分级布网，逐级控制；要有足够的精度和可靠性；要有足够的密度；要有统一的规格。选项B不属于。故选B。'
+  },{
+    id:3,type:'single',question:'下面关于控制网的叙述错误的是（　）。',
+    options:['A. 国家控制网从高级到低级布设','B. 国家控制网分为平面控制网和高程控制网','C. 直接为测图目的建立的控制网，称为图根控制网','D. 国家控制网按精度可分为A、B、C、D、E五级'],
+    answer:'D',explanation:'国家控制网按精度可以分为一、二、三、四等；GPS控制网按精度可分为A、B、C、D、E五级。选项D描述错误。故选D。'
+  },{
+    id:4,type:'single',question:'与国家控制网比较，工程控制网的特点是（　）。',
+    options:['A. 边长较长','B. 边长相对精度较高','C. 点位密度大','D. 点位密度小'],
+    answer:'C',explanation:'国家控制网边长较长，相对精度较高，点位密度小；工程控制网范围较小，用点率高，点位密度大。故选C。'
+  },{
+    id:5,type:'single',question:'施工控制网有时分两级布网，次级网的精度（　）首级网的精度。',
+    options:['A. 一定低于','B. 一定高于','C. 可能高于','D. 等于'],
+    answer:'C',explanation:'施工控制网有时次级网的精度会高于首级网的精度，这是控制网逐级控制的唯一特例。故选C。'
+  },{
+    id:6,type:'single',question:'施工控制网一般选择投影到主施工高程面作为投影面而不进行高斯投影，主要是为了（　）。',
+    options:['A. 方便施工放样，方便控制网观测','B. 方便平差计算','C. 方便观测记录','D. 与城市控制网相区别'],
+    answer:'A',explanation:'施工控制网一般选择投影到主施工高程面作为投影面而不进行高斯投影，主要是为了方便施工放样，方便控制网观测。故选A。'
+  },{
+    id:7,type:'single',question:'下列控制网不是按照网形分的是（　）。',
+    options:['A. 三角网','B. 导线网','C. 方格网','D. 附合网'],
+    answer:'D',explanation:'工程控制网按网形可分为三角网、导线网、混合网、方格网等。附合网是按照基准划分的。故选D。'
+  },{
+    id:8,type:'single',question:'工程运营管理阶段测绘的主要任务是（　）。',
+    options:['A. 勘察测量','B. 施工测量','C. 验收测量','D. 变形测量'],
+    answer:'D',explanation:'勘察测量属于工程勘察设计阶段；施工测量、验收测量属于工程施工建设阶段；变形测量属于工程运营管理阶段。故选D。'
+  },{
+    id:9,type:'single',question:'工程高程控制测量过程中，精度最高的是（　）。',
+    options:['A. 目估法','B. 三角高程测量','C. 水准测量','D. GPS水准'],
+    answer:'C',explanation:'工程高程控制测量过程中，目前精度最高的是水准测量。故选C。'
+  },{
+    id:10,type:'single',question:'控制网优化设计分为四类，其中"一类设计"是指（　）。',
+    options:['A. 基准设计','B. 网形设计','C. 权设计','D. 改进设计或加密设计'],
+    answer:'B',explanation:'控制网优化设计分为4类：零类设计（基准设计）、一类设计（网形设计）、二类设计（权设计）、三类设计（改进设计或加密设计）。故选B。'
+  },{
+    id:11,type:'single',question:'工程测量控制网可采用卫星定位测量方法。对于GPS测量数据处理，其基线解算，下列描述错误的是（　）。',
+    options:['A. 起算点的单点定位观测时间，不宜少于15min','B. 解算模式可采用单基线解算模式','C. 解算模式可采用多基线解算模式','D. 解算成果，应采用双差固定解'],
+    answer:'A',explanation:'《工程测量规范》第3.2.10条规定：起算点的单点定位观测时间不宜少于30min。选项A描述不正确。故选A。'
+  },{
+    id:12,type:'single',question:'工程测量高程控制点间的距离一般地区应为1～3km，工业场区宜为1km，但一个测区及周围至少应有（　）个高程控制点。',
+    options:['A. 2','B. 3','C. 4','D. 5'],
+    answer:'B',explanation:'根据工程测量规范，一个测区及周围至少应有3个高程控制点。故选B。'
+  },{
+    id:13,type:'single',question:'下列关于工程控制网的特点说法不正确的是（　）。',
+    options:['A. 控制网的大小、形状应和工程相适应','B. 可采用独立的坐标系','C. 地面控制网精度一定要均匀','D. 投影面的选择应满足控制点坐标反算两点间长度与实地两点间长度之差尽可能小的要求'],
+    answer:'C',explanation:'地面控制网的精度不要求网的精度均匀，但要保证某一方向和某几个点的相对精度高。选项C描述不正确。故选C。'
+  },{
+    id:14,type:'single',question:'工程控制网的质量准则不包括（　）。',
+    options:['A. 时间准则','B. 灵敏度准则','C. 精度准则','D. 费用准则'],
+    answer:'A',explanation:'工程控制网的质量准则有：精度准则、可靠性准则、灵敏度准则、费用准则。时间准则不属于。故选A。'
+  },{
+    id:15,type:'single',question:'关于工程测量高程控制的施测方法，下列说法不正确的是（　）。',
+    options:['A. 通常情况下采用水准测量的方法','B. 根据高程控制测量可以采用GPS拟合高程测量','C. 二等及以下等级可采用GPS拟合高程测量','D. 四等及以下等级可采用电磁波测距三角高程测量'],
+    answer:'C',explanation:'四等及以下等级（包括图根高程控制测量）可采用GPS拟合高程测量。选项C描述不正确。故选C。'
+  },{
+    id:16,type:'single',question:'下列坐标系中肯定不属于独立坐标系的是（　）。',
+    options:['A. 北京坐标系','B. 施工坐标系','C. 工程坐标系','D. 地方坐标系'],
+    answer:'A',explanation:'北京坐标系是国家坐标系。施工坐标系、工程坐标系、地方坐标系都有可能采用独立的坐标系。故选A。'
+  },{
+    id:17,type:'single',question:'工程控制网的建立步骤不包括（　）。',
+    options:['A. 设计','B. 绘制地形图','C. 选点埋石','D. 观测和平差计算'],
+    answer:'B',explanation:'工程控制网的建立步骤一般分为：设计、选点埋石、观测和平差计算。绘制地形图不属于。故选B。'
+  },{
+    id:18,type:'multi',question:'工程控制网按网点的性质划分为（　）。',
+    options:['A. 约束网','B. 一维网','C. 二维网','D. 三维网','E. 自由网'],
+    answer:'BCD',explanation:'按网点的性质可分为一维网、二维网、三维网；按照坐标系和基准可分为附合网、独立网、经典网、自由网。故选BCD。'
+  },{
+    id:19,type:'multi',question:'工程控制网的质量准则为（　）。',
+    options:['A. 灵敏度准则','B. 平衡准则','C. 精度准则','D. 多样性准则','E. 费用准则'],
+    answer:'ACE',explanation:'工程控制网的质量准则有4个：精度准则、可靠性准则、灵敏度准则、费用准则。故选ACE。'
+  },{
+    id:20,type:'multi',question:'GPS工程控制网数据平差计算和转换中的主要内容包括（　）。',
+    options:['A. 与地面网的联合平差','B. 观测数据的平滑','C. 无约束平差','D. 坐标系统的转换','E. 基线向量解算'],
+    answer:'ACDE',explanation:'GPS工程控制网数据处理中的平差计算和转换，主要内容有：基线向量解算、无约束平差、坐标系统的转换、与地面网的联合平差等。故选ACDE。'
+  },{
+    id:21,type:'multi',question:'关于高程控制测量的施测方法，下列说法正确的是（　）。',
+    options:['A. 通常情况下采用水准测量的方法','B. 根据等级可以采用GPS拟合高程测量','C. 二等及以下等级可采用GPS拟合高程测量','D. 四等以下等级可采用电磁波测距三角高程测量','E. 因为工程控制网要求精度高，所有的工程高程控制网应使用水准测量的方法进行'],
+    answer:'ABD',explanation:'通常情况下高程控制网应使用水准测量；四等及以下等级可采用GPS拟合高程测量；四等及以下等级可采用电磁波测距三角高程测量。C、E描述不正确。故选ABD。'
+  },{
+    id:22,type:'multi',question:'工程施工建设阶段的测量工作主要分为（　）。',
+    options:['A. 勘察测量','B. 施工测量','C. 监理测量','D. 验收测量','E. 变形监测'],
+    answer:'BC',explanation:'工程施工建设阶段测量工作主要分为施工测量和监理测量。故选BC。'
+  },{
+    id:23,type:'multi',question:'图根平面控制点的布设，可采用（　）方法。',
+    options:['A. 三角高程','B. 图根导线','C. 交会测量','D. GPS RTK','E. 图根三角'],
+    answer:'BCDE',explanation:'图根平面控制点的布设可采用图根导线、图根三角、交会测量、GPS RTK测量等。三角高程测量属于高程控制测量。故选BCDE。'
+  },{
+    id:24,type:'multi',question:'工程高程控制网的施测方法可以采用（　）。',
+    options:['A. 水准测量','B. 三角测量','C. 三角高程测量','D. 导线测量','E. GPS水准方法'],
+    answer:'ACE',explanation:'工程高程控制测量的施测方法有几何水准测量、三角高程测量、GPS水准测量方法。三角测量、导线测量属于平面控制测量。故选ACE。'
+  },{
+    id:25,type:'multi',question:'GPS工程控制网数据处理平差计算和转换包括（　）。',
+    options:['A. 数据编辑','B. 基线向量解算','C. 无约束平差','D. 与地面网的联合平差','E. 坐标系统的转换'],
+    answer:'BCDE',explanation:'GPS工程控制网数据处理平差计算和转换的主要内容：基线向量解算、无约束平差、坐标系统的转换、与地面网的联合平差等。数据编辑不属于。故选BCDE。'
+  },{
+    id:26,type:'multi',question:'工程控制网的布网原则有（　）。',
+    options:['A. 要有统一的规格','B. 控制网精度高，控制范围小','C. 要有足够的精度和可靠性','D. 要有足够的密度','E. 分级布网，逐级控制'],
+    answer:'ACDE',explanation:'工程控制网的布网原则：分级布网，逐级控制；要有足够的精度和可靠性；要有足够的密度；要有统一的规格。故选ACDE。'
+  },{
+    id:27,type:'multi',question:'下面关于控制网的叙述正确的是（　）。',
+    options:['A. 国家控制网从高级到低级布设','B. 国家控制网分为平面控制网和高程控制网','C. 国家控制网按精度可分为A、B、C、D、E五级','D. 控制网是指控制点按一定规律构成的几何图形','E. 直接为测图目的建立的控制网，称为图根控制网'],
+    answer:'ABDE',explanation:'国家控制网分为平面控制网和高程控制网；从高级到低级布设；按精度可以分为一、二、三、四等；GPS控制网按精度可分为A、B、C、D、E五级。C选项描述不正确。故选ABDE。'
+  }]
+},{
+  id:'ch2',name:'考点二：工程地形图测绘',questions:[{
+    id:1,type:'single',question:'按《工程测量规范》，地形图的基本等高距应按地形类别和测图比例尺进行选择，对于丘陵地区1:500的地形图，应该选择（　）为基本等高距。',
+    options:['A. 5m','B. 2m','C. 1m','D. 0.5m'],
+    answer:'D',explanation:'丘陵地区1:500地形图的基本等高距应为0.5m。故选D。'
+  },{
+    id:2,type:'single',question:'一般的工程建设中，对于厂址的选择通常选用（　）的地形图。',
+    options:['A. 1:5000~1:10000','B. 1:2000','C. 1:2000~1:1000','D. 1:1000~1:500'],
+    answer:'A',explanation:'厂址的选择通常选用1:5000~1:10000的地形图。故选A。'
+  },{
+    id:3,type:'single',question:'按《工程测量规范》，地形图的基本等高距应按地形类别和测图比例尺进行选择，对于地形倾角小于3°的地区，绘制1:1000的地形图等高距应为（　）。',
+    options:['A. 5m','B. 1m','C. 2m','D. 0.5m'],
+    answer:'D',explanation:'地形倾角小于3°的地区属于平坦地区，1:1000地形图等高距应为0.5m。故选D。'
+  },{
+    id:4,type:'single',question:'下列关于地形图的精度说法错误的是（　）。',
+    options:['A. 地形图上地物点相对于邻近图根点的平面点位中误差，对于城镇建筑区和工矿区不应超过图上0.6mm','B. 地形图上地物点相对于邻近图根点的平面点位中误差，对于一般地区不应超过图上1mm','C. 地形图上地物点相对于邻近图根点的平面点位中误差，对于水域部分不应超过图上1.5mm','D. 地形图等高线的插求点相对于邻近图根点的高程中误差，对于一般平坦地区小于1/3的基本等高距'],
+    answer:'B',explanation:'一般地区不应超过图上0.8mm，不是1mm。选项B描述不正确。故选B。'
+  },{
+    id:5,type:'single',question:'关于地形图基本等高距、比例尺和地形类别三者关系的描述，以下说法正确的是（　）。',
+    options:['A. 测图比例尺越大，基本等高距越小；地形越复杂，基本等高距越小','B. 测图比例尺越大，基本等高距越大；地形越复杂，基本等高距越小','C. 测图比例尺越大，基本等高距越大；地形越复杂，基本等高距离越大','D. 测图比例尺越大，基本等高距越小；地形越复杂，基本等高距越大'],
+    answer:'D',explanation:'测图比例尺越大，基本等高距越小；地形越复杂，基本等高距越大。故选D。'
+  },{
+    id:6,type:'single',question:'对数字测图方法，对于1:500测图，每平方千米图根点的数量不少于（　）个。',
+    options:['A. 50','B. 64','C. 100','D. 150'],
+    answer:'B',explanation:'1:500比例尺测图不少于64个，1:1000不少于16个，1:2000不少于4个。故选B。'
+  },{
+    id:7,type:'single',question:'工程测量中平坦地区高程中误差一般不超过（　）。',
+    options:['A. H_d','B. 2/3 H_d','C. 1/2 H_d','D. 1/3 H_d'],
+    answer:'D',explanation:'平坦地区的高程中误差一般不超过1/3 H_d。故选D。'
+  },{
+    id:8,type:'single',question:'工程建设的大比例尺地形图一般采用（　）分幅方式。',
+    options:['A. 经纬线','B. 梯形','C. 矩形','D. 圆形'],
+    answer:'C',explanation:'大比例尺地形图一般采用矩形分幅方式，中小比例尺通常采用梯形分幅。故选C。'
+  },{
+    id:9,type:'single',question:'根据需要，在图上表示的最小距离不大于实地0.1m，则测图比例尺应选择（　）。',
+    options:['A. 1:1000','B. 1:2000','C. 1:5000','D. 1:10000'],
+    answer:'A',explanation:'比例尺精度：图上0.1mm所代表的实地长度。0.1mm/0.1m=1:1000。故选A。'
+  },{
+    id:10,type:'single',question:'大比例尺数字地形图平面和高程精度的检查中，用钢尺或测距量测相邻地物点的距离，量测边数每幅图一般不少于（　）处。',
+    options:['A. 8','B. 10','C. 15','D. 20'],
+    answer:'D',explanation:'量测边数每幅图一般不少于20处。故选D。'
+  },{
+    id:11,type:'single',question:'依据《工程测量规范》"纸质地形图的绘制"有关规定，对于"不依比例尺绘制的符号"，应保持（　）。',
+    options:['A. 其轮廓位置的精度','B. 其主线位置的几何精度','C. 其主点位置的几何精度','D. 其符号的整体美观性'],
+    answer:'C',explanation:'不依比例尺绘制的符号应保持其主点位置的几何精度。故选C。'
+  },{
+    id:12,type:'single',question:'对数字测图方法，对于1:1000比例尺测图，每平方千米图根点的数量不少于（　）。',
+    options:['A. 64','B. 16','C. 8','D. 4'],
+    answer:'B',explanation:'1:1000比例尺测图不少于16个。故选B。'
+  },{
+    id:13,type:'single',question:'在地形图中，表示测量控制点的符号属于（　）。',
+    options:['A. 比例符号','B. 半比例符号','C. 非比例符号','D. 地貌符号'],
+    answer:'C',explanation:'表示控制点的符号属于非比例符号。故选C。'
+  },{
+    id:14,type:'single',question:'地形图可以进行修测，但修测的面积超过原图总面积（　）时，应重新进行测绘。',
+    options:['A. 1/2','B. 1/3','C. 1/4','D. 1/5'],
+    answer:'D',explanation:'修测面积超过原图总面积1/5时，应重新进行测绘。故选D。'
+  },{
+    id:15,type:'single',question:'测图平面控制网的精度要能满足1:500比例尺地形图测图要求，四等以下（含四等）平面控制网最弱点的点位中误差不得超过图上±0.1mm，即实地（　），这一数值可作为平面控制网精度设计的依据。',
+    options:['A. ±0.5cm','B. ±1cm','C. ±5cm','D. ±10cm'],
+    answer:'C',explanation:'图上0.1mm，实地=0.1×500=50mm=5cm。故选C。'
+  },{
+    id:16,type:'single',question:'工程地形图上，地物点相对于邻近图根点的点位中误差，水域地区不应超过图上（　）。',
+    options:['A. ±0.6mm','B. ±0.8mm','C. ±1.5mm','D. ±2.0mm'],
+    answer:'C',explanation:'水域地区不应超过图上1.5mm。故选C。'
+  },{
+    id:17,type:'single',question:'水域地区，工程测量中丘陵地区高程中误差一般不超过（　）。',
+    options:['A. 1/3 H_d','B. 1/2 H_d','C. 2/3 H_d','D. H_d'],
+    answer:'C',explanation:'丘陵地区（水域地区）的高程中误差为2/3 H_d。故选C。'
+  },{
+    id:18,type:'single',question:'按《工程测量规范》，地形图的基本等高距应按地形类别和测图比例尺进行选择，对于1:5000的丘陵地形图应该选择（　）为基本等高距。',
+    options:['A. 0.5m','B. 1m','C. 2m','D. 5m'],
+    answer:'D',explanation:'丘陵地区1:5000地形图的基本等高距应为5m。故选D。'
+  },{
+    id:19,type:'single',question:'图根点相对于基本控制点的点位中误差不应超过图上±0.1mm，高程中误差不应超过基本等高距的（　）。',
+    options:['A. 1/2','B. 1/3','C. 1/5','D. 1/10'],
+    answer:'D',explanation:'高程中误差不应超过基本等高距的1/10。故选D。'
+  },{
+    id:20,type:'single',question:'采用数字测图方法，对于1:2000比例尺测图，每平方千米图根点的个数不少于（　）。',
+    options:['A. 4','B. 16','C. 50','D. 64'],
+    answer:'A',explanation:'1:2000比例尺测图不少于4个。故选A。'
+  },{
+    id:21,type:'single',question:'对于工程地形图质量检验，其成果质量元素包括5个，以下不属于地形图成果质量元素的是（　）。',
+    options:['A. 埋石质量','B. 数据结构正确性','C. 整饰质量','D. 附件质量'],
+    answer:'A',explanation:'地形图成果质量元素包括：数学精度、数据结构正确性、地理精度、整饰质量、附件质量。埋石质量不属于。故选A。'
+  },{
+    id:22,type:'multi',question:'地形图的测绘方法可分为模拟法和数字法两种。目前，地形图测绘主要采用数字法，以下属于数字法测图的方法有（　）。',
+    options:['A. GPS RTK测图','B. 平板仪测图','C. 经纬仪测图','D. 全站仪测图','E. 遥感测图方法'],
+    answer:'ADE',explanation:'数字法测图的方法有全站仪测图、GPS RTK测图、数字摄影测量、遥感测图等。平板仪测图、经纬仪测图属于模拟法。故选ADE。'
+  },{
+    id:23,type:'multi',question:'水下地形图测绘的工作内容主要包括定位、测深、绘图等，其中定位方法主要包括（　）。',
+    options:['A. 全站仪定位','B. 光电测距三角高程法','C. GPS差分定位','D. 水下声学定位','E. 激光准直法'],
+    answer:'ACD',explanation:'定位方法主要包括无线电定位、全站仪定位、GPS差分定位、水下声学定位等。故选ACD。'
+  },{
+    id:24,type:'multi',question:'对于一些大型水利枢纽、能源、交通等工程，在可行性研究和总体规划阶段，经常需要使用（　）甚至更小比例尺的地形图。',
+    options:['A. 1:50000','B. 1:25000','C. 1:10000','D. 1:2000','E. 1:1000'],
+    answer:'AB',explanation:'可行性研究和总体规划阶段经常使用1:25000、1:50000甚至更小比例尺的地形图。故选AB。'
+  },{
+    id:25,type:'multi',question:'地图的图幅设计包括（　）。',
+    options:['A. 数学基础设计','B. 地图的拼接设计','C. 地图线划设计','D. 地图的分幅设计','E. 图面配置设计'],
+    answer:'ABDE',explanation:'地图的图幅设计包括数学基础设计、地图的分幅设计、图面配置设计、地图的拼接设计等。故选ABDE。'
+  },{
+    id:26,type:'multi',question:'地图符号按比例尺关系可分为（　）。',
+    options:['A. 点状符号','B. 依比例尺符号','C. 面状符号','D. 不依比例尺符号','E. 半比例尺符号'],
+    answer:'BDE',explanation:'地图符号按比例尺关系可分为依比例尺符号、半比例尺符号、不依比例尺符号三种。故选BDE。'
+  },{
+    id:27,type:'multi',question:'全站仪测图的方法，可采用（　）。',
+    options:['A. 编码法','B. 扫描法','C. 草图法','D. 摄影法','E. 实时成图法'],
+    answer:'ACE',explanation:'全站仪测图的方法有实地编码法、实时成图法、草图法。扫描法、摄影法不属于。故选ACE。'
+  },{
+    id:28,type:'multi',question:'下列关于地形图的精度说法正确的是（　）。',
+    options:['A. 地形图上地物点相对于邻近图根点的平面点位中误差，对于水域部分不应超过图上1.5mm','B. 地形图上地物点相对于邻近图根点的平面点位中误差，对于一般地区不应超过图上1mm','C. 地形图上地物点相对于邻近图根点的平面点位中误差，对于城镇建筑区和工矿区不应超过图上0.6mm','D. 地形图等高线的插求点相对于邻近图根点的高程中误差，对于一般平坦地区小于1/2的基本等高距','E. 地形图的精度包括平面精度和高程精度两个部分'],
+    answer:'ACE',explanation:'一般地区不应超过0.8mm，平坦地区高程中误差小于1/3基本等高距。B、D描述不正确。故选ACE。'
+  },{
+    id:29,type:'multi',question:'对于工程的施工设计阶段和运营管理阶段，往往需要用数字成图法测绘（　）乃至更大比例尺的地形图或专题图。',
+    options:['A. 1:500','B. 1:1000','C. 1:2000','D. 1:5000','E. 1:10000'],
+    answer:'AB',explanation:'施工设计阶段和运营管理阶段需要1:1000或1:500，有时甚至更大比例尺。故选AB。'
+  }]
+},{
+  id:'ch3',name:'考点三：施工测量',questions:[{
+    id:1,type:'single',question:'施工测量应首先建立施工控制网，测设建筑物的主轴线，然后根据主轴线测设建筑物的（　）。',
+    options:['A. 控制点','B. 建筑基线','C. 细部点','D. 高程'],
+    answer:'C',explanation:'施工测量的步骤：建立施工控制网→测设主轴线→根据主轴线测设细部点。故选C。'
+  },{
+    id:2,type:'single',question:'在进行贯通测量技术设计时，了解贯通工程概况，需要比例尺不小于（　）的井巷贯通工程图。',
+    options:['A. 1:500','B. 1:2000','C. 1:5000','D. 1:10000'],
+    answer:'B',explanation:'需要比例尺不小于1:2000的井巷贯通工程图。故选B。'
+  },{
+    id:3,type:'single',question:'坐标反算就是根据直线的起、终点坐标，计算直线的（　）。',
+    options:['A. 斜距、水平角','B. 水平距离、水平角','C. 斜距、方位角','D. 水平距离、方位角'],
+    answer:'D',explanation:'坐标反算：由起点和终点的坐标计算水平距离、方位角。故选D。'
+  },{
+    id:4,type:'single',question:'隧道洞内平面控制测量通常采用（　）。',
+    options:['A. 水准测量','B. 三角测量','C. 导线测量','D. GPS测量'],
+    answer:'C',explanation:'隧道洞内场地狭窄，平面控制常采用导线测量。故选C。'
+  },{
+    id:5,type:'single',question:'在平面内连接不同线路方向的曲线，称为（　）。',
+    options:['A. 圆曲线','B. 缓和曲线','C. 平曲线','D. 竖曲线'],
+    answer:'C',explanation:'平面曲线简称平曲线，是在平面内连接不同线路方向的曲线。故选C。'
+  },{
+    id:6,type:'single',question:'对于四等电磁波测距三角高程测量，应采用"对向观测"方式，其"对向观测高差较差"的限差要求为（　），式中D为测距边的长度(km)。',
+    options:['A. 20√Dmm','B. 40√Dmm','C. 50√Dmm','D. 60√Dmm'],
+    answer:'B',explanation:'四等对向观测高差较差限差为40√Dmm。故选B。'
+  },{
+    id:7,type:'single',question:'下列不属于建设工程规划监督测量的是（　）。',
+    options:['A. 水准测量','B. 放线测量','C. 验收测量','D. 验线测量'],
+    answer:'A',explanation:'建设工程规划监督测量包括放线测量、验线测量、验收测量。水准测量不属于。故选A。'
+  },{
+    id:8,type:'single',question:'使用全站仪极坐标放样时，需要向全站仪输入测站数据，下列不属于测站数据的是（　）。',
+    options:['A. 测站坐标','B. 仪器高','C. 测点坐标','D. 目标高'],
+    answer:'C',explanation:'测站数据包括测站坐标、仪器高、目标高、后视方位角。测点坐标不属于。故选C。'
+  },{
+    id:9,type:'single',question:'线路的纵断面是由不同的坡度连接的。当两相邻的坡度值的代数差超过一定值时，在变坡处，必须用曲线连接。这种在竖面上连接不同坡度的曲线称为（　）。',
+    options:['A. 平曲线','B. 回头曲线','C. 竖曲线','D. 缓和曲线'],
+    answer:'C',explanation:'竖曲线是在竖面上连接不同坡度的曲线。故选C。'
+  },{
+    id:10,type:'single',question:'对于两开挖洞口间长度小于4km的隧道工程，其相向施工中线在贯通面上的高程贯通误差，不应大于（　）。',
+    options:['A. 30mm','B. 50mm','C. 70mm','D. 100mm'],
+    answer:'C',explanation:'高程贯通误差不应大于70mm。故选C。'
+  },{
+    id:11,type:'single',question:'使用GPS测量法进行线路平面控制，在选取GPS点位时，除了满足GPS要求外，一般每隔（　）km左右布设一对相互通视的边长为500～1000m的GPS点。',
+    options:['A. 3','B. 4','C. 5','D. 6'],
+    answer:'C',explanation:'一般每隔5km左右布设一对相互通视的GPS点。故选C。'
+  },{
+    id:12,type:'single',question:'线路的纵断面采用直角坐标法绘制，以中桩的里程为横坐标，以其高程为纵坐标，纵横坐标比例尺的关系是（　）。',
+    options:['A. 纵大于横','B. 纵等于横','C. 纵小于横','D. 都可以'],
+    answer:'A',explanation:'纵坐标比例尺大于横坐标比例尺，以突出地面起伏。故选A。'
+  },{
+    id:13,type:'single',question:'大坝施工测量中，首先进行放样的内容是（　）。',
+    options:['A. 清基开挖线的放样','B. 坡脚线放样','C. 坝轴线测设','D. 坝体边坡线放样'],
+    answer:'C',explanation:'大坝施工测量中首先进行坝轴线测设。故选C。'
+  },{
+    id:14,type:'single',question:'已知道路交点桩号为K5+316.24，圆曲线切线长为62.50m，则圆曲线起点的桩号为（　）。',
+    options:['A. K5+191.24','B. K5+253.74','C. K5+378.74','D. K5+441.24'],
+    answer:'B',explanation:'ZY = JD - T = 316.24 - 62.50 = 253.74，即K5+253.74。故选B。'
+  },{
+    id:15,type:'single',question:'按照城市规划行政主管部门下达的定线、拨地测量，其中拨地界址点相对于邻近高级控制点的点位中误差不应大于（　）。',
+    options:['A. ±0.05m','B. ±0.10m','C. ±0.15m','D. ±0.20m'],
+    answer:'A',explanation:'拨地界址点相对于邻近高级控制点的点位中误差不应大于±0.05m。故选A。'
+  },{
+    id:16,type:'single',question:'对于两开挖洞口间长度小于4km的隧道工程，其相向施工中线在贯通面上的横向贯通误差，不应大于（　）。',
+    options:['A. 70mm','B. 100mm','C. 150mm','D. 200mm'],
+    answer:'B',explanation:'横向贯通误差不应大于100mm。故选B。'
+  },{
+    id:17,type:'single',question:'测量误差影响的是测量数据，放样误差影响的则是（　）。',
+    options:['A. 距离数据','B. 点的平面坐标数据','C. 点的高程数据','D. 实地点位'],
+    answer:'D',explanation:'放样误差影响的是实地点位。故选D。'
+  },{
+    id:18,type:'single',question:'下列选项不属于定线和拨地测量校验的是（　）。',
+    options:['A. 图形校核','B. 控制点校核','C. 界址点校核','D. 坐标校核'],
+    answer:'C',explanation:'校验测量包括控制点校核、图形校核、坐标校核。界址点校核不属于。故选C。'
+  },{
+    id:19,type:'single',question:'导线角度闭合差的调整方法是将闭合差反符号后（　）。',
+    options:['A. 按角度大小成正比例分配','B. 按角度大小成反比例分配','C. 按边长成正比例分配','D. 按角的个数平均分配'],
+    answer:'D',explanation:'角度闭合差反符号后按角的个数平均分配。故选D。'
+  },{
+    id:20,type:'single',question:'线路初测阶段高程测量中，沿线路布设水准点的高程测量称为（　）。',
+    options:['A. 三角高程测量','B. 中平测量','C. 基平测量','D. 平面控制测量'],
+    answer:'C',explanation:'基平测量是测量沿线路布设的水准点的高程。故选C。'
+  },{
+    id:21,type:'single',question:'线路横断面图的纵横比例尺的关系是（　）。',
+    options:['A. 横比例尺大于纵比例尺','B. 纵横比例尺相等','C. 横比例尺小于纵比例尺','D. 都可以'],
+    answer:'B',explanation:'横断面图纵横比例尺相同，一般采用1:100或1:200。故选B。'
+  },{
+    id:22,type:'single',question:'采用偏角法测设圆曲线时，其偏角应等于相应弧长所对圆心角的（　）。',
+    options:['A. 3倍','B. 2倍','C. 1/2','D. 1/3'],
+    answer:'C',explanation:'弦切角等于弧长所对圆心角的一半，偏角即为弦切角。故选C。'
+  },{
+    id:23,type:'single',question:'矿井工业广场井筒附近布设的平面控制点称为（　）。',
+    options:['A. 三角点','B. 导线点','C. 井口水准基点','D. 近井点'],
+    answer:'D',explanation:'近井点是矿井工业广场井筒附近布设的平面控制点。故选D。'
+  },{
+    id:24,type:'single',question:'以下用作矿井高程联系测量的是（　）。',
+    options:['A. 一井定向','B. 两井定向','C. 导入高程','D. 陀螺定向'],
+    answer:'C',explanation:'导入高程是高程联系测量方法。一井定向、两井定向、陀螺定向属于平面联系测量。故选C。'
+  },{
+    id:25,type:'single',question:'桥梁高程测量一般采用（　）的方法。',
+    options:['A. GPS高程','B. 三角高程法','C. 气压法','D. 水准测量'],
+    answer:'D',explanation:'桥梁高程测量精度要求较高，一般采用水准测量。故选D。'
+  },{
+    id:26,type:'single',question:'巷道掘进时，给定掘进的坡度通常叫作给（　）。',
+    options:['A. 坡度线','B. 方向线','C. 腰线','D. 中线'],
+    answer:'C',explanation:'腰线表示巷道在竖直面的高低起伏，即给定掘进的坡度。故选C。'
+  },{
+    id:27,type:'single',question:'城镇定线与拨地测量中，用于展绘的基础图比例尺宜采用（　）。',
+    options:['A. 1:500～1:2000','B. 1:500～1:5000','C. 1:1000～1:5000','D. 1:2000～1:5000'],
+    answer:'A',explanation:'宜采用1:500～1:2000比例尺的基本地形图作为基础图。故选A。'
+  },{
+    id:28,type:'single',question:'两井定向中不需要进行的一项工作是（　）。',
+    options:['A. 地面连接','B. 测量井筒中钢丝长度','C. 投点','D. 井下连接'],
+    answer:'B',explanation:'两井定向是平面联系测量，不需要测量井筒中钢丝长度。故选B。'
+  },{
+    id:29,type:'single',question:'对于联系测量工作，下列选项说法不正确的是（　）。',
+    options:['A. 竖井平面联系测量就是测定地下导线起算边的坐标方位角和起算点的平面坐标','B. 平硐、斜井的联系测量可采用导线测量、水准测量、三角高程测量完成','C. 竖井平面联系测量可以用GPS测量方法进行','D. 竖井高程联系测量可以用长钢尺法进行'],
+    answer:'C',explanation:'竖井中接收不到GPS信号，不能采用GPS测量方法。选项C描述不正确。故选C。'
+  },{
+    id:30,type:'single',question:'由于直线定线不准确，造成丈量偏离直线方向，其测量结果使距离（　）。',
+    options:['A. 偏小','B. 忽大忽小，无一定的规律','C. 偏大','D. 影响值为常数，可事先计算出来，对结果无影响'],
+    answer:'C',explanation:'直线定线不准确测量的是折线距离，折线距离比直线距离大。故选C。'
+  },{
+    id:31,type:'single',question:'井下导线测量，基本控制导线一般采用的是（　）。',
+    options:['A. 30″和60″级两种','B. 15″和30″级两种','C. 7″和15″级两种','D. 一级导线'],
+    answer:'C',explanation:'基本控制导线可分为7英寸和15英寸级两种。故选C。'
+  },{
+    id:32,type:'single',question:'圆曲线的起点的代号通常用（　）表示。',
+    options:['A. YZ','B. QZ','C. ZY','D. JD'],
+    answer:'C',explanation:'圆曲线起点为直圆点，代号ZY。故选C。'
+  },{
+    id:33,type:'single',question:'下列选项不属于立交桥测量内容的是（　）。',
+    options:['A. 桥梁施工控制网建立','B. 桥址地形图测绘','C. 桥梁高程控制网建立','D. 桥梁的变形监测'],
+    answer:'D',explanation:'变形监测属于桥梁运营期的测量工作，不属于施工期。故选D。'
+  },{
+    id:34,type:'single',question:'下面放样方法中，不属于平面位置放样方法的是（　）。',
+    options:['A. 极坐标法','B. 直角坐标法','C. 高程上下传递法','D. GPS法'],
+    answer:'C',explanation:'高程上下传递法属于高程放样方法。故选C。'
+  },{
+    id:35,type:'single',question:'井口水准基点一般位于（　）。',
+    options:['A. 井下任意位置的水准点','B. 地面工业广场井筒附近','C. 地面任意位置的水准点','D. 井下井筒附近'],
+    answer:'B',explanation:'井口水准基点应选择在地面工业广场井筒附近。故选B。'
+  },{
+    id:36,type:'single',question:'规划中线不能通视时，可在规划红线内能通视的地方用（　）实定轴线，略图上注明轴线与中线的间距，也可直接定出红线。',
+    options:['A. 平行法','B. 平行移轴法','C. 目估法','D. 直角转弯法'],
+    answer:'B',explanation:'规划中线不能通视时用平行移轴法实定轴线。故选B。'
+  },{
+    id:37,type:'single',question:'陀螺经纬仪在地理南北纬度不大于（　）的范围内，一般不受时间和环境等条件限制，可实现快速定向。',
+    options:['A. 80°','B. 75°','C. 60°','D. 50°'],
+    answer:'B',explanation:'陀螺经纬仪在地理南北纬度不大于75°的范围内可实现快速定向。故选B。'
+  },{
+    id:38,type:'single',question:'下列不属于城镇规划测量内容的是（　）。',
+    options:['A. 拨地测量','B. 放样测量','C. 规划监督测量','D. 定线测量'],
+    answer:'B',explanation:'城镇规划测量包括定线测量、拨地测量、规划监督测量。放样测量不属于。故选B。'
+  },{
+    id:39,type:'single',question:'下列说法不正确的是（　）。',
+    options:['A. 竖曲线是连接不同坡度的曲线','B. 可以直接使用RTK放样竖曲线','C. 圆曲线上任意一点的曲率半径处处相等','D. 平面曲线的测设可以使用偏角法'],
+    answer:'B',explanation:'GPS RTK测量需要转换参数后才可放样竖曲线，不能直接使用。选项B描述不正确。故选B。'
+  },{
+    id:40,type:'single',question:'线路的纵断面图中，横向为线路里程，纵向为高程，对横向、纵向比例尺的关系描述正确的是（　）。',
+    options:['A. 纵向比例尺小于横向比例尺','B. 纵横向比例尺大小一样','C. 纵向比例尺大于横向比例尺','D. 固定比例尺大小'],
+    answer:'C',explanation:'纵断面图中纵向比例尺大于横向比例尺，以突显地面起伏。故选C。'
+  },{
+    id:41,type:'single',question:'以下不能用作矿井平面联系测量的是（　）。',
+    options:['A. 三角高程测量','B. 一井定向','C. 两井定向','D. 陀螺定向'],
+    answer:'A',explanation:'三角高程测量属于高程测量方法，不是平面联系测量方法。故选A。'
+  },{
+    id:42,type:'single',question:'关于隧道控制测量，以下说法错误的是（　）。',
+    options:['A. 洞外高程控制测量通常使用水准测量','B. 每个洞口应埋设不少于两个水准点，最好是一站可以观测这两点的高差','C. 洞外平面控制测量可以使用GPS定位','D. 洞内平面控制测量可以使用GPS定位'],
+    answer:'D',explanation:'洞内没有GPS信号，无法使用GPS定位。选项D描述错误。故选D。'
+  },{
+    id:43,type:'single',question:'线路定测的主要工作内容不包括（　）。',
+    options:['A. 中线测量','B. 地形图测绘','C. 纵断面测量','D. 横断面测量'],
+    answer:'B',explanation:'地形图测绘属于线路初测的内容，不属于定测。故选B。'
+  },{
+    id:44,type:'single',question:'下列不属于平面曲线的是（　）。',
+    options:['A. 竖曲线','B. 缓和曲线','C. 回头曲线','D. 圆曲线'],
+    answer:'A',explanation:'竖曲线是在竖直面上连接不同坡度的曲线，不属于平面曲线。故选A。'
+  },{
+    id:45,type:'single',question:'下列工作不属于建设工程规划监督测量的是（　）。',
+    options:['A. 放线测量','B. 高程测量','C. 验收测量','D. 验线测量'],
+    answer:'B',explanation:'建设工程规划监督测量包括放线测量、验线测量、验收测量。高程测量不属于。故选B。'
+  },{
+    id:46,type:'single',question:'立交桥工程测量的内容不包括（　）。',
+    options:['A. 桥梁竣工测量','B. 桥址地形图测绘','C. 桥梁施工控制网建立','D. 高程测量'],
+    answer:'D',explanation:'立交桥测量内容包括桥址地形图测绘、施工控制网建立、高程控制网建立、桥墩台施工放样及竣工测量等。高程测量太笼统。故选D。'
+  },{
+    id:47,type:'multi',question:'隧道洞内平面控制测量常用（　）。',
+    options:['A. GPS测量','B. 导线测量','C. 三角测量','D. 中线法','E. 三角高程测量'],
+    answer:'BD',explanation:'洞内平面控制常采用中线法和导线测量。故选BD。'
+  },{
+    id:48,type:'multi',question:'地下工程施工阶段主要的工作内容有（　）。',
+    options:['A. 测绘竣工图','B. 放样出施工中线','C. 设备安装测量','D. 地面控制和地下控制','E. 放样出施工腰线'],
+    answer:'BDE',explanation:'地下工程施工阶段工作内容包括地面控制、地下控制、放样施工中线、放样施工腰线。竣工图测绘和设备安装测量属于施工之后的工作。故选BDE。'
+  },{
+    id:49,type:'multi',question:'下列有关线路纵断面图的测绘的说法错误的是（　）。',
+    options:['A. 线路的纵断面是在各中桩处测定垂直于道路中线方向的地面起伏情况','B. 线路纵断面图采用直角坐标法绘制，以中桩的里程为横坐标，比例尺通常表示为1:2000或1:1000','C. 断面是根据外业测量资料绘制而成，非常直观地体现地面现状的起伏状况','D. 线路的横断面是以中平测量要求测出各里程桩的高程，绘制表示沿线起伏的情况','E. 绘制横断面的纵横比例尺相同，一般采用1:100或1:200'],
+    answer:'AD',explanation:'A描述的是横断面，D描述的是纵断面，二者混淆了。故选AD。'
+  },{
+    id:50,type:'multi',question:'曲线测设的方法有多种，常见的有（　）。',
+    options:['A. 极坐标法','B. 坐标法','C. 偏角法','D. 三角测量法','E. 切线支距法'],
+    answer:'ABCE',explanation:'曲线测设常见方法有极坐标法、坐标法、偏角法、切线支距法。三角测量法不属于。故选ABCE。'
+  },{
+    id:51,type:'multi',question:'常用的坡脚线放样方法有（　）。',
+    options:['A. 极坐标法','B. 平行线法','C. 套绘断面法','D. 交会法','E. 支距法'],
+    answer:'BC',explanation:'坡脚线放样常用方法有套绘断面法和平行线法。故选BC。'
+  },{
+    id:52,type:'multi',question:'地下工程测量过程中，高程测量可以采用（　）方法。',
+    options:['A. 水准测量','B. 激光三维扫描','C. GPS水准','D. 光电测距三角高程测量','E. 导线测量'],
+    answer:'AD',explanation:'地下工程高程测量可采用水准测量和光电测距三角高程测量。GPS水准无法使用，导线测量是平面测量。故选AD。'
+  },{
+    id:53,type:'multi',question:'线路的平面控制宜采用（　）进行布设。',
+    options:['A. 导线','B. GPS测量','C. 三角网','D. 方格网','E. 边角网'],
+    answer:'AB',explanation:'线路平面控制宜采用导线和GPS测量。三角网、边角网需通视良好，方格网适用于建筑场区。故选AB。'
+  },{
+    id:54,type:'multi',question:'以下常用作矿井平面联系测量的是（　）。',
+    options:['A. 高程导入','B. 一井定向','C. 两井定向','D. 水准测量','E. 陀螺定向'],
+    answer:'BCE',explanation:'矿井平面联系测量有一井定向、两井定向、陀螺定向。高程导入和水准测量属于高程联系测量。故选BCE。'
+  },{
+    id:55,type:'multi',question:'建设工程规划监督测量包括（　）。',
+    options:['A. 放线测量','B. 验线测量','C. 勘察测量','D. 验收测量','E. 变形测量'],
+    answer:'ABD',explanation:'建设工程规划监督测量包括放线测量、验线测量、验收测量。故选ABD。'
+  },{
+    id:56,type:'multi',question:'下列关于隧道控制测量说法正确的是（　）。',
+    options:['A. 洞外平面控制测量可以使用GPS定位','B. 洞外高程控制测量通常使用水准测量','C. 洞内平面控制测量可以使用GPS定位','D. 洞内高程控制测量通常使用三角高程测量','E. 每个洞口应埋设不少于两个水准点，最好是一站可以观测这两点的高差'],
+    answer:'ABE',explanation:'洞内没有GPS信号，C错误；洞内高程控制通常使用水准测量，D错误。故选ABE。'
+  },{
+    id:57,type:'multi',question:'市政平面控制测量方法常用（　）。',
+    options:['A. 导线测量','B. 水准测量','C. GPS测量','D. 距离交会','E. 三角高程测量'],
+    answer:'AC',explanation:'市政平面控制测量常用GPS定位和导线测量。故选AC。'
+  },{
+    id:58,type:'multi',question:'洞内高程控制测量常采用的方法是（　）。',
+    options:['A. 导线测量','B. 水准测量','C. GPS测量','D. 距离交会','E. 三角高程测量'],
+    answer:'BE',explanation:'洞内高程控制测量常采用水准测量和三角高程测量。故选BE。'
+  }]
+},{
+  id:'ch4',name:'考点四：地下管线测量与工程竣工测量',questions:[{
+    id:1,type:'single',question:'地下管线隐蔽管线点的探查精度要求：其埋深限差为（　）。(注：h为管线中心的埋深，小于1m时按1m计。)',
+    options:['A. 0.1h','B. 0.15h','C. 0.2h','D. 0.3h'],
+    answer:'B',explanation:'埋深限差为0.15h。故选B。'
+  },{
+    id:2,type:'single',question:'地下管线点的测量精度为：相对于邻近控制点，点位平面位置中误差不超过（　）。',
+    options:['A. ±3cm','B. ±4cm','C. ±5cm','D. ±6cm'],
+    answer:'C',explanation:'点位平面位置中误差不超过±5cm。故选C。'
+  },{
+    id:3,type:'single',question:'以下不属于地下管线探测方法的是（　）。',
+    options:['A. 实地调查法','B. 物探调查法','C. 开挖调查法','D. 目估调查法'],
+    answer:'D',explanation:'地下管线探测方法有实地调查法、物探调查法、开挖调查法。目估调查法不属于。故选D。'
+  },{
+    id:4,type:'single',question:'对于地下管线数据建库，以下描述不正确的是（　）。',
+    options:['A. 地下管线数据库是某一区域地下管线数据的集合','B. 地下管线数据库一般包括地下管线数据和必要的地形数据','C. 地下管线数据包括地下管线要素的空间数据和属性数据','D. 地下管线属性一般包括材质、规格、建设时间等，但不包括权属单位'],
+    answer:'D',explanation:'地下管线属性包括材质、规格、建设时间、权属单位等。选项D描述不正确。故选D。'
+  },{
+    id:5,type:'single',question:'对于地下管线探测质量检验，每个工区必须在隐蔽管线点和明显管线点中，分别按不少于总数（　）的比例，随机抽取管线点进行重复探查。',
+    options:['A. 1%','B. 3%','C. 5%','D. 6%'],
+    answer:'C',explanation:'按不少于总数5%的比例进行重复探查。故选C。'
+  },{
+    id:6,type:'single',question:'地下管线探查应在充分收集和分析已有资料的基础上，采用（　）的方法进行。',
+    options:['A. 开挖查看','B. 实地调查','C. 仪器探查','D. 实地调查与仪器探查相结合'],
+    answer:'D',explanation:'采用实地调查与仪器探查相结合的方法。故选D。'
+  },{
+    id:7,type:'single',question:'下列说法正确的是（　）。',
+    options:['A. 地下管线图上管线点位测定的精度要低于一般地物点的精度','B. 与地下管线关系不大的地物在图上必须保留','C. 只要表达管线的位置信息，无须记录管线属性信息','D. 地下管线图上需要表达除了管线点位以外的管线属性信息'],
+    answer:'D',explanation:'地下管线图上需要表达管线点位以外的属性信息。故选D。'
+  },{
+    id:8,type:'single',question:'地下管线探查通过现场实地调查和仪器探测的方法探寻的内容不包括（　）。',
+    options:['A. 埋设位置','B. 长度','C. 埋设深度','D. 材质、规格等属性'],
+    answer:'B',explanation:'探查内容包括埋设位置、埋设深度、材质规格等，不包括长度。故选B。'
+  },{
+    id:9,type:'single',question:'地下管线隐蔽管线点的探查精度要求：其平面位置误差为（　）。(注：h为管线中心的埋深，小于1m时按1m计。)',
+    options:['A. 0.1h','B. 0.15h','C. 0.2h','D. 0.3h'],
+    answer:'A',explanation:'平面位置限差为0.1h。故选A。'
+  },{
+    id:10,type:'single',question:'地下管线点的测量精度：相对于邻近控制点，点位高程中误差不超过（　）。',
+    options:['A. ±2cm','B. ±3cm','C. ±4cm','D. ±5cm'],
+    answer:'A',explanation:'高程中误差不超过±2cm。故选A。'
+  },{
+    id:11,type:'single',question:'对于地下管线探测质量检验，每个工区应在隐蔽管线点中，按不少于总数（　）的比例，随机抽取管线点进行开挖验证。',
+    options:['A. 1%','B. 3%','C. 5%','D. 6%'],
+    answer:'A',explanation:'按不少于总数1%的比例进行开挖验证。故选A。'
+  },{
+    id:12,type:'single',question:'下列关于线路施工与竣工测量说法不正确的是（　）。',
+    options:['A. 线路复测是在线路中线桩定测已在地面标定之后进行的','B. 线路复测的目的是恢复定测桩点和监测定测质量','C. 线路复测工作的内容和定测一致','D. 线路复测的方法与定测的方法不能相同'],
+    answer:'D',explanation:'线路复测的方法与定测基本相同。选项D描述不正确。故选D。'
+  },{
+    id:13,type:'single',question:'关于建筑竣工测量，以下描述不正确的是（　）。',
+    options:['A. 建筑竣工测量是在建筑工程施工阶段进行的','B. 建筑竣工测量的目的是为工程的交工验收及将来的维修、改建、扩建提供依据','C. 建筑竣工测量主要包括建筑平面位置及四至关系测量、建筑高程及高度测量','D. 竣工测量时，建筑物高度测量可以采用手持测距仪测量'],
+    answer:'A',explanation:'建筑竣工测量在建筑工程完工后进行的。选项A描述不正确。故选A。'
+  },{
+    id:14,type:'single',question:'竣工总图的比例尺，宜选用（　）。',
+    options:['A. 1:500','B. 1:1000','C. 1:2000','D. 1:5000'],
+    answer:'A',explanation:'竣工总图一般选用1:500比例尺。故选A。'
+  },{
+    id:15,type:'single',question:'线路竣工测量不包括（　）。',
+    options:['A. 放样测量','B. 中线测量','C. 高程测量','D. 横断面测量'],
+    answer:'A',explanation:'线路竣工测量包括中线测量、高程测量、横断面测量。放样测量不属于。故选A。'
+  },{
+    id:16,type:'single',question:'竣工总图的编绘，应收集众多资料。下列选项中，不属于竣工总图编绘应收集资料范围的是（　）。',
+    options:['A. 施工设计图','B. 施工检测记录','C. 建筑物立面图','D. 竣工测量资料'],
+    answer:'C',explanation:'竣工总图编绘应收集总平面布置图、施工设计图、设计变更文件、施工检测记录、竣工测量资料等。建筑物立面图不属于。故选C。'
+  },{
+    id:17,type:'multi',question:'城市地下管线探测按具体对象可分为（　）。',
+    options:['A. 市政公用管线探测','B. 电力管线探测','C. 厂区或住宅小区管线探测','D. 施工场地管线探测','E. 专用管线探测'],
+    answer:'ACDE',explanation:'城市地下管线探测按具体对象分为市政公用管线探测、厂区或住宅小区管线探测、施工场地管线探测、专用管线探测。电力管线探测属于市政公用管线探测的一部分。故选ACDE。'
+  },{
+    id:18,type:'multi',question:'下列说法不正确的是（　）。',
+    options:['A. 地下管线图上管线点位测定的精度要低于一般地物点的精度','B. 与地下管线关系不大的地物在图上必须保留','C. 地下管线图上需要表达除了管线点位以外的管线属性信息','D. 只要表达管线的位置信息，无须记录管线属性信息','E. 施工场地管线探测是为了某施工施工开挖前进行的探测，目的是防止施工开挖造成对原有地下管线的破坏'],
+    answer:'ABD',explanation:'A项没有这样的规定；B项与地下管线关系不大的地物可以舍去；D项管线的位置和属性都要表达。故选ABD。'
+  },{
+    id:19,type:'multi',question:'地下管线探查是通过现场实地调查和仪器探测的方法探寻各种管线的（　）。',
+    options:['A. 埋设位置','B. 埋设深度','C. 长度','D. 形状','E. 材质、规格等属性'],
+    answer:'ABE',explanation:'探查内容包括埋设位置、埋设深度、材质规格等属性。长度和形状不是探查内容。故选ABE。'
+  },{
+    id:20,type:'multi',question:'地下管线竣工测量的工作内容包括（　）。',
+    options:['A. 查明管线管材、管径、埋深等','B. 建筑物高度测量','C. 地下管线权属单位调查','D. 道路宽度测量','E. 管线点测量'],
+    answer:'ACE',explanation:'地下管线竣工测量工作内容包括管线点调查（含管材、管径、埋深、权属单位等）和管线点测量。故选ACE。'
+  },{
+    id:21,type:'multi',question:'竣工测量成果的整理归档一般应包括（　）内容。',
+    options:['A. 平面位置放样数据','B. 竣工测量观测与计算资料','C. 细部点成果表','D. 竣工总图、专业分图、断面图','E. 日照测量成果'],
+    answer:'BCD',explanation:'竣工测量归档包括技术设计书、技术总结、观测与计算资料、竣工总图、专业分图、断面图、细部点成果表、仪器检定资料、检查验收报告等。放样数据和日照测量成果不属于。故选BCD。'
+  },{
+    id:22,type:'multi',question:'线路竣工测量的工作内容包括（　）。',
+    options:['A. 中线测量','B. 剖面测量','C. 线路复测','D. 高程测量','E. 横断面测量'],
+    answer:'ADE',explanation:'线路竣工测量包括中线测量、高程测量、横断面测量。剖面测量和线路复测不属于。故选ADE。'
+  }]
+},{
+  id:'ch5',name:'考点五：变形测量与精密工程测量',questions:[{
+    id:1,type:'single',question:'对于各观测周期的变形观测，以下描述不正确的是（　）。',
+    options:['A. 在较长的时间内完成','B. 采用相同的观测路线和观测方法','C. 使用同一仪器和设备','D. 采用统一基准处理数据'],
+    answer:'A',explanation:'各观测周期应在较短时间内完成。选项A描述不正确。故选A。'
+  },{
+    id:2,type:'single',question:'以下不属于动态变形监测方法的是（　）。',
+    options:['A. 实时动态GPS测量方法','B. 经纬仪前方交会法','C. 近景摄影测量方法','D. 地面三维激光扫描方法'],
+    answer:'B',explanation:'经纬仪前方交会法测量时间较长，不能实现动态变形监测。故选B。'
+  },{
+    id:3,type:'single',question:'以下不属于变形物理解释方法的是（　）。',
+    options:['A. 统计分析法(如回归分析法)','B. 平均间隔法','C. 确定函数法(如有限元法)','D. 混合模型法'],
+    answer:'B',explanation:'平均间隔法主要用于基准点稳定性分析，不属于变形物理解释方法。故选B。'
+  },{
+    id:4,type:'single',question:'下列测量方法中，不可用于测定工程建筑物垂直位移的有（　）。',
+    options:['A. 三角高程测量','B. 水准测量','C. 导线测量','D. 液体静力水准测量'],
+    answer:'C',explanation:'导线测量属于平面测量方法，不能用于垂直位移测定。故选C。'
+  },{
+    id:5,type:'single',question:'下列选项不能用于地面形变测量的是（　）。',
+    options:['A. 摄影测量','B. 水准测量','C. InSAR','D. GPS'],
+    answer:'A',explanation:'摄影测量不能用于地面形变测量。故选A。'
+  },{
+    id:6,type:'single',question:'下列选择不是变形测量的特点的是（　）。',
+    options:['A. 操作简单化','B. 精度高','C. 重复观测','D. 数据处理更加严密'],
+    answer:'A',explanation:'变形测量没有"操作简单化"这个特点。故选A。'
+  },{
+    id:7,type:'single',question:'测定建筑物的平面位置随时间而移动的工作叫（　）。',
+    options:['A. 挠度观测','B. 裂缝观测','C. 沉降观测','D. 水平位移观测'],
+    answer:'D',explanation:'测定建筑物平面位置随时间而移动的工作叫水平位移观测。故选D。'
+  },{
+    id:8,type:'single',question:'针对工程项目，变形监测的网点可分三种，不包括（　）。',
+    options:['A. 基准点','B. 工作基点','C. 大地原点','D. 变形观测点'],
+    answer:'C',explanation:'变形监测网点分基准点、工作基点、变形观测点三种。大地原点不包括。故选C。'
+  },{
+    id:9,type:'single',question:'在建筑物的沉降观测中，每个工程至少应有（　）个基准点。',
+    options:['A. 4','B. 3','C. 2','D. 1'],
+    answer:'B',explanation:'每个工程至少应有3个基准点。故选B。'
+  },{
+    id:10,type:'single',question:'下列选项不属于变形测量特点的是（　）。',
+    options:['A. 重复观测','B. 难度大','C. 精度高','D. 变形测量的数据处理要求更加严密'],
+    answer:'B',explanation:'有些工程的变形测量难度并不大。选项B描述不准确。故选B。'
+  },{
+    id:11,type:'single',question:'精密工程测量中相对精度一般要高于（　）。',
+    options:['A. 10⁻⁴','B. 10⁻⁵','C. 10⁻⁷','D. 10⁻⁸'],
+    answer:'B',explanation:'精密工程测量相对精度应达到10⁻⁵量级。故选B。'
+  },{
+    id:12,type:'single',question:'对于精密工程测量，以下高程测量方法中，精度最高的是（　）。',
+    options:['A. 几何水准测量','B. 三角高程测量','C. GPS水准','D. 目估法'],
+    answer:'A',explanation:'几何水准测量是目前精度最高的高程测量方法。故选A。'
+  },{
+    id:13,type:'single',question:'数百米至数千米的精密距离测量宜使用（　）。',
+    options:['A. 精密钢尺','B. 精密经纬仪','C. 精密水准仪','D. 精密全站仪'],
+    answer:'D',explanation:'精密距离测量宜使用精密全站仪（精密光电测距仪）。故选D。'
+  },{
+    id:14,type:'single',question:'在环形粒子加速器工程施工中，为精确放样储能环上的磁块等设备，需要建立精密工程测量控制网。控制网可布设成（　）。',
+    options:['A. 环形三角网','B. 直伸形三角网','C. 双大地四边形','D. 双三角形'],
+    answer:'A',explanation:'环形粒子加速器工程控制网布设成环形三角网。故选A。'
+  },{
+    id:15,type:'single',question:'与一般测量工作相比，工业设备形位检测具有一些特点。以下描述不正确的是（　）。',
+    options:['A. 要求的测量精度高','B. 不受现场条件限制','C. 有时受到工作时间的限制','D. 更多地需要专用的仪器设备'],
+    answer:'B',explanation:'工业设备形位检测往往受到现场条件的限制。选项B描述不正确。故选B。'
+  },{
+    id:16,type:'single',question:'对于精密工程控制网布设，以下描述不正确的是（　）。',
+    options:['A. 控制网的精度指标是根据精密工程关键部位竣工位置的容许误差确定','B. 精密工程控制网必须分两次布网','C. 精密工程控制网必须进行优化设计','D. 精密高程控制网主要采用水准测量的方法建立'],
+    answer:'B',explanation:'精密工程控制网一般一次布网。选项B描述不正确。故选B。'
+  },{
+    id:17,type:'multi',question:'变形监测内容包括几何量、物理量两方面，其中几何量监测内容主要包括（　）。',
+    options:['A. 水平位移测量','B. 应力测量','C. 应变测量','D. 倾斜测量','E. 裂缝测量'],
+    answer:'ADE',explanation:'几何量监测内容包括水平位移、垂直位移、倾斜、挠度、弯曲、扭转、震动、裂缝等。应力、应变属于物理量。故选ADE。'
+  },{
+    id:18,type:'multi',question:'变形监测内容包括几何量、物理量两方面，其中物理量监测内容主要包括（　）。',
+    options:['A. 弯曲测量','B. 应力测量','C. 温度测量','D. 扬压力测量','E. 震动测量'],
+    answer:'BCD',explanation:'物理量监测内容包括应力、应变、温度、气压、水位、渗流、渗压、扬压力等。弯曲、震动属于几何量。故选BCD。'
+  },{
+    id:19,type:'multi',question:'变形监测的成果表达形式主要有（　）。',
+    options:['A. 文字形式','B. 表格形式','C. 图形形式','D. 漫画形式','E. 虚拟现实技术'],
+    answer:'ABCE',explanation:'变形监测成果表达形式有文字、表格、图形、多媒体技术、仿真技术、虚拟现实技术等。漫画形式不属于。故选ABCE。'
+  },{
+    id:20,type:'multi',question:'变形测量中水平位移测量的方法有（　）。',
+    options:['A. 地面测量方法','B. 三角高程测量','C. GPS技术','D. 水准测量','E. 数字近景摄影测量方法'],
+    answer:'ACE',explanation:'水平位移测量方法有地面测量方法、数字近景摄影测量方法、GPS技术、专用测量方法等。三角高程测量和水准测量是高程测量方法。故选ACE。'
+  },{
+    id:21,type:'multi',question:'针对工程项目，变形监测的网点可分为（　）。',
+    options:['A. 水准原点','B. 基准点','C. 大地原点','D. 工作基点','E. 变形观测点'],
+    answer:'BDE',explanation:'变形监测网点分为基准点、工作基点、变形观测点。故选BDE。'
+  },{
+    id:22,type:'multi',question:'动态变形测量的精度应根据（　）来确定。',
+    options:['A. 变形速率','B. 测量要求','C. 变形体特性','D. 经济因素','E. 变形幅度'],
+    answer:'ABDE',explanation:'动态变形测量精度根据变形速率、变形幅度、测量要求、经济因素确定，与变形体特性无关。故选ABDE。'
+  },{
+    id:23,type:'multi',question:'地面形变测量采用的主要方法有（　）。',
+    options:['A. 摄影测量','B. GPS','C. 水准测量','D. 交会法','E. InSAR'],
+    answer:'BCE',explanation:'地面形变测量主要采用水准测量、GPS测量、InSAR等。摄影测量和交会法不用于地面形变测量。故选BCE。'
+  },{
+    id:24,type:'multi',question:'对于精密工程控制网布设，以下描述正确的是（　）。',
+    options:['A. 控制网的精度指标是根据精密工程关键部位竣工位置的容许误差确定的','B. 精密工程控制网必须分两次布网','C. 精密工程控制网必须进行优化设计','D. 精密水平控制网通常布设为固定基准下的独立网','E. 精密高程控制网主要采用三角高程测量的方法建立'],
+    answer:'ACD',explanation:'精密工程控制网一般一次布网，B错误；精密高程控制网主要采用水准测量，E错误。故选ACD。'
+  },{
+    id:25,type:'multi',question:'工业设备形位检测的常用方法有（　）。',
+    options:['A. 全站仪三维坐标测量','B. 近景摄影测量','C. GPS水准','D. 两井定向','E. 激光准直测量'],
+    answer:'ABE',explanation:'工业设备形位检测常用方法有全站仪三维坐标测量、近景摄影测量、激光准直测量。GPS水准和两井定向不属于。故选ABE。'
+  },{
+    id:26,type:'multi',question:'下列关于精密工程测量说法正确的是（　）。',
+    options:['A. 精密工程测量所用的仪器设备必须具有较高的性能，以保证测量成果的精度、可靠性和有效性','B. 精密工程测量精度很高，一般相对精度达到10⁻³','C. 在进行精密工程测量方案设计时要考虑用不同方法进行论证','D. 精密垂准测量是观测基本位于同一水平基准线上的许多点的偏移值','E. 精密准直测量是观测基本位于同一水平基准线上的许多点的偏移值'],
+    answer:'ACE',explanation:'精密工程测量相对精度应达到10⁻⁵，B错误；D描述的是准直测量，垂准测量是以铅垂线为基准。故选ACE。'
+  }]
+},{
+  id:'ch6',name:'考点六：《工程测量规范》',questions:[{
+    id:1,type:'single',question:'工程测量控制网可采用卫星定位测量方法。依照《工程测量规范》，对于GPS测量数据处理，其基线解算，下列描述错误的是（　）。',
+    options:['A. 起算点的单点定位观测时间，不宜少于30min','B. 解算模式不可采用单基线解算模式','C. 解算模式可采用多基线解算模式','D. 解算成果，应采用双差固定解'],
+    answer:'B',explanation:'《工程测量规范》第3.2.10条规定：解算模式可采用单基线解算模式，也可采用多基线解算模式。选项B描述错误。故选B。'
+  },{
+    id:2,type:'single',question:'依据《工程测量规范》"纸质地形图的绘制"有关规定，对于"半依比例尺绘制的符号"，应保持（　）。',
+    options:['A. 其符号的整体美观性','B. 其主线位置的几何精度','C. 其主点位位置的几何精度','D. 其轮廓位置的精度'],
+    answer:'B',explanation:'半依比例尺绘制的线状符号应保持主线位置的几何精度。故选B。'
+  },{
+    id:3,type:'single',question:'对于五等电磁波测距三角高程测量，应采用"对向观测"方式，其"对向观测高差较差"的限差要求为（　）mm，其中D为测距边的长度(km)。',
+    options:['A. 20√Dmm','B. 40√Dmm','C. 50√Dmm','D. 60√Dmm'],
+    answer:'D',explanation:'五等对向观测高差较差限差为60√Dmm。故选D。'
+  },{
+    id:4,type:'single',question:'对于四等电磁波测距三角高程测量，应采用"对向观测"方式进行。其"附合或环形闭合差"的限差要求为（　）mm。其中D为测距边的长度(km)。',
+    options:['A. 20√∑D','B. 30√∑D','C. 40√∑D','D. 50√∑D'],
+    answer:'A',explanation:'四等附合或环形闭合差限差为20√∑Dmm。故选A。'
+  },{
+    id:5,type:'single',question:'对于两开挖洞口间长度为6.4km的隧道工程，其相向施工中线在贯通面上的横向贯通误差不应大于（　）。',
+    options:['A. 70mm','B. 100mm','C. 150mm','D. 200mm'],
+    answer:'C',explanation:'4~8km之间的隧道横向贯通误差不应大于150mm。故选C。'
+  },{
+    id:6,type:'single',question:'竣工总图的编绘，应收集众多资料。下列选项中，不属于竣工总图编绘应收集资料范畴的是（　）。',
+    options:['A. 施工设计图','B. 施工检测记录','C. 建筑物立面图','D. 竣工测量资料'],
+    answer:'C',explanation:'竣工总图编绘应收集总平面布置图、施工设计图、设计变更文件、施工检测记录、竣工测量资料等。建筑物立面图不属于。故选C。'
+  },{
+    id:7,type:'single',question:'根据《工程测量规范》中卫星定位测量的主要技术要求，四等的平均边长为2km，其约束平差后最弱边相对中误差的要求为（　）。',
+    options:['A. ≤1/120000','B. ≤1/70000','C. ≤1/40000','D. ≤1/20000'],
+    answer:'C',explanation:'四等最弱边相对中误差要求为≤1/40000。故选C。'
+  },{
+    id:8,type:'single',question:'根据《工程测量规范》，卫星定位测量控制网的布设应符合下列要求：控制网应由独立观测边构成一个或若干个闭合环或附合路线，各等级控制网中构成闭合环或附合路线的边数不宜多于（　）条。',
+    options:['A. 5','B. 6','C. 7','D. 8'],
+    answer:'B',explanation:'边数不宜多于6条。故选B。'
+  },{
+    id:9,type:'single',question:'根据《工程测量规范》，GPS控制测量测站作业应满足下列要求：天线高的量取应精确至1mm；天线安置的对中误差，不应大于（　）。',
+    options:['A. 1mm','B. 2mm','C. 3mm','D. 4mm'],
+    answer:'B',explanation:'天线安置的对中误差不应大于2mm。故选B。'
+  },{
+    id:10,type:'single',question:'根据《工程测量规范》，高程控制测量一般规定，高程控制点间的距离，一般地区应为1～3km，工业厂区、城镇建筑区宜小于1km。但一个测区及周围至少应有（　）个高程控制点。',
+    options:['A. 1','B. 2','C. 3','D. 4'],
+    answer:'C',explanation:'一个测区及周围至少应有3个高程控制点。故选C。'
+  },{
+    id:11,type:'single',question:'根据《工程测量规范》，利用全站仪进行距离测量作业时，应符合下列规定：测站对中误差和反光镜对中误差不应大于（　）。',
+    options:['A. 1mm','B. 2mm','C. 3mm','D. 4mm'],
+    answer:'B',explanation:'对中误差不应大于2mm。故选B。'
+  },{
+    id:12,type:'single',question:'根据《工程测量规范》，当水准路线需要跨越江河时，应符合下列规定：当跨越距离小于200m时，可采用单线过河；也可采用在测站上变换仪器高度的方法进行，两次观测高差较差不应超过（　），取其平均值作为观测高差。',
+    options:['A. 3mm','B. 5mm','C. 6mm','D. 7mm'],
+    answer:'D',explanation:'两次观测高差较差不应超过7mm。故选D。'
+  },{
+    id:13,type:'single',question:'根据《工程测量规范》，GPS拟合高程测量的主要技术要求应符合下列规定：GPS网应与四等或四等以上的水准点联测；联测点数，宜大于选用计算模型中未知参数个数的（　），点间距离宜小于10km。',
+    options:['A. 1.5倍','B. 2.0倍','C. 2.5倍','D. 3.0倍'],
+    answer:'A',explanation:'联测点数宜大于未知参数个数的1.5倍。故选A。'
+  },{
+    id:14,type:'single',question:'根据《工程测量规范》，GPS图根控制测量，宜采用GPS-RTK方法直接测定图根点的坐标和高程。GPS-RTK方法的作业半径不宜超过（　），对每个图根点均应进行同一参考站或不同参考站下的两次独立测量。',
+    options:['A. 5km','B. 10km','C. 15km','D. 20km'],
+    answer:'A',explanation:'GPS-RTK方法的作业半径不宜超过5km。故选A。'
+  },{
+    id:15,type:'single',question:'根据《工程测量规范》，全站仪测图的仪器安置及测站检核应符合下列要求：检核点的平面位置较差不应大于图上（　），高程较差不应大于基本等高距的1/5。',
+    options:['A. 0.1mm','B. 0.2mm','C. 0.3mm','D. 0.4mm'],
+    answer:'B',explanation:'平面位置较差不应大于图上0.2mm。故选B。'
+  },{
+    id:16,type:'single',question:'根据《工程测量规范》，对于GPS-RTK测图，流动站的作业应符合下列规定：流动站作业的有效卫星数不宜少于（　）个，PDOP值应小于6，并应采用固定解成果。',
+    options:['A. 3','B. 4','C. 5','D. 6'],
+    answer:'C',explanation:'有效卫星数不宜少于5个。故选C。'
+  },{
+    id:17,type:'single',question:'根据《工程测量规范》，对于GPS-RTK测图，参考站点位的选择应符合下列规定：参考站的有效作业半径不应超过（　）。',
+    options:['A. 5km','B. 10km','C. 15km','D. 20km'],
+    answer:'B',explanation:'参考站有效作业半径不应超过10km。故选B。'
+  },{
+    id:18,type:'single',question:'根据《工程测量规范》，在GPS-RTK测图作业前，应先求取WGS-84坐标系与测区地方坐标系的转换参数。检测结果，平面较差不应大于5cm，高程较差不应大于（　）。(注：D为参考站到检查点的距离，单位为km)',
+    options:['A. 20√Dmm','B. 30√Dmm','C. 40√Dmm','D. 50√Dmm'],
+    answer:'B',explanation:'高程较差不应大于30√Dmm。故选B。'
+  },{
+    id:19,type:'single',question:'根据《工程测量规范》，数字高程模型建立后应进行检查，并符合下列规定：对用实测数据建立的数字高程模型，应进行外业实测检查并统计精度；每个图幅的检测点数不应少于（　）个点，且均匀分布。',
+    options:['A. 10','B. 15','C. 20','D. 30'],
+    answer:'C',explanation:'每个图幅检测点数不应少于20个点。故选C。'
+  },{
+    id:20,type:'single',question:'根据《工程测量规范》，地形图的修测应符合下列规定：地形图的修测方法，可采用全站仪测图法和支距法等；新测地物与原有地物的间距中误差，不得超过图上（　）。',
+    options:['A. 0.2mm','B. 0.3mm','C. 0.4mm','D. 0.6mm'],
+    answer:'D',explanation:'新测地物与原有地物的间距中误差不得超过图上0.6mm。故选D。'
+  },{
+    id:21,type:'single',question:'根据《工程测量规范》，对于公路测量，定测中线桩位测量应符合下列规定：对于公路曲线半径小于30m，缓和曲线长度小于30m或回头曲线段，中线桩间距均不应大于（　）。',
+    options:['A. 5m','B. 10m','C. 20m','D. 50m'],
+    answer:'A',explanation:'中线桩间距均不应大于5m。故选A。'
+  },{
+    id:22,type:'single',question:'根据《工程测量规范》，对于地下管线施测，管线点相对于邻近控制点的测量点位中误差不应大于5cm，测量高程中误差不应大于（　）。',
+    options:['A. 1cm','B. 2cm','C. 3cm','D. 5cm'],
+    answer:'B',explanation:'高程中误差不应大于2cm。故选B。'
+  },{
+    id:23,type:'single',question:'根据《工程测量规范》有关建筑物施工放样的要求，已知某高层建筑物总高H=70m，其轴线竖向投测的偏差每层不应超过3mm，总偏差不应超过（　）。',
+    options:['A. 15mm','B. 20mm','C. 25mm','D. 30mm'],
+    answer:'A',explanation:'H=70m在60<H≤90范围内，总偏差不应超过15mm。故选A。'
+  },{
+    id:24,type:'single',question:'根据《工程测量规范》，地下隧道在施工和运营初期，还应对受影响的地面建筑物、地表、地下管线等进行同步变形测量，并符合下列规定：新奥法隧道施工时，地表沉陷变形观测点，应沿隧道地面中线呈横断面布设，两侧的布点范围宜为隧道深度的（　），每个横断面不少于5个变形观测点。',
+    options:['A. 1.5倍','B. 2.0倍','C. 2.5倍','D. 3.0倍'],
+    answer:'B',explanation:'两侧布点范围宜为隧道深度的2倍。故选B。'
+  },{
+    id:25,type:'multi',question:'竣工总图的编绘，应收集众多资料。下列选项中，属于竣工总图编绘应收集资料范畴的有（　）。',
+    options:['A. 总平面布置图','B. 建筑物立面图','C. 设计变更文件','D. 放样数据表','E. 施工检测记录'],
+    answer:'ACE',explanation:'竣工总图编绘应收集总平面布置图、施工设计图、设计变更文件、施工检测记录、竣工测量资料等。建筑物立面图和放样数据表不属于。故选ACE。'
+  },{
+    id:26,type:'multi',question:'GPS拟合高程，应符合下列规定：（　）。',
+    options:['A. 充分利用当地的重力大地水准面模型或资料','B. 对于大面积测区，尽量采用简单的平面拟合模型','C. 对于地形起伏较大的测区，宜采用曲面拟合模型','D. 对拟合高程模型应进行优化','E. GPS点的高程计算，不宜超出拟合高程模型所覆盖的范围'],
+    answer:'ACDE',explanation:'对于地形平坦的小测区可采用平面拟合模型，对于地形起伏较大的大面积测区宜采用曲面拟合模型。选项B描述错误。故选ACDE。'
+  }]
+}];
+
+// ============================================================
+// App Logic
+// ============================================================
+let allQuestions = [];
+let flatQuestions = [];
+CHAPTERS.forEach(ch => {
+  ch.questions.forEach(q => {
+    flatQuestions.push({ ...q, chapterId: ch.id, chapterName: ch.name });
+  });
+});
+
+let currentMode = 'chapter';
+let currentChapterId = null;
+let currentQuestions = [];
+let currentIndex = 0;
+let answered = false;
+let selectedOptions = [];
+let isMulti = false;
+let score = 0;
+let totalAnswered = 0;
+let quizHistory = {};
+let reviewFilter = 'all';
+
+const $ = id => document.getElementById(id);
+const dom = {
+  homeView: $('homeView'), quizView: $('quizView'), reviewView: $('reviewView'),
+  chapterGrid: $('chapterGrid'), btnRandom: $('btnRandom'), btnAll: $('btnAll'),
+  btnBackHome: $('btnBackHome'), btnToggleMode: $('btnToggleMode'), btnResetProgress: $('btnResetProgress'),
+  btnPrev: $('btnPrev'), btnNext: $('btnNext'), btnSubmit: $('btnSubmit'), btnShowAnswer: $('btnShowAnswer'),
+  progressText: $('progressText'), statusText: $('statusText'), progressBar: $('progressBar'), progressDot: $('progressDot'),
+  qNumber: $('qNumber'), qType: $('qType'), qText: $('qText'), qChapterLabel: $('qChapterLabel'),
+  optionsContainer: $('optionsContainer'), explanation: $('explanation'), resultBanner: $('resultBanner'),
+  totalInfo: $('totalInfo'), scrollTop: $('scrollTop'),
+  reviewScore: $('reviewScore'), reviewPct: $('reviewPct'), reviewSub: $('reviewSub'),
+  reviewCorrect: $('reviewCorrect'), reviewWrong: $('reviewWrong'), reviewList: $('reviewList'),
+  btnReviewHome: $('btnReviewHome'),
+};
+
+function init() {
+  dom.totalInfo.textContent = '共 ' + flatQuestions.length + ' 题';
+  renderHome();
+  bindEvents();
+  window.addEventListener('scroll', handleScroll);
+}
+
+function handleScroll() {
+  dom.scrollTop.classList.toggle('show', window.scrollY > 300);
+}
+dom.scrollTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+function renderHome() {
+  let html = '';
+  CHAPTERS.forEach(ch => {
+    const count = ch.questions.length;
+    html += '<div class="card" data-chapter="' + ch.id + '">'
+      + '<div class="num">' + count + '</div>'
+      + '<div class="name">' + ch.name.replace('考点','') + '</div>'
+      + '<div class="badge">' + ch.id.replace('ch','') + '</div>'
+      + '<div class="bar" style="width:0%"></div></div>';
+  });
+  dom.chapterGrid.innerHTML = html;
+  document.querySelectorAll('.card[data-chapter]').forEach(el => {
+    el.addEventListener('click', () => startChapter(el.dataset.chapter));
+  });
+}
+
+function bindEvents() {
+  dom.btnRandom.addEventListener('click', startRandom);
+  dom.btnAll.addEventListener('click', startAll);
+  dom.btnBackHome.addEventListener('click', goHome);
+  dom.btnToggleMode.addEventListener('click', toggleMode);
+  dom.btnResetProgress.addEventListener('click', resetProgress);
+  dom.btnPrev.addEventListener('click', prevQuestion);
+  dom.btnNext.addEventListener('click', nextQuestion);
+  dom.btnSubmit.addEventListener('click', submitAnswer);
+  dom.btnShowAnswer.addEventListener('click', showAnswer);
+  dom.btnReviewHome.addEventListener('click', goHome);
+}
+
+function goHome() {
+  dom.homeView.style.display = '';
+  dom.quizView.classList.remove('active');
+  dom.reviewView.classList.remove('active');
+  dom.btnToggleMode.textContent = '章节模式';
+  dom.btnToggleMode.classList.add('active');
+  currentMode = 'chapter';
+  window.scrollTo({ top: 0 });
+}
+
+function startChapter(chId) {
+  currentChapterId = chId;
+  const ch = CHAPTERS.find(c => c.id === chId);
+  if (!ch) return;
+  currentQuestions = ch.questions.map(q => ({ ...q, chapterId: ch.id, chapterName: ch.name }));
+  currentMode = 'chapter';
+  dom.btnToggleMode.textContent = '章节模式';
+  dom.btnToggleMode.classList.add('active');
+  enterQuiz();
+}
+
+function shuffleOptions(q) {
+  // 打乱选项顺序，同时更新 answer 以匹配新的字母标签
+  const labels = 'ABCDEFGH';
+  const optionTexts = q.options.map(opt => opt.replace(/^[A-Z]\.\s*/, ''));
+  const correctLabels = q.answer.split('').filter(s => s.trim());
+  const correctTexts = correctLabels.map(label => optionTexts[labels.indexOf(label)]);
+
+  const indices = optionTexts.map((_, i) => i);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+
+  const newOptions = indices.map((oldIdx, newIdx) => labels[newIdx] + '. ' + optionTexts[oldIdx]);
+  const newAnswer = correctTexts
+    .map(text => labels[indices.findIndex(oldIdx => optionTexts[oldIdx] === text)])
+    .sort()
+    .join('');
+
+  return { ...q, options: newOptions, answer: newAnswer };
+}
+
+function startRandom() {
+  const shuffled = [...flatQuestions].sort(() => Math.random() - 0.5);
+  currentQuestions = shuffled.slice(0, 20).map(q => shuffleOptions(q));
+  console.log('组卷首题选项:', currentQuestions[0].options, '答案:', currentQuestions[0].answer);
+  currentMode = 'random';
+  dom.btnToggleMode.textContent = '随机组卷';
+  dom.btnToggleMode.classList.remove('active');
+  enterQuiz();
+}
+
+function startAll() {
+  currentQuestions = flatQuestions.map(q => ({ ...q }));
+  currentMode = 'chapter';
+  dom.btnToggleMode.textContent = '全部题目';
+  dom.btnToggleMode.classList.remove('active');
+  enterQuiz();
+}
+
+function toggleMode() {
+  if (currentMode === 'chapter') startRandom();
+  else if (currentChapterId) startChapter(currentChapterId);
+  else goHome();
+}
+
+function enterQuiz() {
+  dom.homeView.style.display = 'none';
+  dom.reviewView.classList.remove('active');
+  dom.quizView.classList.add('active');
+  currentIndex = 0; answered = false; selectedOptions = [];
+  quizHistory = {}; score = 0; totalAnswered = 0;
+  dom.resultBanner.classList.remove('show','pass','fail');
+  dom.resultBanner.textContent = '';
+  renderQuestion();
+  updateProgress();
+  window.scrollTo({ top: 0 });
+}
+
+function renderQuestion() {
+  if (currentQuestions.length === 0) return;
+  const q = currentQuestions[currentIndex];
+  isMulti = q.type === 'multi';
+  dom.qNumber.textContent = '第 ' + (currentIndex + 1) + ' 题';
+  dom.qType.textContent = isMulti ? '多选题' : '单选题';
+  dom.qType.className = 'q-type ' + (isMulti ? 'multi' : 'single');
+  dom.qChapterLabel.textContent = q.chapterName || '';
+  dom.qText.textContent = q.question;
+
+  let html = '';
+  const labels = 'ABCDEFGH';
+  q.options.forEach((opt, idx) => {
+    const label = labels[idx] || '?';
+    const cls = selectedOptions.includes(idx) ? 'selected' : '';
+    const text = opt.replace(/^[A-Z]\.\s*/, '');
+    html += '<div class="opt ' + cls + '" data-idx="' + idx + '" data-label="' + label + '">'
+      + '<span class="marker">' + label + '</span>'
+      + '<span class="text">' + text + '</span></div>';
+  });
+  dom.optionsContainer.innerHTML = html;
+
+  document.querySelectorAll('.opt').forEach(el => {
+    el.addEventListener('click', function() {
+      if (answered) return;
+      const idx = parseInt(this.dataset.idx);
+      if (isMulti) {
+        const i = selectedOptions.indexOf(idx);
+        if (i >= 0) { selectedOptions.splice(i,1); this.classList.remove('selected'); }
+        else { selectedOptions.push(idx); this.classList.add('selected'); }
+        dom.btnSubmit.disabled = selectedOptions.length === 0;
+      } else {
+        document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+        selectedOptions = [idx];
+        this.classList.add('selected');
+        dom.btnSubmit.disabled = false;
+      }
+    });
+  });
+
+  answered = false;
+  dom.btnSubmit.disabled = true;
+  dom.btnNext.disabled = false;
+  dom.btnNext.textContent = currentIndex < currentQuestions.length - 1 ? '下一题 →' : '完成 ✓';
+  dom.explanation.classList.remove('show');
+  dom.explanation.innerHTML = '';
+  dom.resultBanner.classList.remove('show','pass','fail');
+  dom.resultBanner.textContent = '';
+
+  const key = getQuestionKey(q);
+  if (quizHistory[key] !== undefined) {
+    answered = true;
+    dom.btnSubmit.disabled = true;
+    submitAnswerSilent(q, quizHistory[key]);
+    if (currentMode !== 'random') {
+      showExplanation(q, quizHistory[key]);
+    }
+  }
+  updateProgress();
+}
+
+function getQuestionKey(q) { return q.chapterId + '_' + q.id; }
+
+function updateProgress() {
+  const total = currentQuestions.length;
+  const done = Object.keys(quizHistory).length;
+  dom.progressText.textContent = done + ' / ' + total;
+  const pct = total > 0 ? (done / total * 100) : 0;
+  dom.progressBar.style.width = Math.min(pct, 100) + '%';
+  dom.progressDot.style.left = Math.min(pct, 100) + '%';
+  dom.progressDot.classList.toggle('active', done > 0);
+  const allDone = done === total;
+  dom.statusText.textContent = allDone ? '已完成 ✓' : '进度 ' + Math.round(pct) + '%';
+  if (allDone && total > 0) {
+    const correct = Object.values(quizHistory).filter(v => v === true).length;
+    dom.statusText.textContent = '完成！正确 ' + correct + '/' + total;
+    dom.statusText.classList.add('done');
+  } else {
+    dom.statusText.classList.remove('done');
+  }
+}
+
+// Store user answers for review
+let userAnswersMap = {};
+
+function submitAnswer() {
+  if (answered || selectedOptions.length === 0) return;
+  const q = currentQuestions[currentIndex];
+  const key = getQuestionKey(q);
+  userAnswersMap[key] = [...selectedOptions];
+  const labels = 'ABCDEFGH';
+  let isCorrect = false;
+  if (isMulti) {
+    const correctArr = q.answer.split('').filter(s => s.trim());
+    const selectedArr = selectedOptions.map(idx => labels[idx] || '').filter(s => s);
+    isCorrect = [...correctArr].sort().join('') === [...selectedArr].sort().join('') && correctArr.length === selectedArr.length;
+  } else {
+    isCorrect = (labels[selectedOptions[0]] || '') === q.answer;
+  }
+  quizHistory[key] = isCorrect;
+  if (isCorrect) score++;
+  totalAnswered++;
+  submitAnswerSilent(q, isCorrect);
+  answered = true;
+  dom.btnSubmit.disabled = true;
+  updateProgress();
+
+  // 章节模式即时显示解析，组卷模式不显示
+  if (currentMode !== 'random') {
+    showExplanation(q, isCorrect);
+  }
+
+  if (Object.keys(quizHistory).length === currentQuestions.length) {
+    const correct = Object.values(quizHistory).filter(v => v === true).length;
+    const total = currentQuestions.length;
+    dom.resultBanner.classList.add('show');
+    dom.resultBanner.textContent = '完成！正确 ' + correct + '/' + total + ' (' + Math.round(correct/total*100) + '%)';
+    dom.resultBanner.classList.add(correct/total >= 0.6 ? 'pass' : 'fail');
+    dom.resultBanner.innerHTML += '<div class="detail">点击 "完成 ✓" 查看详细报告</div>';
+  }
+}
+
+function submitAnswerSilent(q, isCorrect) {
+  const correctAnswer = q.answer;
+  const labels = 'ABCDEFGH';
+  document.querySelectorAll('.opt').forEach(el => {
+    const idx = parseInt(el.dataset.idx);
+    const label = labels[idx] || '';
+    el.classList.add('disabled');
+    if (q.type === 'multi') {
+      const correctArr = correctAnswer.split('').filter(s => s.trim());
+      if (correctArr.includes(label)) el.classList.add('correct');
+      else if (selectedOptions.includes(idx) && !correctArr.includes(label)) el.classList.add('wrong');
+    } else {
+      if (label === correctAnswer) el.classList.add('correct');
+      else if (selectedOptions.includes(idx) && label !== correctAnswer) el.classList.add('wrong');
+    }
+    if (selectedOptions.includes(idx) && !el.classList.contains('correct') && !el.classList.contains('wrong')) {
+      el.classList.add('wrong');
+    }
+  });
+  dom.btnSubmit.disabled = true;
+}
+
+function showExplanation(q, isCorrect) {
+  const correctAnswer = q.answer;
+  const correctStr = q.type === 'multi' ? correctAnswer.split('').join('、') : correctAnswer;
+  const icon = isCorrect ? '✓' : '✗';
+  const sc = isCorrect ? 'correct' : 'wrong';
+  dom.explanation.innerHTML = '<div><strong>' + icon + ' 答案：</strong><span class="' + sc + '">' + (isCorrect ? '正确' : '错误') + '</span>　<strong>正确答案：</strong>' + correctStr + '</div>'
+    + (q.explanation ? '<div style="margin-top:8px;"><strong>解析：</strong>' + q.explanation + '</div>' : '');
+  dom.explanation.classList.add('show');
+}
+
+function showAnswer() {
+  if (answered) return;
+  const q = currentQuestions[currentIndex];
+  const labels = 'ABCDEFGH';
+  document.querySelectorAll('.opt').forEach(el => {
+    const label = labels[parseInt(el.dataset.idx)] || '';
+    if (q.type === 'multi') {
+      if (q.answer.split('').filter(s => s.trim()).includes(label)) el.classList.add('correct');
+    } else {
+      if (label === q.answer) el.classList.add('correct');
+    }
+    el.classList.add('disabled');
+  });
+  dom.explanation.innerHTML = '<div><strong>正确答案：</strong>' + (q.type === 'multi' ? q.answer.split('').join('、') : q.answer) + '</div>'
+    + (q.explanation ? '<div style="margin-top:8px;"><strong>解析：</strong>' + q.explanation + '</div>' : '');
+  dom.explanation.classList.add('show');
+  dom.btnSubmit.disabled = true;
+  answered = true;
+}
+
+function nextQuestion() {
+  if (currentIndex < currentQuestions.length - 1) {
+    currentIndex++; selectedOptions = []; dom.btnSubmit.disabled = true;
+    renderQuestion();
+    window.scrollTo({ top: 0 });
+  } else {
+    showReview();
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--; selectedOptions = []; dom.btnSubmit.disabled = true;
+    renderQuestion();
+    window.scrollTo({ top: 0 });
+  }
+}
+
+function resetProgress() {
+  if (currentQuestions.length === 0) return;
+  if (!confirm('确定要重置当前进度吗？')) return;
+  quizHistory = {}; score = 0; totalAnswered = 0;
+  currentIndex = 0; selectedOptions = []; answered = false;
+  dom.btnSubmit.disabled = true;
+  dom.resultBanner.classList.remove('show','pass','fail');
+  dom.resultBanner.textContent = '';
+  renderQuestion();
+  updateProgress();
+  window.scrollTo({ top: 0 });
+}
+
+// ============================================================
+// Review Panel
+// ============================================================
+function showReview() {
+  dom.quizView.classList.remove('active');
+  dom.reviewView.classList.add('active');
+  const total = currentQuestions.length;
+  const correct = Object.values(quizHistory).filter(v => v === true).length;
+  const wrong = total - correct;
+  const pct = total > 0 ? Math.round(correct/total*100) : 0;
+
+  dom.reviewPct.textContent = pct + '%';
+  dom.reviewPct.className = 'pct ' + (pct >= 60 ? 'pass' : 'fail');
+  dom.reviewSub.textContent = '已完成 ' + total + ' 题';
+  dom.reviewCorrect.textContent = correct;
+  dom.reviewWrong.textContent = wrong;
+
+  reviewFilter = 'all';
+  renderReviewItems();
+  setupReviewFilters();
+  window.scrollTo({ top: 0 });
+}
+
+function renderReviewItems() {
+  const labels = 'ABCDEFGH';
+  let html = '';
+  currentQuestions.forEach((q, idx) => {
+    const key = getQuestionKey(q);
+    const result = quizHistory[key];
+    if (result === undefined) return;
+    if (reviewFilter === 'wrong' && result) return;
+    if (reviewFilter === 'right' && !result) return;
+
+    const isCorrect = result;
+    const correctStr = q.type === 'multi' ? q.answer.split('').join('、') : q.answer;
+
+    let userAnswerStr = '';
+    const userAns = userAnswersMap[key];
+    if (userAns) {
+      userAnswerStr = userAns.map(i => labels[i] || '').join('、');
+    } else {
+      userAnswerStr = '(未记录)';
+    }
+
+    const statusClass = isCorrect ? 'right' : 'wrong';
+    const statusText = isCorrect ? '✓ 正确' : '✗ 错误';
+
+    // 构建选项展示
+    let optHtml = '<div class="r-options" style="margin:6px 0 10px;padding:8px 10px;background:#f8f8f8;border-radius:8px;font-size:13px;line-height:1.7">';
+    const correctArr = q.answer.split('').filter(s => s.trim());
+    q.options.forEach((opt, oi) => {
+      const label = labels[oi];
+      const text = opt.replace(/^[A-Z]+\.\s*/, '');
+      const isCorrectOpt = correctArr.includes(label);
+      const isUserSel = userAns && userAns.includes(oi);
+      let style = '', prefix = '';
+      if (isCorrectOpt) { style = 'color:var(--clr-success);font-weight:600'; prefix = '✓ '; }
+      else if (!isCorrect && isUserSel) { style = 'color:var(--clr-error);font-weight:600'; prefix = '✗ '; }
+      optHtml += '<div style="' + style + '">' + prefix + label + '. ' + text + '</div>';
+    });
+    optHtml += '</div>';
+
+    html += '<div class="review-item">'
+      + '<div class="r-header">'
+      + '<span class="r-num">第 ' + (idx + 1) + ' 题 <span class="r-type">' + (q.type === 'multi' ? '多选题' : '单选题') + '</span></span>'
+      + '<span class="r-status ' + statusClass + '">' + statusText + '</span>'
+      + '</div>'
+      + '<div class="r-text">' + q.question + '</div>'
+      + optHtml
+      + '<div class="r-answer">你的答案：<span class="highlight' + (isCorrect ? '' : ' wrong') + '">' + userAnswerStr + '</span></div>'
+      + '<div class="r-answer">正确答案：<span class="highlight">' + correctStr + '</span></div>'
+      + (q.explanation ? '<div class="r-explain">' + q.explanation + '</div>' : '')
+      + '</div>';
+  });
+  if (!html) {
+    html = '<div style="text-align:center;padding:40px 20px;color:var(--clr-muted);font-size:14px;">没有符合条件的题目</div>';
+  }
+  dom.reviewList.innerHTML = html;
+}
+
+function setupReviewFilters() {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      reviewFilter = this.dataset.filter;
+      renderReviewItems();
+    });
+  });
+}
+
+init();
+</script>
+</body>
+</html>
