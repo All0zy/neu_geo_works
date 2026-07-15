@@ -1,0 +1,39 @@
+Sub mm4()
+    Dim md As IMxDocument
+    Dim tt As IMap
+    
+    Dim pFL As IFeatureLayer
+dim pEF as IEnumFeature
+    
+    Dim pF As IFeature
+    Set md = ThisDocument
+
+    Set tt = md.FocusMap
+    set pEF=tt.FeatureSelection
+    Set pF = pEF.Next
+    Debug.Print pF.Value(4)
+End Sub
+
+如果对某个图层：
+
+Sub mm4()
+    Dim md As IMxDocument
+    Dim tt As IMap
+    
+    Dim pFL As IFeatureLayer
+    Dim pFS As IFeatureSelection
+    Dim pSelSet As ISelectionSet
+    Dim pFCS As IFeatureCursor
+    
+    Dim pF As IFeature
+    Set md = ThisDocument
+
+    Set tt = md.FocusMap
+    
+    Set pFL = tt.Layer(2)
+    Set pFS = pFL
+    Set pSelSet = pFS.SelectionSet '''flayer
+    pSelSet.Search Nothing, True, pFCS
+    Set pF = pFCS.NextFeature
+    Debug.Print pF.Value(4)
+End Sub

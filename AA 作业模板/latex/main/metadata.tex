@@ -1,0 +1,37 @@
+% 文档开关参数：这里定义了一组“是否显示某部分”的布尔开关
+\newif\ifShowCover % 定义开关 ifShowCover（是否显示封面）
+\newif\ifShowTOC % 定义开关 ifShowTOC（是否显示目录）
+\newif\ifShowCnAbstract % 定义开关 ifShowCnAbstract（是否显示中文摘要）
+\newif\ifShowEnAbstract % 定义开关 ifShowEnAbstract（是否显示英文摘要）
+\newif\ifShowBibliography % 定义开关 ifShowBibliography（是否显示参考文献）
+\newif\ifShowAppendix % 定义开关 ifShowAppendix（是否显示附录）
+\newif\ifSetionIndex % 定义开关 ifSetionIndex（是否跟随章节编号）
+
+\ShowCovertrue % 把封面开关设为 true（打开）
+\ShowTOCtrue % 把目录开关设为 true（打开）
+\ShowCnAbstracttrue % 把中文摘要开关设为 true（打开）
+\ShowEnAbstracttrue % 把英文摘要开关设为 true（打开）
+\ShowBibliographytrue % 把参考文献开关设为 true（打开）
+\ShowAppendixtrue % 把附录开关设为 true（打开）
+
+% 报告元信息：统一定义变量，后面封面和正文可重复调用
+\newcommand{\CourseName}{XXXXX} % 课程名称变量
+\newcommand{\TeacherName}{XX} % 指导教师姓名变量
+\newcommand{\ReportType}{实\quad 验\quad 报\quad 告} % 报告类型（\quad 是空格）
+\newcommand{\ReportNameCn}{如何使用{\LaTeX}优雅的编辑论文} % 中文题目变量
+\newcommand{\ReportNameEn}{How to Use {\LaTeX} Elegantly to Edit a Paper} % 英文题目变量
+
+% 封面信息：这些变量会在封面表格和题头里使用
+\newcommand{\SchoolName}{东北大学资源与土木工程学院} % 学校/学院名称
+\newcommand{\StudentMajor}{测绘工程} % 专业
+\newcommand{\StudentClass}{测绘2301班} % 班级
+\newcommand{\StudentID}{20232411} % 学号
+\newcommand{\StudentName}{张\quad 洋} % 中文姓名
+\newcommand{\StudentAffiliationCn}{（1.东北大学\ 资源与土木工程学院，山西省\ 长治市\ 046000）} % 中文单位信息
+\newcommand{\StudentNameEn}{ZHANG Y.\textsuperscript{1}} % 英文姓名（\textsuperscript 为上标）
+\newcommand{\StudentAffiliationEn}{(1.Northeastern University, School of Resources and Civil Engineering, Shanxi, Changzhi, 046000, China)} % 英文单位信息
+
+% 标题区内容：控制 \maketitle 生成的题目、作者、日期区域
+\title{\heiti \zihao{-2} \ReportNameCn} % 标题：黑体 + 小二号 + 中文题名
+\author{\kaishu \zihao{4} \StudentNameEn} % 作者：楷书 + 四号 + 英文姓名
+\date{{\kaishu \zihao{5} \StudentAffiliationCn}} % 日期栏：楷书 + 五号 + 中文单位信息

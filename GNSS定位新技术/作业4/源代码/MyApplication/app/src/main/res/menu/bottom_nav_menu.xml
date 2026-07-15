@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/positionFragment"
+        android:icon="@drawable/ic_location"
+        android:title="定位" />
+    <item
+        android:id="@+id/skyPlotFragment"
+        android:icon="@drawable/ic_satellite"
+        android:title="天空" />
+    <item
+        android:id="@+id/qualityFragment"
+        android:icon="@drawable/ic_quality"
+        android:title="质量" />
+    <item
+        android:id="@+id/securityFragment"
+        android:icon="@drawable/ic_security"
+        android:title="安全" />
+    <item
+        android:id="@+id/logFragment"
+        android:icon="@drawable/ic_log"
+        android:title="日志" />
+</menu>

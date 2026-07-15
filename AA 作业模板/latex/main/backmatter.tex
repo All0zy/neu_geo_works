@@ -1,0 +1,46 @@
+% 后置部分（参考文献、附录）
+\ifShowBibliography
+\zihao{5}
+\bibliography{books}
+\fi
+
+\ifShowAppendix
+\zihao{-4}
+\appendix
+
+\section{系统功能说明（非代码）}
+附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容附录内容
+
+\begin{lstlisting}[style=pythonstyle]
+# 液晶盒参数
+d = 5.2e-6          # 液晶盒厚度 (米)
+theta0 = np.pi / 180  # 预倾角 (1度)
+phi1 = np.pi / 2      # 出射偏振片方向
+
+# 仿真设置
+M = 51              # 电压采样点数
+U_max = 10.0        # 最大电压 (V)
+x0 = np.zeros((M, 6))
+j = 0
+
+# 扫描 e 光折射率
+for ne in np.arange(1.5, 1.62, 0.02):
+    x0[:, j] = TNEL_equation(
+        d, theta0, k11, k22, k33,
+        ev, ep, ne, no, wl, phi0, phi1, U_max, M
+    )
+    j += 1
+
+# 绘图
+plt.figure(1)
+x = np.linspace(0, U_max, M)
+for i in range(5):
+    plt.plot(x, x0[:, i], linewidth=0.75)
+
+plt.xlabel('电压 (V)')
+plt.ylabel('相位延迟')
+plt.title('不同 ne 下的电光响应')
+plt.grid(True)
+plt.show()
+\end{lstlisting}
+\fi

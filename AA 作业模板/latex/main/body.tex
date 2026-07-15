@@ -1,0 +1,70 @@
+% 正文部分：这里放论文的引言、公式、表格、图片等核心内容
+\par 引言\cite{GKWL20250125003} 本实验报告是对XXXXX课程的实验内容进行详细的记录和分析。实验的主要目的是验证XXXXX的理论知识，同时也为今后的研究提供数据支持。本实验报告是对XXXXX课程的实验内容进行详细的记录和分析。实验的主要目的是验证XXXXX的理论知识，同时也为今后的研究提供数据支持。本实验报告是对XXXXX课程的实验内容进行详细的记录和分析。实验的主要目的是验证XXXXX的理论知识，同时也为今后的研究提供数据支持。 % \par 开始新段落，\cite{...} 插入文献引用编号
+\section{一级标题} % 一级标题（章节）
+
+一级标题一级标题一级标题一级标题一级标题一级标题一级标题一级标题一级标题一级标题一级标题一级标题 % 一级标题下的正文示例
+
+\begin{equation}\label{式} % 开始公式环境，并给公式打标签“式”用于交叉引用
+    \nu = \mu % 公式内容
+\end{equation} % 结束公式环境
+
+\begin{equation}\label{test} % 第二个公式，标签为 test
+    \Delta^2 + \beta^2 \Longleftrightarrow \gamma^2 % 数学符号示例：\Longleftrightarrow 表示“等价于”
+\end{equation} % 结束公式环境
+
+\begin{equation}\label{直角三角形} % 第三个公式，标签为“直角三角形”
+    \alpha^2 + \beta^2 = \gamma^2 % 勾股定理示例
+\end{equation} % 结束公式环境
+
+\subsection{二级标题} % 二级标题
+
+这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文 % 二级标题下的正文示例
+
+\begin{table}[htbp] % 插入表格浮动体，htbp 表示优先在当前位置/页顶/页底/单独浮动页放置
+    \centering % 表格整体居中
+    \caption{表题} % 表题（会自动编号）
+    \begin{tabular}{ccccc} % 5 列居中对齐（c 表示 centered）
+        \toprule % 三线表顶线（需要 booktabs 宏包）
+        {组别} & {物理量1/单位} & {物理量2/单位} & {物理量3/单位} & {物理量4/单位} \\ % 表头行，& 分列，\\ 换行
+        \midrule % 三线表中线
+        A & {} & {} & {} & {} \\ % A 组数据行
+        B & {} & {} & {} & {} \\ % B 组数据行
+        C & {} & {} & {} & {} \\ % C 组数据行
+        D & {} & {} & {} & {} \\ % D 组数据行
+        \bottomrule % 三线表底线
+    \end{tabular} % 结束 tabular 表格主体
+\end{table} % 结束 table 浮动体
+
+\subsubsection{三级标题} % 三级标题
+
+这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文这里是正文 % 三级标题下的正文示例
+\begin{figure}[htbp] % 插入第一张图片浮动体
+    \centering % 图片居中
+    \includegraphics[height=5.99cm,width=8.25cm]{PixPin_2025-12-20_17-51-51.jpg} % 插入图片并设置宽高
+    \caption{图注} % 图注（会自动编号）
+\end{figure} % 结束图片浮动体
+
+\begin{figure}[htbp] % 插入第二个图片浮动体（一个图里排多张）
+    \centering % 整体居中
+    \includegraphics[width=2cm,height=1.5cm]{PixPin_2025-12-20_17-51-51.jpg} % 第一张小图
+    \quad % 插入一个较宽空格
+    \includegraphics[width=2cm,height=1.5cm]{PixPin_2025-12-20_17-51-51.jpg} % 第二张小图
+    \\ % 换到下一行继续排图
+    \includegraphics[width=4.8cm,height=3.6cm]{PixPin_2025-12-20_17-51-51.jpg} % 第三张较大图
+    \caption{家中养花实例} % 这个组合图的图注
+\end{figure} % 结束第二个图片浮动体
+
+\begin{figure}[htbp] % 插入第三个图片浮动体（用 minipage 并排）
+    \centering % 整体居中
+    \begin{minipage}{4.8cm} % 创建宽度 4.8cm 的小版面（左图区域）
+        \centering % 左图在小版面内居中
+        \includegraphics[width=4.8cm,height=3.6cm]{PixPin_2025-12-20_17-51-51.jpg} % 左图
+        \caption{有鹅的柳树} % 左图图注
+    \end{minipage} % 结束左侧 minipage
+    \quad % 左右两张图之间留空
+    \begin{minipage}{4.8cm} % 创建右侧小版面
+        \centering % 右图在小版面内居中
+        \includegraphics[width=4.8cm,height=3.6cm]{PixPin_2025-12-20_17-51-51.jpg} % 右图
+        \caption{无鹅的柳树} % 右图图注
+    \end{minipage} % 结束右侧 minipage
+\end{figure} % 结束第三个图片浮动体

@@ -1,0 +1,86 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C7E93207-B55F-4380-9349-B51DFA2447E7}|ITRFCoordinateTransformation.csproj|D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\itrftransformform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{C7E93207-B55F-4380-9349-B51DFA2447E7}|ITRFCoordinateTransformation.csproj|solutionrelative:itrftransformform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C7E93207-B55F-4380-9349-B51DFA2447E7}|ITRFCoordinateTransformation.csproj|D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\itrftransformform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C7E93207-B55F-4380-9349-B51DFA2447E7}|ITRFCoordinateTransformation.csproj|solutionrelative:itrftransformform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C7E93207-B55F-4380-9349-B51DFA2447E7}|ITRFCoordinateTransformation.csproj|d:\\person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-itrf2020\u5230\u5176\u4F59itrf\u6846\u67B6\u8F6C\u6362\\itrf2020\u5230\u5176\u4F59itrf\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\itrftransformform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C7E93207-B55F-4380-9349-B51DFA2447E7}|ITRFCoordinateTransformation.csproj|solutionrelative:itrftransformform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C7E93207-B55F-4380-9349-B51DFA2447E7}|ITRFCoordinateTransformation.csproj|D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C7E93207-B55F-4380-9349-B51DFA2447E7}|ITRFCoordinateTransformation.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAQwBMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T11:47:40.329Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ITRFTransformForm.Designer.cs",
+              "DocumentMoniker": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\ITRFTransformForm.Designer.cs",
+              "RelativeDocumentMoniker": "ITRFTransformForm.Designer.cs",
+              "ToolTip": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\ITRFTransformForm.Designer.cs*",
+              "RelativeToolTip": "ITRFTransformForm.Designer.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoBAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T11:46:15.534Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ITRFTransformForm.cs",
+              "DocumentMoniker": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\ITRFTransformForm.cs",
+              "RelativeDocumentMoniker": "ITRFTransformForm.cs",
+              "ToolTip": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\ITRFTransformForm.cs*",
+              "RelativeToolTip": "ITRFTransformForm.cs*",
+              "ViewState": "AgIAAKsAAAAAWK8U96IgwLoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T11:46:09.888Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ITRFTransformForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\ITRFTransformForm.cs",
+              "RelativeDocumentMoniker": "ITRFTransformForm.cs",
+              "ToolTip": "D:\\Person\\\u5B66\u4E60\\\u5927\u5730\u6D4B\u91CF\\20232411-\u5F20\u6D0B-\u5927\u5730\u4E0E\u63A7\u5236\u6D4B\u91CF\u7F16\u7A0B\u4F5C\u4E1A\\2-ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\\ITRF2020\u5230\u5176\u4F59ITRF\u6846\u67B6\u8F6C\u6362\u4EE3\u7801\\ITRFTransformForm.cs [\u8BBE\u8BA1]*",
+              "RelativeToolTip": "ITRFTransformForm.cs [\u8BBE\u8BA1]*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T11:46:03.537Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

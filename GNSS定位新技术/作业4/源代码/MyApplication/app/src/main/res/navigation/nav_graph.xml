@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/positionFragment">
+
+    <fragment
+        android:id="@+id/positionFragment"
+        android:name="com.example.gnsslogger.ui.PositionFragment"
+        android:label="定位"
+        tools:layout="@layout/fragment_position" />
+
+    <fragment
+        android:id="@+id/skyPlotFragment"
+        android:name="com.example.gnsslogger.ui.SkyPlotFragment"
+        android:label="天空"
+        tools:layout="@layout/fragment_sky_plot" />
+
+    <fragment
+        android:id="@+id/qualityFragment"
+        android:name="com.example.gnsslogger.ui.QualityFragment"
+        android:label="质量"
+        tools:layout="@layout/fragment_quality" />
+
+    <fragment
+        android:id="@+id/securityFragment"
+        android:name="com.example.gnsslogger.ui.SecurityFragment"
+        android:label="安全"
+        tools:layout="@layout/fragment_security" />
+
+    <fragment
+        android:id="@+id/logFragment"
+        android:name="com.example.gnsslogger.ui.LogFragment"
+        android:label="日志"
+        tools:layout="@layout/fragment_log" />
+
+</navigation>

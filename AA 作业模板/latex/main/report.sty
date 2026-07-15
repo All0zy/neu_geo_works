@@ -1,0 +1,175 @@
+% 声明样式包
+\ProvidesPackage{report}[2026/04/07 Modular report style]
+
+% todo === 图表 ===
+\RequirePackage{array} % 增强表格列格式控制
+\RequirePackage{booktabs} % 提供 \toprule/\midrule/\bottomrule 三线表命令
+\RequirePackage{caption} % 图表标题样式控制
+\RequirePackage{graphicx} % 提供插图命令 \includegraphics
+\RequirePackage{amsmath} % 增强数学公式环境
+
+
+\graphicspath{{./res/}} % 默认图片搜索路径设为 res 文件夹
+% 图表标注
+\DeclareCaptionFont{heixiaoWu}{\heiti \zihao{5}} % 定义图表标题字体：黑体五号
+\captionsetup[figure]{font=heixiaoWu,labelfont=heixiaoWu,labelsep=space,skip=3pt} % 图题样式设置 labelsep=space 表示图题标签（如“图1”）与标题文本之间用空格分隔，skip=3pt 表示图题与图像之间的垂直间距为 3pt
+\captionsetup[table]{font=heixiaoWu,labelfont=heixiaoWu,labelsep=space,skip=3pt} % 表题样式设置
+
+\ifSetionIndex % 如果章节编号开关打开
+\numberwithin{figure}{section} % 图号按“章.序号”编号
+\numberwithin{table}{section} % 表号按“章.序号”编号
+\numberwithin{equation}{section} % 公式编号按“章.序号”
+\fi % 结束 ifSetionIndex 条件块
+
+% todo === 代码块 ===
+\RequirePackage{listings} % 代码高亮与代码块环境
+\RequirePackage{xcolor} % 颜色定义支持
+
+\definecolor{codegreen}{rgb}{0.0, 0.5, 0.0}
+\definecolor{codegray}{rgb}{0.3, 0.3, 0.3}
+\definecolor{codepurple}{rgb}{0.58, 0, 0.82}
+\definecolor{codeblue}{rgb}{0.0, 0.2, 0.6}
+
+% 自定义前端语言关键字，避免 listings 对前端语言支持不完整
+\lstdefinelanguage{JavaScriptCustom}{
+  keywords={break,case,catch,class,const,continue,debugger,default,delete,do,else,export,extends,false,finally,for,from,function,if,import,in,instanceof,let,new,null,return,super,switch,this,throw,true,try,typeof,var,void,while,with,yield,async,await},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinelanguage{CSSCustom}{
+  keywords={color,background,border,margin,padding,width,height,display,position,absolute,relative,fixed,grid,flex,font,font-size,font-weight,line-height,text-align,justify-content,align-items,transition,transform,animation},
+  sensitive=true,
+  morecomment=[s]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]'
+}
+
+\lstdefinelanguage{HTMLCustom}{
+  sensitive=true,
+  morecomment=[s]{<!--}{-->},
+  morestring=[b]",
+  morestring=[b]'
+}
+
+\lstdefinelanguage{VueCustom}{
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morecomment=[s]{<!--}{-->},
+  morestring=[b]",
+  morestring=[b]',
+  keywords={template,script,style,setup,scoped,export,default,data,methods,computed,watch,mounted,created,props,emits,ref,reactive,onMounted,v-if,v-else,v-for,v-bind,v-model,v-on}
+}
+
+% 基础代码样式：通用外观都放在这里
+\lstdefinestyle{codestyle}{
+  commentstyle=\color{codegreen}, % 注释文本样式：绿色（字体跟随基础等宽字体）
+    keywordstyle=\color{codeblue}\bfseries, % 关键字样式：蓝色加粗
+    numberstyle=\tiny\color{codegray}, % 行号样式：小号灰色
+    stringstyle=\color{codepurple}, % 字符串样式：紫色
+  basicstyle=\ttfamily\small\linespread{1}\selectfont, % 代码基本字体：等宽小号（由 setmonofont 决定，匹配 VS Code 默认风格）
+    breakatwhitespace=false, % 不仅在空格处分行
+    breaklines=true, % 超长代码自动换行
+    captionpos=b, % 代码标题放在底部
+    keepspaces=true, % 保留空格（代码缩进更准确）
+    numbers=left, % 行号显示在左侧
+    numbersep=5pt, % 行号与代码间距 5pt
+    showspaces=false, % 不显示空格标记
+    showstringspaces=false, % 不显示字符串中的空格标记
+    showtabs=false, % 不显示 Tab 标记
+    tabsize=4, % Tab 宽度按 4 个空格
+    frame=single, % 代码块加单线边框
+    framesep=2mm, % 代码与边框内边距 2mm
+    xleftmargin=1em, % 代码块整体左边距
+    framexleftmargin=1em % 边框相对正文左偏移
+}
+
+  % 六种语言的独立样式：正文里通过 style=xxxstyle 直接调用
+  \lstdefinestyle{pythonstyle}{style=codestyle,language=Python}
+  \lstdefinestyle{csharpstyle}{style=codestyle,language=[Sharp]C}
+  \lstdefinestyle{htmlstyle}{style=codestyle,language=HTMLCustom}
+  \lstdefinestyle{vuestyle}{style=codestyle,language=VueCustom}
+  \lstdefinestyle{cssstyle}{style=codestyle,language=CSSCustom}
+  \lstdefinestyle{jsstyle}{style=codestyle,language=JavaScriptCustom}
+
+
+
+
+
+% \RequirePackage{lmodern} % XeLaTeX + fontspec 下不需要，避免覆盖 setmonofont（否则代码字体可能变成 Latin Modern Mono）
+\RequirePackage{gbt7714} % 国标参考文献格式支持
+
+\RequirePackage[colorlinks,urlcolor=black,linkcolor=black,citecolor=black,hyperfootnotes=false]{hyperref} % 超链接设置为黑色，避免彩色边框
+
+\RequirePackage{geometry} % 页面边距设置
+\RequirePackage{fancyhdr} % 页眉页脚自定义
+\RequirePackage{tocloft} % 目录样式控制
+\RequirePackage[runin]{abstract} % 摘要标题与正文同段运行样式
+
+
+
+% 页面边距
+\geometry{a4paper,left=2cm,right=2cm,top=2.8cm,bottom=2.2cm,headheight=15pt} % 设置 A4 纸和上下左右页边距
+
+% 页眉页脚
+\pagestyle{fancy} % 启用 fancyhdr 页眉页脚风格
+\fancyhf{} % 先清空默认页眉页脚
+\fancyfoot[C]{\thepage} % 页脚中间显示页码
+\fancyhead[L]{\CourseName} % 页眉左侧显示课程名
+\fancyhead[R]{\ReportNameCn} % 页眉右侧显示中文题目
+\renewcommand{\headrulewidth}{0.2pt} % 页眉横线粗细
+\renewcommand{\footrulewidth}{0pt} % 页脚横线粗细（0 表示不显示）
+
+
+
+% 公式设置
+
+\setlength{\abovedisplayskip}{2pt} % 公式前间距
+\setlength{\belowdisplayskip}{2pt} % 公式后间距
+
+% 参考文献设置
+\bibliographystyle{gbt7714-numerical} % 设置参考文献样式为国标数字制
+\ctexset{bibname={\heiti \zihao{-4} 参考文献}} % 设置“参考文献”标题样式
+
+% 标题设置
+\ctexset{section={format={\raggedright \zihao{4} \mdseries},titleformat={\heiti},beforeskip=10pt,afterskip=5pt,aftername=\hspace{6pt}}} % 一级标题样式
+\ctexset{subsection={titleformat={\heiti \zihao{-4} \mdseries},beforeskip=0pt,afterskip=0pt,aftername=\hspace{5pt}}} % 二级标题样式
+\ctexset{subsubsection={titleformat={\heiti \zihao{5} \mdseries},beforeskip=0pt,afterskip=0pt,aftername=\hspace{5pt}}} % 三级标题样式
+\ctexset{appendix/number=\Roman{section},appendix/name={\heiti 附录}} % 附录编号和“附录”标题样式
+
+% section 目录项引导线
+\renewcommand{\cftsecleader}{\cftdotfill{\cftsecdotsep}} % section 目录项使用点线引导
+\renewcommand{\cftsecdotsep}{\cftdotsep} % 设置引导点间距
+
+% 摘要设置
+\setlength{\absleftindent}{0pt} % 摘要左缩进为 0
+\setlength{\absrightindent}{0pt} % 摘要右缩进为 0
+\abslabeldelim{:} % 摘要标题与正文间的分隔符为冒号
+\setlength{\abstitleskip}{-2em} % 调整摘要标题与正文的垂直距离
+
+% 目录设置
+\renewcommand{\cftbeforetoctitleskip}{0pt} % 目录标题前间距
+\renewcommand{\cftaftertoctitleskip}{0pt} % 目录标题后间距
+\renewcommand{\cfttoctitlefont}{\hfill \zihao{3} \textbf} % 目录标题字体并居中
+\renewcommand{\cftaftertoctitle}{\hfill} % 目录标题后补全居中对齐
+\setcounter{tocdepth}{3} % 目录显示到三级标题
+
+% 导言格式设置
+\makeatletter % 允许在命令名中使用 @（重定义内部命令时需要）
+\renewcommand{\@maketitle}{
+  \newpage % 标题区前先换到新页
+  \null % 插入一个空盒，帮助页面布局稳定
+  \begin{center} % 标题区内容居中
+    {\@title \par} % 输出标题内容
+    \vskip 1em % 标题和作者间距
+    {\@author \par} % 输出作者内容
+    \vskip 0em % 作者和日期间距
+    {\@date \par} % 输出日期（这里通常放单位）
+  \end{center} % 结束居中环境
+  \par % 结束段落
+}
+\makeatother % 关闭 @ 特殊权限

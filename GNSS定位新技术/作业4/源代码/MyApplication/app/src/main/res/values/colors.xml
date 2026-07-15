@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 微信风格配色 -->
+    <!-- 主色调 -->
+    <color name="primary">#FF07C160</color>
+    <color name="primary_variant">#FF06AD56</color>
+    <color name="on_primary">#FFFFFFFF</color>
+
+    <!-- 次色调 -->
+    <color name="secondary">#FF576B95</color>
+    <color name="secondary_variant">#FF455A82</color>
+    <color name="on_secondary">#FFFFFFFF</color>
+
+    <!-- 背景色 -->
+    <color name="background">#FFF7F7F7</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="surface_variant">#FFF5F5F5</color>
+    <color name="on_background">#FF191919</color>
+    <color name="on_surface">#FF191919</color>
+    <color name="on_surface_variant">#FF999999</color>
+
+    <!-- 状态色 -->
+    <color name="success">#FF07C160</color>
+    <color name="warning">#FFFF9500</color>
+    <color name="error">#FFFA5151</color>
+    <color name="info">#FF10AEFF</color>
+
+    <!-- 卫星星座色 -->
+    <color name="gps_blue">#FF1989FA</color>
+    <color name="glonass_red">#FFFA5151</color>
+    <color name="bds_orange">#FFFF9500</color>
+    <color name="galileo_green">#FF07C160</color>
+    <color name="qzss_purple">#FF6467F0</color>
+
+    <!-- 分隔线 -->
+    <color name="divider">#FFECECEC</color>
+
+    <!-- 底部导航 -->
+    <color name="nav_selected">#FF07C160</color>
+    <color name="nav_unselected">#FF999999</color>
+
+    <!-- 兼容旧主题 -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

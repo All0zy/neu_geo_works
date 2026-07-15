@@ -1,0 +1,10 @@
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\obj\Debug\ITRFCoordinateTransformation.csproj.AssemblyReference.cache
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\obj\Debug\ITRFCoordinateTransformation.ITRFTransformForm.resources
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\obj\Debug\ITRFCoordinateTransformation.Properties.Resources.resources
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\obj\Debug\ITRFCoordinateTransformation.csproj.GenerateResource.cache
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\obj\Debug\ITRFCoordinateTransformation.csproj.CoreCompileInputs.cache
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\bin\Debug\ITRFCoordinateTransformation.exe.config
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\bin\Debug\ITRFCoordinateTransformation.exe
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\bin\Debug\ITRFCoordinateTransformation.pdb
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\obj\Debug\ITRFCoordinateTransformation.exe
+C:\Users\27599\Desktop\大地测量代码\ITRFCoordinateTransformation\obj\Debug\ITRFCoordinateTransformation.pdb

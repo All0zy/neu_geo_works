@@ -1,0 +1,57 @@
+#region"Select Map Features by Attribute Query"
+// ArcGIS Snippet Title:
+// Select Map Features by Attribute Query
+// 
+// Long Description:
+// Select features in the IActiveView by an attribute query using a SQL syntax in a where clause.
+// 
+// Add the following references to the project:
+// ESRI.ArcGIS.Carto
+// ESRI.ArcGIS.Geodatabase
+// ESRI.ArcGIS.Geometry
+// ESRI.ArcGIS.System
+// 
+// Intended ArcGIS Products for this snippet:
+// ArcGIS Desktop (ArcEditor, ArcInfo, ArcView)
+// ArcGIS Engine
+// ArcGIS Server
+// 
+// Applicable ArcGIS Product Versions:
+// 9.2
+// 9.3
+// 9.3.1
+// 10.0
+// 
+// Required ArcGIS Extensions:
+// (NONE)
+// 
+// Notes:
+// This snippet is intended to be inserted at the base level of a Class.
+// It is not intended to be nested within an existing Method.
+// 
+
+///<summary>Select features in the IActiveView by an attribute query using a SQL syntax in a where clause.</summary>
+/// 
+///<param name="activeView">An IActiveView interface</param>
+///<param name="featureLayer">An IFeatureLayer interface to select upon</param>
+///<param name="whereClause">A System.String that is the SQL where clause syntax to select features. Example: "CityName = 'Redlands'"</param>
+///  
+///<remarks>Providing and empty string "" will return all records.</remarks>
+public void SelectMapFeaturesByAttributeQuery(ESRI.ArcGIS.Carto.IActiveView activeView, ESRI.ArcGIS.Carto.IFeatureLayer featureLayer, System.String whereClause)
+{
+  if(activeView == null || featureLayer == null || whereClause == null)
+  {
+    return;
+  }
+  ESRI.ArcGIS.Carto.IFeatureSelection featureSelection = featureLayer as ESRI.ArcGIS.Carto.IFeatureSelection; // Dynamic Cast
+
+  // Set up the query
+  ESRI.ArcGIS.Geodatabase.IQueryFilter queryFilter = new ESRI.ArcGIS.Geodatabase.QueryFilterClass();
+  queryFilter.WhereClause = whereClause;
+
+  // Invalidate only the selection cache. Flag the original selection
+  activeView.PartialRefresh(ESRI.ArcGIS.Carto.esriViewDrawPhase.esriViewGeoSelection, null, null);
+
+  // Perform the selection
+  featureSelection.SelectFeatures(queryFilter, ESRI.ArcGIS.Carto.esriSelectionResultEnum.esriSelectionResultNew, false);
+}

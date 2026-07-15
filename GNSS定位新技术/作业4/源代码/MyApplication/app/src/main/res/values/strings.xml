@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">GNSS星历解析</string>
+    <string name="nav_log">日志</string>
+    <string name="nav_sky">天空</string>
+    <string name="nav_position">定位</string>
+    <string name="start_logging">开始记录</string>
+    <string name="stop_logging">停止记录</string>
+    <string name="clear_log">清除日志</string>
+    <string name="export_csv">导出 CSV</string>
+    <string name="latitude">纬度</string>
+    <string name="longitude">经度</string>
+    <string name="altitude">海拔</string>
+    <string name="accuracy">精度</string>
+    <string name="satellites">卫星数</string>
+    <string name="no_location">等待定位...</string>
+    <string name="location_permission_required">需要位置权限才能使用 GNSS 功能</string>
+</resources>

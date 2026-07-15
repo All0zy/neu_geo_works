@@ -1,0 +1,10 @@
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\bin\Debug\DaDiToPingMian.exe.config
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\bin\Debug\DaDiToPingMian.exe
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\bin\Debug\DaDiToPingMian.pdb
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\obj\Debug\DaDiToPingMian.csproj.AssemblyReference.cache
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\obj\Debug\DaDiToPingMian.Form1.resources
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\obj\Debug\DaDiToPingMian.Properties.Resources.resources
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\obj\Debug\DaDiToPingMian.csproj.GenerateResource.cache
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\obj\Debug\DaDiToPingMian.csproj.CoreCompileInputs.cache
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\obj\Debug\DaDiToPingMian.exe
+C:\Users\27599\Desktop\大地测量\DaDiToPingMian\obj\Debug\DaDiToPingMian.pdb

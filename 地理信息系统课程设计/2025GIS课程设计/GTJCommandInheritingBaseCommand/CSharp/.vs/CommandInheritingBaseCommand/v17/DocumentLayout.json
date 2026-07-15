@@ -1,0 +1,69 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Person\\\u5B66\u4E60\\GIS\\2025GIS\u8BFE\u7A0B\u8BBE\u8BA1\\GTJCommandInheritingBaseCommand\\CSharp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B99D3108-8448-40D1-951C-C6C810FF5792}|CommandInheritingBaseCommand\\CommandInheritingBaseCommand.csproj|d:\\person\\\u5B66\u4E60\\gis\\2025gis\u8BFE\u7A0B\u8BBE\u8BA1\\gtjcommandinheritingbasecommand\\csharp\\commandinheritingbasecommand\\neuform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B99D3108-8448-40D1-951C-C6C810FF5792}|CommandInheritingBaseCommand\\CommandInheritingBaseCommand.csproj|solutionrelative:commandinheritingbasecommand\\neuform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B99D3108-8448-40D1-951C-C6C810FF5792}|CommandInheritingBaseCommand\\CommandInheritingBaseCommand.csproj|d:\\person\\\u5B66\u4E60\\gis\\2025gis\u8BFE\u7A0B\u8BBE\u8BA1\\gtjcommandinheritingbasecommand\\csharp\\commandinheritingbasecommand\\neuform.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{B99D3108-8448-40D1-951C-C6C810FF5792}|CommandInheritingBaseCommand\\CommandInheritingBaseCommand.csproj|solutionrelative:commandinheritingbasecommand\\neuform.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B99D3108-8448-40D1-951C-C6C810FF5792}|CommandInheritingBaseCommand\\CommandInheritingBaseCommand.csproj|d:\\person\\\u5B66\u4E60\\gis\\2025gis\u8BFE\u7A0B\u8BBE\u8BA1\\gtjcommandinheritingbasecommand\\csharp\\commandinheritingbasecommand\\neuform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B99D3108-8448-40D1-951C-C6C810FF5792}|CommandInheritingBaseCommand\\CommandInheritingBaseCommand.csproj|solutionrelative:commandinheritingbasecommand\\neuform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NeuForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\Person\\\u5B66\u4E60\\GIS\\2025GIS\u8BFE\u7A0B\u8BBE\u8BA1\\GTJCommandInheritingBaseCommand\\CSharp\\CommandInheritingBaseCommand\\NeuForm.cs",
+              "RelativeDocumentMoniker": "CommandInheritingBaseCommand\\NeuForm.cs",
+              "ToolTip": "D:\\Person\\\u5B66\u4E60\\GIS\\2025GIS\u8BFE\u7A0B\u8BBE\u8BA1\\GTJCommandInheritingBaseCommand\\CSharp\\CommandInheritingBaseCommand\\NeuForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "CommandInheritingBaseCommand\\NeuForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T02:37:08.315Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NeuForm.resx",
+              "DocumentMoniker": "D:\\Person\\\u5B66\u4E60\\GIS\\2025GIS\u8BFE\u7A0B\u8BBE\u8BA1\\GTJCommandInheritingBaseCommand\\CSharp\\CommandInheritingBaseCommand\\NeuForm.resx",
+              "RelativeDocumentMoniker": "CommandInheritingBaseCommand\\NeuForm.resx",
+              "ToolTip": "D:\\Person\\\u5B66\u4E60\\GIS\\2025GIS\u8BFE\u7A0B\u8BBE\u8BA1\\GTJCommandInheritingBaseCommand\\CSharp\\CommandInheritingBaseCommand\\NeuForm.resx",
+              "RelativeToolTip": "CommandInheritingBaseCommand\\NeuForm.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-12-04T02:36:59.107Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NeuForm.Designer.cs",
+              "DocumentMoniker": "D:\\Person\\\u5B66\u4E60\\GIS\\2025GIS\u8BFE\u7A0B\u8BBE\u8BA1\\GTJCommandInheritingBaseCommand\\CSharp\\CommandInheritingBaseCommand\\NeuForm.Designer.cs",
+              "RelativeDocumentMoniker": "CommandInheritingBaseCommand\\NeuForm.Designer.cs",
+              "ToolTip": "D:\\Person\\\u5B66\u4E60\\GIS\\2025GIS\u8BFE\u7A0B\u8BBE\u8BA1\\GTJCommandInheritingBaseCommand\\CSharp\\CommandInheritingBaseCommand\\NeuForm.Designer.cs",
+              "RelativeToolTip": "CommandInheritingBaseCommand\\NeuForm.Designer.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAcwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T02:36:55.973Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

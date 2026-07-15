@@ -1,0 +1,81 @@
+
+#region"Get First Feature from Point Search in GeoFeatureLayer"
+// ArcGIS Snippet Title:
+// Get First Feature from Point Search in GeoFeatureLayer
+// 
+// Long Description:
+// Finds the first feature in a GeoFeature layer by supplying an point.  The point could come from a mouse click in the map.
+// 
+// Add the following references to the project:
+// ESRI.ArcGIS.Carto
+// ESRI.ArcGIS.Geodatabase
+// ESRI.ArcGIS.Geometry
+// ESRI.ArcGIS.System
+// 
+// Intended ArcGIS Products for this snippet:
+// ArcGIS Desktop (ArcEditor, ArcInfo, ArcView)
+// ArcGIS Engine
+// ArcGIS Server
+// 
+// Applicable ArcGIS Product Versions:
+// 9.2
+// 9.3
+// 9.3.1
+// 10.0
+// 
+// Required ArcGIS Extensions:
+// (NONE)
+// 
+// Notes:
+// This snippet is intended to be inserted at the base level of a Class.
+// It is not intended to be nested within an existing Method.
+// 
+
+///<summary>Finds the first feature in a GeoFeature layer by supplying an point.  The point could come from a mouse click in the map.</summary>
+///
+///<param name="searchTolerance">A System.Double that is the number of map units to search. Example: 25</param>
+///<param name="point">An IPoint interface in map units where the user clicked on the map</param>
+///<param name="geoFeatureLayer">An ILayer interface to search upon</param>
+///<param name="activeView">An IActiveView interface</param>
+/// 
+///<returns>An IFeature interface that is the first feature found in the GeoFeatureLayer.</returns>
+/// 
+///<remarks></remarks>
+public ESRI.ArcGIS.Geodatabase.IFeature GetFirstFeatureFromPointSearchInGeoFeatureLayer(System.Double searchTolerance, ESRI.ArcGIS.Geometry.IPoint point, ESRI.ArcGIS.Carto.IGeoFeatureLayer geoFeatureLayer, ESRI.ArcGIS.Carto.IActiveView activeView)
+{
+  if (searchTolerance < 0 || point == null || geoFeatureLayer == null || activeView == null)
+  {
+    return null;
+  }
+
+  ESRI.ArcGIS.Carto.IMap map = activeView.FocusMap; 
+
+  // Expand the points envelope to give better search results    
+  ESRI.ArcGIS.Geometry.IEnvelope envelope = point.Envelope;
+  envelope.Expand(searchTolerance, searchTolerance, false);
+
+  ESRI.ArcGIS.Geodatabase.IFeatureClass featureClass = geoFeatureLayer.FeatureClass;
+  System.String shapeFieldName = featureClass.ShapeFieldName;
+
+  // Create a new spatial filter and use the new envelope as the geometry    
+  ESRI.ArcGIS.Geodatabase.ISpatialFilter spatialFilter = new ESRI.ArcGIS.Geodatabase.SpatialFilterClass();
+  spatialFilter.Geometry = envelope;
+  spatialFilter.SpatialRel = ESRI.ArcGIS.Geodatabase.esriSpatialRelEnum.esriSpatialRelEnvelopeIntersects;
+  spatialFilter.set_OutputSpatialReference(shapeFieldName, map.SpatialReference);
+  spatialFilter.GeometryField = shapeFieldName;
+
+  // Do the search
+  ESRI.ArcGIS.Geodatabase.IFeatureCursor featureCursor = featureClass.Search(spatialFilter, false);
+
+  // Get the first feature
+  ESRI.ArcGIS.Geodatabase.IFeature feature = featureCursor.NextFeature();
+  if (!(feature == null))
+  {
+    return feature;
+  }
+  else
+  {
+      return null;
+  }
+}
+#endregion

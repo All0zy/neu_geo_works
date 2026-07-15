@@ -1,0 +1,24 @@
+% 封面页：titlepage 环境会把该页作为独立封面，不受正文分页样式影响
+\begin{titlepage} % 开始封面环境
+    \pagenumbering{empty} % 封面页不显示页码
+    \begin{center} % 封面整体内容居中
+        \vspace*{2cm} % 顶部预留 2cm 空白
+        {\heiti \zihao{1} \SchoolName}\\[1cm] % 学院名称（黑体一号），并在下方留 1cm
+        {\heiti \zihao{1} \ReportType}\\[3cm] % 报告类型（黑体一号），并在下方留 3cm
+        {\zihao{3} 课程名称: \underline{\quad \CourseName \quad}}\\[4cm] % 课程名称，下面划线用于视觉强调
+        \zihao{3} % 后续封面表格统一使用三号字
+        \begin{tabular}{ % 用表格做封面信息对齐
+                >{\raggedright\arraybackslash}p{3cm} % 第1列：左对齐固定宽度 3cm
+                >{\raggedright\arraybackslash}p{3.5cm} % 第2列：左对齐固定宽度 3.5cm
+                >{\raggedright\arraybackslash}p{3cm} % 第3列：左对齐固定宽度 3cm
+                >{\raggedright\arraybackslash}p{3.5cm} % 第4列：左对齐固定宽度 3.5cm
+            }
+            学生专业： & \StudentMajor & 学生班级： & \StudentClass \\ % 第一行：专业与班级
+            学生学号： & \StudentID & 学生姓名： & \StudentName \\ % 第二行：学号与姓名
+            指导教师： & \TeacherName & & \\ % 第三行：指导教师，后两格留空
+            成绩评估： & \\[2cm] % 第四行：留出 2cm 空白给手写成绩
+            评阅老师： & & 评阅时间： & \\ % 第五行：留空给评阅老师与时间
+        \end{tabular}\\[4cm] % 结束封面信息表格，并在下方留 4cm
+        {\kaishu \zihao{3} \today} % 封面底部日期（楷书三号）
+    \end{center} % 结束居中环境
+\end{titlepage} % 结束封面环境

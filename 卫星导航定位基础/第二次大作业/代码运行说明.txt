@@ -1,0 +1,28 @@
+张洋-20232411 代码说明：
+
+星历时间：2025年2月24日；
+观测站地点：巴黎；
+
+运行环境：python 3.13.2；
+库依赖：pandas, numpy, matplotlib, plotly, datetime
+
+源代码结构说明：
+	1、数据文件：
+	brdc0550.25n - 2025年2月24日广播星历数据源文件；
+	opmt0550.25o - 2025年2月24日巴黎观测数据数据源文件
+
+	2、计算程序：
+	main.py - 主程序(运行的文件)
+	HatchFilter.py - 滤波算法程序
+	ReadFile.py - 文件读取程序
+	Satelite.py - 卫星位置结算程序
+	Position.py - 接收站位置计算程序
+	Result.py - 结果输出为文件程序
+	Plot.py - 绘图程序
+
+	3、输出文件：
+	xyz.csv - 各个时刻接收站位置计算结果
+	dop.csv - 各个时刻精度因子计算结果
+	3d_position.jpg - 各个时刻各个立面的计算位置展示图
+	residuals.jpg - 各个时刻xyz三轴计算值误差分布图
+	dop_metrics.jpg - 各个时刻精度因子计算结果波动图

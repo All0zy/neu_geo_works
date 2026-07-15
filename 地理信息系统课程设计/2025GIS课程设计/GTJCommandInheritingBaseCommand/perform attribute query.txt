@@ -1,0 +1,50 @@
+
+#region"Perform Attribute Query"
+// ArcGIS Snippet Title:
+// Perform Attribute Query
+// 
+// Long Description:
+// Creates an attribute query based on a supplied table and where clause.
+// 
+// Add the following references to the project:
+// ESRI.ArcGIS.Geodatabase
+// ESRI.ArcGIS.System
+// 
+// Intended ArcGIS Products for this snippet:
+// ArcGIS Desktop (ArcEditor, ArcInfo, ArcView)
+// ArcGIS Engine
+// ArcGIS Server
+// 
+// Applicable ArcGIS Product Versions:
+// 9.2
+// 9.3
+// 9.3.1
+// 10.0
+// 
+// Required ArcGIS Extensions:
+// (NONE)
+// 
+// Notes:
+// This snippet is intended to be inserted at the base level of a Class.
+// It is not intended to be nested within an existing Method.
+// 
+
+///<summary>Creates an attribute query based on a supplied table and where clause.</summary>
+///  
+///<param name="table">An ESRI.ArcGIS.Geodatabase.ITable, this could be a table or feature class</param>
+///<param name="whereClause">A System.String, (e.g., "city_name = 'Redlands'").</param>
+///   
+///<returns>An ICursor holding the results of the query will be returned.</returns>
+///   
+///<remarks>The SQL syntax used to specify the where clause is the same as that of the underlying database holding the data. If you would like to return everything in the table supply "" for the where clause.</remarks>
+public ESRI.ArcGIS.Geodatabase.ICursor PerformAttributeQuery(ESRI.ArcGIS.Geodatabase.ITable table, System.String whereClause)
+{
+  ESRI.ArcGIS.Geodatabase.IQueryFilter queryFilter = new ESRI.ArcGIS.Geodatabase.QueryFilterClass();
+  queryFilter.WhereClause = whereClause; // create the where clause statement
+    
+  // query the table passed into the function and use a cursor to hold the results
+  ESRI.ArcGIS.Geodatabase.ICursor cursor = table.Search(queryFilter, false);
+
+  return cursor;
+}
+#endregion

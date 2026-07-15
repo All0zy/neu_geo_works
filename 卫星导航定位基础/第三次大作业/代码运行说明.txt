@@ -1,0 +1,33 @@
+张洋-20232411 代码说明：
+
+星历时间：2025年2月24日、2025年4月10日；
+观测站地点：武汉、东北大学火箭广场；
+
+运行环境：python 3.13.2；
+库依赖：pandas, numpy, matplotlib, plotly, datetime
+
+源代码结构说明：
+一、基线解算
+1.源代码：
+	base.py - 假设的基准站点星历文件解析
+	rover.py-假设的流动站点星历文件解析
+	line.py-基线解算主文件
+	plot.py-计算结果可视化文件
+2.输出结果：
+	base_station.txt-假设的基准站点星历文件解析结果
+	rover_station.txt-假设的流动站点星历文件解析结果
+	baseline_results.txt-基线解算结果
+	average_coords.txt-观测站坐标最终结果
+二、网解算
+1.源代码：
+	base.py - 假设的基准站点星历文件解析
+	rover.py-假设的流动站点1星历文件解析
+	rover2.py-假设的流动站点2星历文件解析
+	net.py-各颗卫星网解算主文件
+	plot.py-计算结果可视化文件
+2.输出结果：
+	base_station.txt-假设的基准站点星历文件解析结果
+	rover_station.txt-假设的流动站点1星历文件解析结果
+	rover2_station.txt-假设的流动站点2星历文件解析结果
+	net_results.txt-各颗卫星网解算结果
+	average_results.txt-观测站坐标最终坐标结果
