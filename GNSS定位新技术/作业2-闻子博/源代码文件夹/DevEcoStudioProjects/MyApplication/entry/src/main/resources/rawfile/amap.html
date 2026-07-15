@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>AMap Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <style>
+        html, body, #container {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          background: #f5f5f5;
+        }
+        .info-card {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          z-index: 999;
+          background: rgba(255,255,255,0.92);
+          padding: 10px 12px;
+          border-radius: 10px;
+          font-size: 13px;
+          color: #333;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+          max-width: 300px;
+          line-height: 1.5;
+          white-space: pre-line;
+          display: none;
+        }
+        #routePanel {
+          position: absolute;
+          right: 12px;
+          top: 90px;
+          z-index: 999;
+          width: 260px;
+          max-height: 320px;
+          overflow: auto;
+          background: rgba(255,255,255,0.96);
+          border-radius: 12px;
+          padding: 10px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+          font-size: 12px;
+          display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<div class="info-card" id="statusBox"></div>
+<div id="routePanel"></div>
+
+<script>
+    function setStatus(text) {
+      var box = document.getElementById('statusBox');
+      if (box) {
+        box.innerText = text;
+        box.style.display = 'block';
+        clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(function() {
+          box.style.display = 'none';
+        }, 1800);
+      }
+    }
+
+    function showAppToast(text) {
+      setStatus(text);
+    }
+
+    window.onerror = function(message, source, lineno) {
+      setStatus(
+        'JS错误：' + message + '\n' +
+        '来源：' + source + '\n' +
+        '行号：' + lineno
+      );
+    };
+
+    function loadAMapFailed() {
+      setStatus(
+        '高德脚本加载失败。\n' +
+        '请检查 WebKey、securityJsCode、INTERNET 权限和网络'
+      );
+    }
+
+    function initAMap() {
+      try {
+        if (typeof AMap === 'undefined') {
+          setStatus('AMap 未定义：脚本未正确加载');
+          return;
+        }
+
+        let map = new AMap.Map('container', {
+          zoom: 15,
+          center: [116.397428, 39.90923],
+          viewMode: '3D'
+        });
+
+        map.plugin(['AMap.ToolBar', 'AMap.Scale'], function () {
+          map.addControl(new AMap.ToolBar());
+          map.addControl(new AMap.Scale());
+        });
+
+        setStatus('高德地图加载成功');
+
+        let currentMarker = null;
+        let fenceCircle = null;
+        let trackPolyline = null;
+        let photoMarkers = [];
+        let satelliteLayer = null;
+        let roadNetLayer = null;
+        let driving = null;
+        let riding = null;
+        let walking = null;
+
+        function buildCurrentMarker(position, titleText) {
+          if (currentMarker) {
+            map.remove(currentMarker);
+          }
+
+          currentMarker = new AMap.Marker({
+            position: position,
+            anchor: 'bottom-center',
+            offset: new AMap.Pixel(0, 0),
+            content:
+              '<div style="position:relative;width:24px;height:24px;">' +
+                '<div style="position:absolute;left:2px;top:2px;width:20px;height:20px;border-radius:50%;background:#1E80FF;border:3px solid rgba(255,255,255,0.95);box-shadow:0 0 0 10px rgba(30,128,255,0.18);"></div>' +
+              '</div>',
+            title: titleText || '当前位置'
+          });
+
+          map.add(currentMarker);
+        }
+
+        function convertGpsToGcj(lng, lat, callback) {
+          AMap.convertFrom([lng, lat], 'gps', function(status, result) {
+            if (status === 'complete' && result.info === 'ok' && result.locations && result.locations.length > 0) {
+              callback(result.locations[0]);
+            } else {
+              setStatus('坐标转换失败');
+            }
+          });
+        }
+
+        function clearRoutePanel() {
+          let panel = document.getElementById('routePanel');
+          if (panel) {
+            panel.innerHTML = '';
+            panel.style.display = 'none';
+          }
+        }
+
+        function clearAllRouteServices() {
+          if (driving) {
+            driving.clear();
+          }
+          if (riding) {
+            riding.clear();
+          }
+          if (walking) {
+            walking.clear();
+          }
+          clearRoutePanel();
+        }
+
+        window.clearRoute = function() {
+          clearAllRouteServices();
+          setStatus('路线已清除');
+        };
+
+        window.showCurrentLocationFromWGS84 = function(lng, lat) {
+          convertGpsToGcj(lng, lat, function(pos) {
+            map.setZoomAndCenter(17, pos);
+            buildCurrentMarker(pos, '当前位置');
+          });
+        };
+
+        window.drawFenceFromWGS84 = function(lng, lat, radius) {
+          convertGpsToGcj(lng, lat, function(pos) {
+            if (fenceCircle) {
+              map.remove(fenceCircle);
+            }
+
+            buildCurrentMarker(pos, '围栏中心');
+
+            fenceCircle = new AMap.Circle({
+              center: pos,
+              radius: radius,
+              strokeColor: '#3366FF',
+              strokeWeight: 3,
+              fillColor: '#3366FF',
+              fillOpacity: 0.15
+            });
+
+            map.add(fenceCircle);
+            map.setFitView([fenceCircle, currentMarker]);
+          });
+        };
+
+        window.removeFence = function() {
+          if (fenceCircle) {
+            map.remove(fenceCircle);
+            fenceCircle = null;
+          }
+        };
+
+        window.drawTrackFromWGS84 = function(points) {
+          if (!points || points.length === 0) {
+            return;
+          }
+
+          let converted = [];
+          let finished = 0;
+
+          points.forEach(function(item, index) {
+            AMap.convertFrom(item, 'gps', function(status, result) {
+              finished++;
+              if (status === 'complete' && result.info === 'ok' && result.locations && result.locations.length > 0) {
+                converted[index] = result.locations[0];
+              }
+              if (finished === points.length) {
+                let validPoints = converted.filter(Boolean);
+                if (validPoints.length === 0) {
+                  setStatus('轨迹坐标转换失败');
+                  return;
+                }
+
+                if (trackPolyline) {
+                  map.remove(trackPolyline);
+                }
+
+                trackPolyline = new AMap.Polyline({
+                  path: validPoints,
+                  strokeColor: '#00B578',
+                  strokeWeight: 6,
+                  lineJoin: 'round',
+                  lineCap: 'round'
+                });
+
+                map.add(trackPolyline);
+                map.setFitView([trackPolyline]);
+              }
+            });
+          });
+        };
+
+        window.clearTrack = function() {
+          if (trackPolyline) {
+            map.remove(trackPolyline);
+            trackPolyline = null;
+          }
+        };
+
+        window.addPhotoMarkerFromWGS84 = function(lng, lat, photoUri) {
+          convertGpsToGcj(lng, lat, function(pos) {
+            let marker = new AMap.Marker({
+              position: pos,
+              anchor: 'bottom-center',
+              content:
+                '<div style="position:relative;width:26px;height:34px;">' +
+                  '<div style="width:26px;height:26px;border-radius:50%;background:#FF6A00;color:white;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,0.25);">📷</div>' +
+                '</div>',
+              title: '拍照定位点'
+            });
+
+            marker.on('click', function() {
+              let infoWindow = new AMap.InfoWindow({
+                content:
+                  '<div style="padding:8px;max-width:220px;word-break:break-all;">' +
+                  '<div style="font-weight:bold;margin-bottom:6px;">拍照定位点</div>' +
+                  '<div style="font-size:12px;">' + photoUri + '</div>' +
+                  '</div>',
+                offset: new AMap.Pixel(0, -20)
+              });
+              infoWindow.open(map, pos);
+            });
+
+            photoMarkers.push(marker);
+            map.add(marker);
+            map.setZoomAndCenter(17, pos);
+          });
+        };
+
+        window.toggleSatellite = function(enable) {
+          if (enable) {
+            if (!satelliteLayer) {
+              satelliteLayer = new AMap.TileLayer.Satellite();
+            }
+            if (!roadNetLayer) {
+              roadNetLayer = new AMap.TileLayer.RoadNet();
+            }
+            map.setLayers([satelliteLayer, roadNetLayer]);
+          } else {
+            map.setLayers([new AMap.TileLayer()]);
+          }
+        };
+
+        window.searchPlace = function(keyword) {
+          AMap.plugin(['AMap.PlaceSearch'], function() {
+            let placeSearch = new AMap.PlaceSearch({
+              pageSize: 1,
+              pageIndex: 1
+            });
+
+            placeSearch.search(keyword, function(status, result) {
+              if (status === 'complete' && result && result.poiList && result.poiList.pois.length > 0) {
+                const poi = result.poiList.pois[0];
+                map.setZoomAndCenter(16, poi.location);
+                buildCurrentMarker(poi.location, poi.name);
+              } else {
+                setStatus('未搜索到地点：' + keyword);
+              }
+            });
+          });
+        };
+
+        window.planRoute = function(startKeyword, endKeyword, mode) {
+          let panel = document.getElementById('routePanel');
+          if (panel) {
+            panel.style.display = 'block';
+            panel.innerHTML = '';
+          }
+
+          clearAllRouteServices()
+
+          if (mode === 'driving') {
+            AMap.plugin(['AMap.Driving'], function() {
+              driving = new AMap.Driving({
+                map: map,
+                panel: 'routePanel',
+                policy: AMap.DrivingPolicy.LEAST_TIME,
+                showTraffic: true,
+                autoFitView: true
+              })
+
+              driving.search(
+                [{ keyword: startKeyword }, { keyword: endKeyword }],
+                function(status) {
+                  if (status === 'complete') {
+                    setStatus('驾车路线规划成功')
+                  } else {
+                    setStatus('驾车路线规划失败')
+                  }
+                }
+              )
+            })
+            return
+          }
+
+          if (mode === 'riding') {
+            AMap.plugin(['AMap.Riding'], function() {
+              riding = new AMap.Riding({
+                map: map,
+                panel: 'routePanel',
+                autoFitView: true
+              })
+
+              riding.search(
+                [{ keyword: startKeyword }, { keyword: endKeyword }],
+                function(status) {
+                  if (status === 'complete') {
+                    setStatus('骑行路线规划成功')
+                  } else {
+                    setStatus('骑行路线规划失败')
+                  }
+                }
+              )
+            })
+            return
+          }
+
+          AMap.plugin(['AMap.Walking'], function() {
+            walking = new AMap.Walking({
+              map: map,
+              panel: 'routePanel',
+              autoFitView: true
+            })
+
+            walking.search(
+              [{ keyword: startKeyword }, { keyword: endKeyword }],
+              function(status) {
+                if (status === 'complete') {
+                  setStatus('步行路线规划成功')
+                } else {
+                  setStatus('步行路线规划失败')
+                }
+              }
+            )
+          })
+        };
+      } catch (e) {
+        setStatus('地图初始化失败：' + JSON.stringify(e));
+      }
+    }
+
+    window._AMapSecurityConfig = {
+      securityJsCode: 'a6b3a21770895d71f19b1ba127328d9b'
+    };
+</script>
+
+<script
+        src="https://webapi.amap.com/maps?v=2.0&key=ff0dddeb675330a76de6022267b0d78b&plugin=AMap.PlaceSearch,AMap.AutoComplete,AMap.Driving,AMap.Riding,AMap.Walking"
+        onload="initAMap()"
+        onerror="loadAMapFailed()">
+</script>
+</body>
+</html>

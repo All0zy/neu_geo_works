@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>AMap Realtime GNSS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <style>
+        html, body, #container {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          background: #f5f5f5;
+        }
+
+        .info-card {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          z-index: 999;
+          background: rgba(255,255,255,0.94);
+          padding: 10px 12px;
+          border-radius: 12px;
+          font-size: 13px;
+          color: #333;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+          max-width: 300px;
+          line-height: 1.5;
+          white-space: pre-line;
+          display: none;
+        }
+
+        #routePanel {
+          position: absolute;
+          right: 12px;
+          top: 90px;
+          z-index: 999;
+          width: 260px;
+          max-height: 320px;
+          overflow: auto;
+          background: rgba(255,255,255,0.96);
+          border-radius: 12px;
+          padding: 10px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+          font-size: 12px;
+          display: none;
+        }
+
+        #gnssPanel {
+          position: absolute;
+          left: 12px;
+          right: 12px;
+          top: 76px;
+          bottom: 132px;
+          z-index: 999;
+          overflow: auto;
+          background: rgba(255,255,255,0.98);
+          border-radius: 18px;
+          padding: 16px;
+          box-shadow: 0 4px 18px rgba(0,0,0,0.16);
+          display: none;
+          box-sizing: border-box;
+        }
+
+        .gnss-title {
+          font-size: 16px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .gnss-box {
+          padding: 12px;
+          background: #F8FAFC;
+          border-radius: 12px;
+          line-height: 1.8;
+          color: #111827;
+        }
+
+        .gnss-row {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 10px;
+          flex-wrap: wrap;
+        }
+
+        .gnss-input, .gnss-select, .gnss-textarea {
+          flex: 1;
+          padding: 12px;
+          border-radius: 12px;
+          border: 1px solid #D0D5DD;
+          box-sizing: border-box;
+          font-size: 14px;
+          background: white;
+          color: #111827;
+          min-width: 120px;
+        }
+
+        .gnss-textarea {
+          width: 100%;
+          min-height: 120px;
+          resize: vertical;
+        }
+
+        .btn-primary {
+          flex: 1;
+          padding: 12px;
+          border: none;
+          border-radius: 12px;
+          background: #1E80FF;
+          color: white;
+          font-size: 14px;
+          min-width: 120px;
+        }
+
+        .btn-light {
+          flex: 1;
+          padding: 12px;
+          border: none;
+          border-radius: 12px;
+          background: #EEF4FF;
+          color: #1E80FF;
+          font-size: 14px;
+          min-width: 120px;
+        }
+
+        .btn-danger {
+          padding: 10px 16px;
+          border: none;
+          border-radius: 12px;
+          background: #FCEFEA;
+          color: #C2410C;
+          font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<div class="info-card" id="statusBox"></div>
+<div id="routePanel"></div>
+
+<div id="gnssPanel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="font-size:18px;font-weight:bold;">GNSS 综合增强（实时动态）</div>
+        <button onclick="closeGnssTool()" class="btn-danger">关闭</button>
+    </div>
+    <div id="gnssToolContent" style="font-size:14px;color:#333;"></div>
+</div>
+
+<script>
+    function setStatus(text) {
+      const box = document.getElementById('statusBox');
+      if (box) {
+        box.innerText = text;
+        box.style.display = 'block';
+        clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(function() {
+          box.style.display = 'none';
+        }, 1800);
+      }
+    }
+
+    function showAppToast(text) {
+      setStatus(text);
+    }
+
+    window.onerror = function(message, source, lineno) {
+      setStatus('JS错误：' + message + '\n来源：' + source + '\n行号：' + lineno);
+    };
+
+    function loadAMapFailed() {
+      setStatus('高德脚本加载失败，请检查 WebKey、securityJsCode、INTERNET 权限和网络');
+    }
+
+    function outOfChina(lng, lat) {
+      return !(lng > 73.66 && lng < 135.05 && lat > 3.86 && lat < 53.55);
+    }
+
+    function transformLat(x, y) {
+      let ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+      ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0;
+      ret += (20.0 * Math.sin(y * Math.PI) + 40.0 * Math.sin(y / 3.0 * Math.PI)) * 2.0 / 3.0;
+      ret += (160.0 * Math.sin(y / 12.0 * Math.PI) + 320.0 * Math.sin(y * Math.PI / 30.0)) * 2.0 / 3.0;
+      return ret;
+    }
+
+    function transformLng(x, y) {
+      let ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+      ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0;
+      ret += (20.0 * Math.sin(x * Math.PI) + 40.0 * Math.sin(x / 3.0 * Math.PI)) * 2.0 / 3.0;
+      ret += (150.0 * Math.sin(x / 12.0 * Math.PI) + 300.0 * Math.sin(x / 30.0 * Math.PI)) * 2.0 / 3.0;
+      return ret;
+    }
+
+    function wgs84ToGcj02(lng, lat) {
+      if (outOfChina(lng, lat)) {
+        return { lng: lng, lat: lat };
+      }
+      let a = 6378245.0;
+      let ee = 0.00669342162296594323;
+      let dLat = transformLat(lng - 105.0, lat - 35.0);
+      let dLng = transformLng(lng - 105.0, lat - 35.0);
+      let radLat = lat / 180.0 * Math.PI;
+      let magic = Math.sin(radLat);
+      magic = 1 - ee * magic * magic;
+      let sqrtMagic = Math.sqrt(magic);
+      dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * Math.PI);
+      dLng = (dLng * 180.0) / (a / sqrtMagic * Math.cos(radLat) * Math.PI);
+      let mgLat = lat + dLat;
+      let mgLng = lng + dLng;
+      return { lng: mgLng, lat: mgLat };
+    }
+
+    function gcj02ToWgs84(lng, lat) {
+      let g = wgs84ToGcj02(lng, lat);
+      return { lng: lng * 2 - g.lng, lat: lat * 2 - g.lat };
+    }
+
+    function gcj02ToBd09(lng, lat) {
+      let z = Math.sqrt(lng * lng + lat * lat) + 0.00002 * Math.sin(lat * Math.PI * 3000.0 / 180.0);
+      let theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * Math.PI * 3000.0 / 180.0);
+      return { lng: z * Math.cos(theta) + 0.0065, lat: z * Math.sin(theta) + 0.006 };
+    }
+
+    function bd09ToGcj02(lng, lat) {
+      let x = lng - 0.0065;
+      let y = lat - 0.006;
+      let z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * Math.PI * 3000.0 / 180.0);
+      let theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * Math.PI * 3000.0 / 180.0);
+      return { lng: z * Math.cos(theta), lat: z * Math.sin(theta) };
+    }
+
+    function toRad(v) {
+      return v * Math.PI / 180.0;
+    }
+
+    function calcDistanceMeters(lng1, lat1, lng2, lat2) {
+      const R = 6378137;
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function calcHeadingDeg(lng1, lat1, lng2, lat2) {
+      const y = Math.sin(toRad(lng2 - lng1)) * Math.cos(toRad(lat2));
+      const x =
+        Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+        Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(toRad(lng2 - lng1));
+      let brng = Math.atan2(y, x) * 180 / Math.PI;
+      brng = (brng + 360) % 360;
+      return brng;
+    }
+
+    function mean(arr) {
+      return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
+    }
+
+    function percentile(arr, p) {
+      if (!arr.length) return null;
+      const s = arr.slice().sort((a, b) => a - b);
+      const idx = Math.min(s.length - 1, Math.max(0, Math.round((s.length - 1) * p)));
+      return s[idx];
+    }
+
+    let map = null;
+    let currentMarker = null;
+    let fenceCircle = null;
+    let trackPolyline = null;
+    let photoMarkers = [];
+    let satelliteLayer = null;
+    let roadNetLayer = null;
+    let driving = null;
+    let riding = null;
+    let walking = null;
+
+    const gnssState = {
+      observations: [],
+      rawObservations: [],
+      activeTool: '',
+      quality: { visible: null, avgCn0: null, maxCn0: null, pdop: null, hdop: null, vdop: null },
+      correctionMode: 'OFF',
+      correctionOffset: { dlng: 0, dlat: 0 },
+      pppWindow: [],
+      fusionEnabled: false,
+      fusionState: { vx: 0, vy: 0 },
+      anomaly: [],
+      nmeaText: ''
+    };
+
+    function getRecentObservations(limit) {
+      if (!gnssState.observations.length) {
+        return [];
+      }
+      return gnssState.observations.slice(-limit);
+    }
+
+    function buildCurrentMarker(position, titleText) {
+      if (currentMarker) {
+        map.remove(currentMarker);
+      }
+
+      currentMarker = new AMap.Marker({
+        position: position,
+        anchor: 'bottom-center',
+        offset: new AMap.Pixel(0, 0),
+        content:
+          '<div style="position:relative;width:24px;height:24px;">' +
+          '<div style="position:absolute;left:2px;top:2px;width:20px;height:20px;border-radius:50%;background:#1E80FF;border:3px solid rgba(255,255,255,0.95);box-shadow:0 0 0 10px rgba(30,128,255,0.18);"></div>' +
+          '</div>',
+        title: titleText || '当前位置'
+      });
+
+      map.add(currentMarker);
+    }
+
+    function computeScatterStats(points) {
+      if (!points || points.length < 2) {
+        return null;
+      }
+
+      const meanLng = points.reduce((s, p) => s + p.lng, 0) / points.length;
+      const meanLat = points.reduce((s, p) => s + p.lat, 0) / points.length;
+      const ds = points.map(p => calcDistanceMeters(p.lng, p.lat, meanLng, meanLat));
+      const avg = ds.reduce((a, b) => a + b, 0) / ds.length;
+      const rms = Math.sqrt(ds.reduce((a, b) => a + b * b, 0) / ds.length);
+      const cep95 = percentile(ds, 0.95);
+
+      return { meanLng, meanLat, avg, rms, cep95 };
+    }
+
+    function computeMotionStats(points) {
+      if (!points || points.length < 2) {
+        return null;
+      }
+
+      let maxSpeed = 0;
+      let speedSamples = [];
+      let headingChanges = [];
+
+      for (let i = 1; i < points.length; i++) {
+        const p1 = points[i - 1];
+        const p2 = points[i];
+        const dist = calcDistanceMeters(p1.lng, p1.lat, p2.lng, p2.lat);
+        const dt = Math.max(0.5, (p2.ts - p1.ts) / 1000.0);
+        const speed = dist / dt;
+        speedSamples.push(speed);
+        maxSpeed = Math.max(maxSpeed, speed);
+
+        if (i >= 2) {
+          const p0 = points[i - 2];
+          const h1 = calcHeadingDeg(p0.lng, p0.lat, p1.lng, p1.lat);
+          const h2 = calcHeadingDeg(p1.lng, p1.lat, p2.lng, p2.lat);
+          let diff = Math.abs(h2 - h1);
+          if (diff > 180) {
+            diff = 360 - diff;
+          }
+          headingChanges.push(diff);
+        }
+      }
+
+      return {
+        avgSpeed: mean(speedSamples) || 0,
+        maxSpeed,
+        avgHeadingChange: mean(headingChanges) || 0
+      };
+    }
+
+    function applyCorrectionWgs(lng, lat) {
+      if (gnssState.correctionMode === 'CORS') {
+        return [lng + gnssState.correctionOffset.dlng, lat + gnssState.correctionOffset.dlat];
+      }
+
+      if (gnssState.correctionMode === 'PPP') {
+        gnssState.pppWindow.push([lng, lat]);
+        if (gnssState.pppWindow.length > 12) {
+          gnssState.pppWindow.shift();
+        }
+        const xs = gnssState.pppWindow.map(v => v[0]);
+        const ys = gnssState.pppWindow.map(v => v[1]);
+        return [mean(xs), mean(ys)];
+      }
+
+      return [lng, lat];
+    }
+
+    function fuseWithMotion(lng, lat, ts) {
+      if (!gnssState.fusionEnabled || !gnssState.observations.length) {
+        return [lng, lat];
+      }
+
+      const last = gnssState.observations[gnssState.observations.length - 1];
+      const dt = Math.max(0.5, (ts - last.ts) / 1000.0);
+      const fusedLng = 0.78 * lng + 0.22 * (last.lng + gnssState.fusionState.vx * dt / 111320.0);
+      const fusedLat = 0.78 * lat + 0.22 * (last.lat + gnssState.fusionState.vy * dt / 110540.0);
+      return [fusedLng, fusedLat];
+    }
+
+    function updateVelocity() {
+      if (gnssState.observations.length < 2) {
+        return;
+      }
+
+      const a = gnssState.observations[gnssState.observations.length - 2];
+      const b = gnssState.observations[gnssState.observations.length - 1];
+      const dt = Math.max(0.5, (b.ts - a.ts) / 1000.0);
+      gnssState.fusionState.vx = (b.lng - a.lng) * 111320.0 / dt;
+      gnssState.fusionState.vy = (b.lat - a.lat) * 110540.0 / dt;
+    }
+
+    function detectAnomaly(rawObs) {
+      const notes = [];
+      const n = gnssState.rawObservations.length;
+
+      if (n >= 2) {
+        const prev = gnssState.rawObservations[n - 2];
+        const dist = calcDistanceMeters(prev.lng, prev.lat, rawObs.lng, rawObs.lat);
+        const dt = Math.max(0.5, (rawObs.ts - prev.ts) / 1000.0);
+        const speed = dist / dt;
+        if (speed > 65) {
+          notes.push('瞬时速度异常偏高');
+        }
+        if (dist > 80 && dt < 2) {
+          notes.push('短时位置突跳');
+        }
+      }
+
+      if (gnssState.quality.hdop != null && gnssState.quality.hdop > 6) {
+        notes.push('HDOP 偏大');
+      }
+      if (gnssState.quality.avgCn0 != null && gnssState.quality.avgCn0 < 25) {
+        notes.push('平均 C/N0 偏低');
+      }
+      if (gnssState.quality.visible != null && gnssState.quality.visible < 5) {
+        notes.push('可见卫星数不足');
+      }
+
+      gnssState.anomaly = notes;
+    }
+
+    function renderMetricCard(label, value, unit, color) {
+      return `
+        <div style="flex:1;min-width:110px;padding:12px;border-radius:14px;background:#F8FAFC;border:1px solid #E5E7EB;box-sizing:border-box;">
+          <div style="font-size:12px;color:#667085;margin-bottom:6px;">${label}</div>
+          <div style="font-size:20px;font-weight:bold;color:${color || '#111827'};">
+            ${value}<span style="font-size:12px;font-weight:normal;margin-left:4px;">${unit || ''}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function computeSpoofAnalysis(points) {
+      if (!points || points.length < 2) {
+        return {
+          level: '低',
+          score: 0,
+          summary: '样本不足，建议先开启实时模式采集连续样本。',
+          jumpCount: 0,
+          maxJump: 0,
+          maxSpeed: 0,
+          avgHeadingChange: 0,
+          rms: 0,
+          reasons: ['样本不足']
+        };
+      }
+
+      const motion = computeMotionStats(points);
+      const scatter = computeScatterStats(points);
+      let jumpCount = 0;
+      let maxJump = 0;
+      let score = 0;
+      let reasons = [];
+
+      for (let i = 1; i < points.length; i++) {
+        const d = calcDistanceMeters(points[i - 1].lng, points[i - 1].lat, points[i].lng, points[i].lat);
+        maxJump = Math.max(maxJump, d);
+        if (d > 30) {
+          jumpCount += 1;
+        }
+      }
+
+      if (jumpCount >= 2) {
+        score += 35;
+        reasons.push('连续位置突跳较多');
+      } else if (jumpCount === 1) {
+        score += 18;
+        reasons.push('检测到单次位置突跳');
+      }
+
+      if (motion && motion.maxSpeed > 20) {
+        score += 25;
+        reasons.push('短时间速度异常偏高');
+      } else if (motion && motion.maxSpeed > 10) {
+        score += 12;
+        reasons.push('速度变化偏大');
+      }
+
+      if (motion && motion.avgHeadingChange > 90) {
+        score += 20;
+        reasons.push('航向突变明显');
+      }
+
+      if (scatter && scatter.rms > 15) {
+        score += 20;
+        reasons.push('定位散布较大');
+      } else if (scatter && scatter.rms > 8) {
+        score += 10;
+        reasons.push('定位稳定性一般');
+      }
+
+      let level = '低';
+      if (score >= 60) {
+        level = '高';
+      } else if (score >= 30) {
+        level = '中';
+      }
+
+      if (reasons.length === 0) {
+        reasons.push('未发现明显异常模式');
+      }
+
+      return {
+        level,
+        score,
+        summary: level === '高'
+          ? '存在较强异常/欺骗风险，建议暂停信任当前解算结果。'
+          : level === '中'
+            ? '存在一定异常风险，建议继续观察并结合质量评估结果判断。'
+            : '当前未发现明显异常，定位样本整体较稳定。',
+        jumpCount,
+        maxJump,
+        maxSpeed: motion ? motion.maxSpeed : 0,
+        avgHeadingChange: motion ? motion.avgHeadingChange : 0,
+        rms: scatter ? scatter.rms : 0,
+        reasons
+      };
+    }
+
+    function computeFusionResult(points) {
+      if (!points || points.length < 2) {
+        return null;
+      }
+
+      const windowSize = Math.min(points.length, 8);
+      const recent = points.slice(-windowSize);
+      const smoothLng = recent.reduce((s, p) => s + p.lng, 0) / recent.length;
+      const smoothLat = recent.reduce((s, p) => s + p.lat, 0) / recent.length;
+      const latest = recent[recent.length - 1];
+      const motion = computeMotionStats(recent);
+      const scatter = computeScatterStats(recent);
+
+      let heading = 0;
+      let speed = 0;
+      if (recent.length >= 2) {
+        const p1 = recent[recent.length - 2];
+        const p2 = recent[recent.length - 1];
+        heading = calcHeadingDeg(p1.lng, p1.lat, p2.lng, p2.lat);
+        const dt = Math.max(0.5, (p2.ts - p1.ts) / 1000.0);
+        speed = calcDistanceMeters(p1.lng, p1.lat, p2.lng, p2.lat) / dt;
+      }
+
+      return {
+        latestLng: latest.lng,
+        latestLat: latest.lat,
+        fusedLng: smoothLng,
+        fusedLat: smoothLat,
+        heading,
+        speed,
+        windowSize,
+        scatterRms: scatter ? scatter.rms : 0,
+        avgSpeed: motion ? motion.avgSpeed : 0
+      };
+    }
+
+    function computeCorrectionStats(points) {
+      if (!points || points.length < 3) {
+        return null;
+      }
+
+      const rawStats = computeScatterStats(points);
+      if (!rawStats) {
+        return null;
+      }
+
+      const recent = points.slice(-Math.min(points.length, 10));
+      const fusedLng = recent.reduce((s, p) => s + p.lng, 0) / recent.length;
+      const fusedLat = recent.reduce((s, p) => s + p.lat, 0) / recent.length;
+
+      const correctedPoints = points.map((p, idx) => {
+        const alpha = idx < points.length - recent.length ? 0.7 : 0.45;
+        return {
+          lng: p.lng * alpha + fusedLng * (1 - alpha),
+          lat: p.lat * alpha + fusedLat * (1 - alpha)
+        };
+      });
+
+      const corrStats = computeScatterStats(correctedPoints);
+      if (!corrStats) {
+        return null;
+      }
+
+      const improveRms = rawStats.rms > 0
+        ? ((rawStats.rms - corrStats.rms) / rawStats.rms) * 100
+        : 0;
+
+      return {
+        rawMeanLng: rawStats.meanLng,
+        rawMeanLat: rawStats.meanLat,
+        rawRms: rawStats.rms,
+        rawCep95: rawStats.cep95,
+        corrMeanLng: corrStats.meanLng,
+        corrMeanLat: corrStats.meanLat,
+        corrRms: corrStats.rms,
+        corrCep95: corrStats.cep95,
+        improveRms
+      };
+    }
+
+    function pushGnssObservation(lng, lat, ts) {
+      const rawObs = { lng, lat, ts };
+      gnssState.rawObservations.push(rawObs);
+      if (gnssState.rawObservations.length > 200) {
+        gnssState.rawObservations.shift();
+      }
+
+      let corrected = applyCorrectionWgs(lng, lat);
+      corrected = fuseWithMotion(corrected[0], corrected[1], ts);
+
+      const obs = { lng: corrected[0], lat: corrected[1], ts };
+      gnssState.observations.push(obs);
+      if (gnssState.observations.length > 200) {
+        gnssState.observations.shift();
+      }
+
+      if (gnssState.observations.length >= 2) {
+        const a = gnssState.observations[gnssState.observations.length - 2];
+        const b = gnssState.observations[gnssState.observations.length - 1];
+        const dt = Math.max(0.5, (b.ts - a.ts) / 1000.0);
+        gnssState.fusionState.vx = (b.lng - a.lng) * 111320.0 / dt;
+        gnssState.fusionState.vy = (b.lat - a.lat) * 110540.0 / dt;
+      }
+
+      detectAnomaly(rawObs);
+    }
+
+    function refreshGnssRealtimePanels() {
+      if (gnssState.activeTool) {
+        const panel = document.getElementById('gnssPanel');
+        if (panel && panel.style.display !== 'none') {
+          openGnssTool(gnssState.activeTool);
+        }
+      }
+    }
+
+    function showFusedPointOnMap() {
+      const result = computeFusionResult(getRecentObservations(20));
+      if (!result) {
+        setStatus('暂无足够定位样本');
+        return;
+      }
+
+      const pos = wgs84ToGcj02(result.fusedLng, result.fusedLat);
+      const marker = new AMap.Marker({
+        position: [pos.lng, pos.lat],
+        anchor: 'bottom-center',
+        content:
+          '<div style="position:relative;width:28px;height:38px;">' +
+          '<div style="width:28px;height:28px;border-radius:50%;background:#7C3AED;color:white;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 8px rgba(0,0,0,0.25);">F</div>' +
+          '</div>',
+        title: '组合导航融合点'
+      });
+      map.add(marker);
+      map.setZoomAndCenter(18, [pos.lng, pos.lat]);
+      setStatus('已显示融合结果点');
+    }
+
+    function showCorrectedPointOnMap() {
+      const result = computeCorrectionStats(getRecentObservations(20));
+      if (!result) {
+        setStatus('样本不足，无法应用改正');
+        return;
+      }
+
+      const pos = wgs84ToGcj02(result.corrMeanLng, result.corrMeanLat);
+      const marker = new AMap.Marker({
+        position: [pos.lng, pos.lat],
+        anchor: 'bottom-center',
+        content:
+          '<div style="position:relative;width:28px;height:38px;">' +
+          '<div style="width:28px;height:28px;border-radius:50%;background:#16A34A;color:white;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 8px rgba(0,0,0,0.25);">C</div>' +
+          '</div>',
+        title: '改正后结果点'
+      });
+      map.add(marker);
+      map.setZoomAndCenter(18, [pos.lng, pos.lat]);
+      setStatus('已显示改正后结果点');
+    }
+
+    function enableCorsMode() {
+      const points = getRecentObservations(20);
+      if (points.length < 3) {
+        setStatus('样本不足，无法启用 CORS 模拟');
+        return;
+      }
+      const stats = computeScatterStats(points);
+      const latest = points[points.length - 1];
+      gnssState.correctionMode = 'CORS';
+      gnssState.correctionOffset.dlng = stats.meanLng - latest.lng;
+      gnssState.correctionOffset.dlat = stats.meanLat - latest.lat;
+      setStatus('已启用 CORS 模拟改正');
+      refreshGnssRealtimePanels();
+    }
+
+    function enablePppMode() {
+      gnssState.correctionMode = 'PPP';
+      gnssState.pppWindow = [];
+      setStatus('已启用 PPP 平滑模式');
+      refreshGnssRealtimePanels();
+    }
+
+    function disableCorrectionMode() {
+      gnssState.correctionMode = 'OFF';
+      gnssState.pppWindow = [];
+      gnssState.correctionOffset = { dlng: 0, dlat: 0 };
+      setStatus('已关闭改正模式');
+      refreshGnssRealtimePanels();
+    }
+
+    function toggleFusionMode() {
+      gnssState.fusionEnabled = !gnssState.fusionEnabled;
+      setStatus(gnssState.fusionEnabled ? '组合导航已开启' : '组合导航已关闭');
+      openGnssTool('fusion');
+    }
+
+    function parseNmeaQuality() {
+      const text = document.getElementById('nmeaInput').value || '';
+      gnssState.nmeaText = text;
+      const lines = text.split(/\r?\n/);
+      let satCount = 0;
+      let snrs = [];
+      let pdop = null;
+      let hdop = null;
+      let vdop = null;
+
+      lines.forEach(line => {
+        if (line.includes('GSV')) {
+          const parts = line.split(',');
+          for (let i = 7; i < parts.length; i += 4) {
+            const snr = parseFloat(parts[i]);
+            if (!isNaN(snr)) {
+              snrs.push(snr);
+              satCount += 1;
+            }
+          }
+        }
+        if (line.includes('GSA')) {
+          const parts = line.split(',');
+          pdop = parseFloat(parts[15]) || pdop;
+          hdop = parseFloat(parts[16]) || hdop;
+          vdop = parseFloat(parts[17]) || vdop;
+        }
+      });
+
+      gnssState.quality.visible = satCount;
+      gnssState.quality.avgCn0 = snrs.length ? mean(snrs) : null;
+      gnssState.quality.maxCn0 = snrs.length ? Math.max(...snrs) : null;
+      gnssState.quality.pdop = pdop;
+      gnssState.quality.hdop = hdop;
+      gnssState.quality.vdop = vdop;
+
+      setStatus('NMEA 质量解析完成');
+      refreshGnssRealtimePanels();
+    }
+
+    function closeGnssTool() {
+      const panel = document.getElementById('gnssPanel');
+      if (panel) {
+        panel.style.display = 'none';
+      }
+      gnssState.activeTool = '';
+    }
+
+    function openGnssTool(tool) {
+      const panel = document.getElementById('gnssPanel');
+      const content = document.getElementById('gnssToolContent');
+
+      if (!panel || !content) {
+        setStatus('GNSS 面板未初始化');
+        return;
+      }
+
+      gnssState.activeTool = tool;
+      panel.style.display = 'block';
+
+      if (tool === 'transform') {
+        const latest = gnssState.rawObservations.length ? gnssState.rawObservations[gnssState.rawObservations.length - 1] : null;
+        content.innerHTML = `
+          <div class="gnss-title">1. 坐标转换（实时）</div>
+          <div class="gnss-row">
+            <input id="convLng" class="gnss-input" placeholder="经度" value="${latest ? latest.lng : ''}">
+            <input id="convLat" class="gnss-input" placeholder="纬度" value="${latest ? latest.lat : ''}">
+          </div>
+          <div class="gnss-row">
+            <select id="convFrom" class="gnss-select">
+              <option>WGS84</option>
+              <option>GCJ02</option>
+              <option>BD09</option>
+            </select>
+            <select id="convTo" class="gnss-select">
+              <option>GCJ02</option>
+              <option>WGS84</option>
+              <option>BD09</option>
+            </select>
+          </div>
+          <div class="gnss-row">
+            <button class="btn-primary" onclick="runCoordTransform()">转换</button>
+            <button class="btn-light" onclick="fillLatestCoord()">取最新定位</button>
+          </div>
+          <div id="coordResult" class="gnss-box">最近实时样本：${latest ? `${latest.lng.toFixed(7)}, ${latest.lat.toFixed(7)}` : '暂无'}</div>
+        `;
+        return;
+      }
+
+      if (tool === 'precision') {
+        const stats = computeScatterStats(getRecentObservations(20));
+        if (!stats) {
+          content.innerHTML = `
+            <div class="gnss-title">2. GNSS定位精度评估（实时）</div>
+            <div class="gnss-box">当前暂无足够定位样本，建议先开启实时模式或多点击几次“定位当前位置”。</div>
+          `;
+          return;
+        }
+
+        content.innerHTML = `
+          <div class="gnss-title">2. GNSS定位精度评估（实时）</div>
+          <div class="gnss-row">
+            ${renderMetricCard('样本数', getRecentObservations(20).length, '个', '#111827')}
+            ${renderMetricCard('平均散布', stats.avg.toFixed(2), 'm', '#2563EB')}
+          </div>
+          <div class="gnss-row">
+            ${renderMetricCard('RMS', stats.rms.toFixed(2), 'm', '#7C3AED')}
+            ${renderMetricCard('CEP95', (stats.cep95 || 0).toFixed(2), 'm', '#DC2626')}
+          </div>
+          <div class="gnss-box">
+            均值坐标：${stats.meanLng.toFixed(7)}, ${stats.meanLat.toFixed(7)}<br>
+            本页面会随实时定位样本自动刷新，无需反复手动定位。
+          </div>
+        `;
+        return;
+      }
+
+      if (tool === 'quality') {
+        content.innerHTML = `
+          <div class="gnss-title">3. GNSS定位质量评估</div>
+          <textarea id="nmeaInput" class="gnss-textarea" placeholder="粘贴 GSA / GSV NMEA 语句">${gnssState.nmeaText || ''}</textarea>
+          <div class="gnss-row">
+            <button class="btn-primary" onclick="parseNmeaQuality()">解析质量</button>
+            <button class="btn-light" onclick="refreshGnssRealtimePanels()">刷新面板</button>
+          </div>
+          <div class="gnss-row">
+            ${renderMetricCard('可见卫星数', gnssState.quality.visible != null ? gnssState.quality.visible : '--', '个', '#2563EB')}
+            ${renderMetricCard('平均 C/N0', gnssState.quality.avgCn0 != null ? gnssState.quality.avgCn0.toFixed(1) : '--', 'dB-Hz', '#16A34A')}
+          </div>
+          <div class="gnss-row">
+            ${renderMetricCard('PDOP', gnssState.quality.pdop != null ? gnssState.quality.pdop.toFixed(2) : '--', '', '#7C3AED')}
+            ${renderMetricCard('HDOP', gnssState.quality.hdop != null ? gnssState.quality.hdop.toFixed(2) : '--', '', '#D97706')}
+          </div>
+          <div class="gnss-box">
+            最大 C/N0：${gnssState.quality.maxCn0 != null ? gnssState.quality.maxCn0.toFixed(1) + ' dB-Hz' : '暂无'}<br>
+            VDOP：${gnssState.quality.vdop != null ? gnssState.quality.vdop.toFixed(2) : '暂无'}
+          </div>
+        `;
+        return;
+      }
+
+      if (tool === 'errors') {
+        const points = getRecentObservations(20);
+        const stats = computeScatterStats(points);
+        const motion = computeMotionStats(points);
+        const text = stats && stats.rms > 15
+          ? '近期散布偏大，优先怀疑多路径或遮挡。'
+          : '近期位置散布较平稳。';
+
+        content.innerHTML = `
+          <div class="gnss-title">4. GNSS导航误差源分析（实时）</div>
+          <div class="gnss-row">
+            ${renderMetricCard('散布RMS', stats ? stats.rms.toFixed(2) : 'N/A', 'm', '#2563EB')}
+            ${renderMetricCard('平均速度', motion ? motion.avgSpeed.toFixed(2) : 'N/A', 'm/s', '#16A34A')}
+          </div>
+          <div class="gnss-row">
+            ${renderMetricCard('航向变化', motion ? motion.avgHeadingChange.toFixed(1) : 'N/A', '°', '#D97706')}
+            ${renderMetricCard('样本数', points.length, '个', '#111827')}
+          </div>
+          <div class="gnss-box">
+            <b>误差源解释：</b><br>
+            1. 多路径误差：楼宇、树木密集区域更明显。<br>
+            2. 卫星几何误差：DOP 偏大时精度下降。<br>
+            3. 遮挡与信号衰减：可见卫星数不足时更明显。<br>
+            4. 接收机噪声：会引入短时抖动。<br><br>
+            <b>当前判断：</b><br>${text}
+          </div>
+        `;
+        return;
+      }
+
+      if (tool === 'fusion') {
+        const result = computeFusionResult(getRecentObservations(20));
+        if (!result) {
+          content.innerHTML = `
+            <div class="gnss-title">5. GNSS + 惯性组合导航（实时）</div>
+            <div class="gnss-box">样本不足，建议先开启实时模式后再观察融合结果。</div>
+          `;
+          return;
+        }
+
+        content.innerHTML = `
+          <div class="gnss-title">5. GNSS + 惯性组合导航（实时）</div>
+          <div class="gnss-row">
+            ${renderMetricCard('平滑窗口', result.windowSize, '点', '#111827')}
+            ${renderMetricCard('瞬时速度', result.speed.toFixed(2), 'm/s', '#16A34A')}
+          </div>
+          <div class="gnss-row">
+            ${renderMetricCard('航向角', result.heading.toFixed(1), '°', '#2563EB')}
+            ${renderMetricCard('平滑RMS', result.scatterRms.toFixed(2), 'm', '#7C3AED')}
+          </div>
+          <div class="gnss-box" style="margin-bottom:10px;">
+            <b>原始最新点：</b><br>
+            ${result.latestLng.toFixed(7)}, ${result.latestLat.toFixed(7)}<br><br>
+            <b>融合平滑点：</b><br>
+            ${result.fusedLng.toFixed(7)}, ${result.fusedLat.toFixed(7)}<br><br>
+            开启后会随实时定位样本自动更新融合结果。
+          </div>
+          <div class="gnss-row">
+            <button class="${gnssState.fusionEnabled ? 'btn-light' : 'btn-primary'}" style="${gnssState.fusionEnabled ? 'color:#D4380D;background:#FFF1F0;' : ''}" onclick="toggleFusionMode()">
+              ${gnssState.fusionEnabled ? '关闭组合导航' : '开启组合导航'}
+            </button>
+            <button class="btn-light" onclick="showFusedPointOnMap()">显示融合点</button>
+          </div>
+        `;
+        return;
+      }
+
+      if (tool === 'spoof') {
+        const analysis = computeSpoofAnalysis(getRecentObservations(20));
+        const levelColor = analysis.level === '高' ? '#DC2626' : analysis.level === '中' ? '#D97706' : '#16A34A';
+
+        content.innerHTML = `
+          <div class="gnss-title">6. GNSS欺骗与异常检测（实时）</div>
+          <div class="gnss-row">
+            ${renderMetricCard('风险等级', analysis.level, '', levelColor)}
+            ${renderMetricCard('风险分数', analysis.score.toFixed(0), '分', levelColor)}
+          </div>
+          <div class="gnss-row">
+            ${renderMetricCard('最大突跳', analysis.maxJump.toFixed(2), 'm', '#2563EB')}
+            ${renderMetricCard('最高速度', analysis.maxSpeed.toFixed(2), 'm/s', '#7C3AED')}
+          </div>
+          <div class="gnss-row">
+            ${renderMetricCard('突跳次数', analysis.jumpCount, '次', '#111827')}
+            ${renderMetricCard('航向突变', analysis.avgHeadingChange.toFixed(1), '°', '#D97706')}
+          </div>
+          <div class="gnss-box">
+            <b>诊断结论：</b><br>${analysis.summary}<br><br>
+            <b>触发因素：</b><br>${analysis.reasons.map((r, i) => `${i + 1}. ${r}`).join('<br>')}
+          </div>
+        `;
+        return;
+      }
+
+      if (tool === 'correction') {
+        const stats = computeCorrectionStats(getRecentObservations(20));
+        if (!stats) {
+          content.innerHTML = `
+            <div class="gnss-title">7. CORS / PPP 提升定位精度（实时）</div>
+            <div class="gnss-box">样本不足，建议先开启实时模式采集更多定位样本后再进行改正评估。</div>
+          `;
+          return;
+        }
+
+        content.innerHTML = `
+          <div class="gnss-title">7. CORS / PPP 提升定位精度（实时）</div>
+          <div class="gnss-row">
+            ${renderMetricCard('改正前 RMS', stats.rawRms.toFixed(2), 'm', '#DC2626')}
+            ${renderMetricCard('改正后 RMS', stats.corrRms.toFixed(2), 'm', '#16A34A')}
+          </div>
+          <div class="gnss-row">
+            ${renderMetricCard('RMS 改善', stats.improveRms.toFixed(1), '%', '#2563EB')}
+            ${renderMetricCard('改正后 CEP95', (stats.corrCep95 || 0).toFixed(2), 'm', '#7C3AED')}
+          </div>
+          <div class="gnss-box" style="margin-bottom:10px;">
+            <b>改正前均值：</b><br>
+            ${stats.rawMeanLng.toFixed(7)}, ${stats.rawMeanLat.toFixed(7)}<br><br>
+            <b>改正后均值：</b><br>
+            ${stats.corrMeanLng.toFixed(7)}, ${stats.corrMeanLat.toFixed(7)}<br><br>
+            当前为实时实验版：CORS 使用控制量偏移模拟改正；PPP 使用时间窗平滑模拟精密单点改进。
+          </div>
+          <div class="gnss-row">
+            <button class="btn-primary" onclick="enableCorsMode()">启用 CORS 模拟</button>
+            <button class="btn-light" onclick="enablePppMode()">启用 PPP 平滑</button>
+          </div>
+          <div class="gnss-row">
+            <button class="btn-light" onclick="disableCorrectionMode()">关闭改正</button>
+            <button class="btn-light" onclick="showCorrectedPointOnMap()">显示改正点</button>
+          </div>
+        `;
+        return;
+      }
+
+      content.innerHTML = `
+        <div class="gnss-title">GNSS 总览（实时）</div>
+        <div class="gnss-box">
+          当前实时样本数：${getRecentObservations(50).length}<br>
+          当前改正模式：${gnssState.correctionMode}<br>
+          组合导航：${gnssState.fusionEnabled ? '已开启' : '未开启'}<br>
+          异常提示：${gnssState.anomaly.length ? gnssState.anomaly.join('、') : '暂无'}<br><br>
+          开启实时模式后，本页面和各 GNSS 工具页会自动刷新，无需每次手动定位。
+        </div>
+      `;
+    }
+
+    function fillLatestCoord() {
+      if (!gnssState.rawObservations.length) {
+        setStatus('暂无定位样本');
+        return;
+      }
+      const p = gnssState.rawObservations[gnssState.rawObservations.length - 1];
+      document.getElementById('convLng').value = p.lng;
+      document.getElementById('convLat').value = p.lat;
+    }
+
+    function runCoordTransform() {
+      const lng = parseFloat(document.getElementById('convLng').value);
+      const lat = parseFloat(document.getElementById('convLat').value);
+      const from = document.getElementById('convFrom').value;
+      const to = document.getElementById('convTo').value;
+      const box = document.getElementById('coordResult');
+
+      if (isNaN(lng) || isNaN(lat)) {
+        box.innerHTML = '请输入有效经纬度';
+        return;
+      }
+
+      let res = { lng: lng, lat: lat };
+
+      if (from === to) {
+        box.innerHTML = `转换结果：${lng.toFixed(7)}, ${lat.toFixed(7)}`;
+        return;
+      }
+
+      if (from === 'WGS84' && to === 'GCJ02') {
+        res = wgs84ToGcj02(lng, lat);
+      } else if (from === 'GCJ02' && to === 'WGS84') {
+        res = gcj02ToWgs84(lng, lat);
+      } else if (from === 'GCJ02' && to === 'BD09') {
+        res = gcj02ToBd09(lng, lat);
+      } else if (from === 'BD09' && to === 'GCJ02') {
+        res = bd09ToGcj02(lng, lat);
+      } else if (from === 'WGS84' && to === 'BD09') {
+        const gcj = wgs84ToGcj02(lng, lat);
+        res = gcj02ToBd09(gcj.lng, gcj.lat);
+      } else if (from === 'BD09' && to === 'WGS84') {
+        const gcj = bd09ToGcj02(lng, lat);
+        res = gcj02ToWgs84(gcj.lng, gcj.lat);
+      }
+
+      box.innerHTML = `转换结果：${res.lng.toFixed(7)}, ${res.lat.toFixed(7)}`;
+    }
+
+    function showCurrentLocationFromWGS84(lng, lat) {
+      pushGnssObservation(lng, lat, Date.now());
+      const last = gnssState.observations[gnssState.observations.length - 1] || { lng, lat };
+      const gcj = wgs84ToGcj02(last.lng, last.lat);
+      map.setZoomAndCenter(17, [gcj.lng, gcj.lat]);
+      buildCurrentMarker([gcj.lng, gcj.lat], '当前位置');
+    }
+
+    function drawFenceFromWGS84(lng, lat, radius) {
+      const corrected = applyCorrectionWgs(lng, lat);
+      const gcj = wgs84ToGcj02(corrected[0], corrected[1]);
+      if (fenceCircle) {
+        map.remove(fenceCircle);
+      }
+      buildCurrentMarker([gcj.lng, gcj.lat], '围栏中心');
+      fenceCircle = new AMap.Circle({
+        center: [gcj.lng, gcj.lat],
+        radius: radius,
+        strokeColor: '#3366FF',
+        strokeWeight: 3,
+        fillColor: '#3366FF',
+        fillOpacity: 0.15
+      });
+      map.add(fenceCircle);
+      map.setFitView([fenceCircle, currentMarker]);
+    }
+
+    function removeFence() {
+      if (fenceCircle) {
+        map.remove(fenceCircle);
+        fenceCircle = null;
+      }
+    }
+
+    function drawTrackFromWGS84(points) {
+      const validPoints = (points || []).map(item => {
+        const corrected = applyCorrectionWgs(item[0], item[1]);
+        const gcj = wgs84ToGcj02(corrected[0], corrected[1]);
+        return [gcj.lng, gcj.lat];
+      });
+      if (!validPoints.length) {
+        return;
+      }
+      if (trackPolyline) {
+        map.remove(trackPolyline);
+      }
+      trackPolyline = new AMap.Polyline({
+        path: validPoints,
+        strokeColor: '#00B578',
+        strokeWeight: 6,
+        lineJoin: 'round',
+        lineCap: 'round'
+      });
+      map.add(trackPolyline);
+      map.setFitView([trackPolyline]);
+    }
+
+    function clearTrack() {
+      if (trackPolyline) {
+        map.remove(trackPolyline);
+        trackPolyline = null;
+      }
+    }
+
+    function addPhotoMarkerFromWGS84(lng, lat, photoUri) {
+      const corrected = applyCorrectionWgs(lng, lat);
+      const pos = wgs84ToGcj02(corrected[0], corrected[1]);
+      const marker = new AMap.Marker({
+        position: [pos.lng, pos.lat],
+        anchor: 'bottom-center',
+        content:
+          '<div style="position:relative;width:26px;height:34px;">' +
+          '<div style="width:26px;height:26px;border-radius:50%;background:#FF6A00;color:white;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,0.25);">📷</div>' +
+          '</div>',
+        title: '拍照定位点'
+      });
+
+      marker.on('click', function() {
+        const infoWindow = new AMap.InfoWindow({
+          content:
+            '<div style="padding:8px;max-width:220px;word-break:break-all;">' +
+            '<div style="font-weight:bold;margin-bottom:6px;">拍照定位点</div>' +
+            '<div style="font-size:12px;">' + photoUri + '</div>' +
+            '</div>',
+          offset: new AMap.Pixel(0, -20)
+        });
+        infoWindow.open(map, [pos.lng, pos.lat]);
+      });
+
+      photoMarkers.push(marker);
+      map.add(marker);
+      map.setZoomAndCenter(17, [pos.lng, pos.lat]);
+    }
+
+    function toggleSatellite(enable) {
+      if (enable) {
+        if (!satelliteLayer) {
+          satelliteLayer = new AMap.TileLayer.Satellite();
+        }
+        if (!roadNetLayer) {
+          roadNetLayer = new AMap.TileLayer.RoadNet();
+        }
+        map.setLayers([satelliteLayer, roadNetLayer]);
+      } else {
+        map.setLayers([new AMap.TileLayer()]);
+      }
+    }
+
+    function searchPlace(keyword) {
+      AMap.plugin(['AMap.PlaceSearch'], function() {
+        const placeSearch = new AMap.PlaceSearch({ pageSize: 1, pageIndex: 1 });
+        placeSearch.search(keyword, function(status, result) {
+          if (status === 'complete' && result && result.poiList && result.poiList.pois.length > 0) {
+            const poi = result.poiList.pois[0];
+            map.setZoomAndCenter(16, poi.location);
+            buildCurrentMarker(poi.location, poi.name);
+          } else {
+            setStatus('未搜索到地点：' + keyword);
+          }
+        });
+      });
+    }
+
+    function clearRoutePanel() {
+      const panel = document.getElementById('routePanel');
+      if (panel) {
+        panel.innerHTML = '';
+        panel.style.display = 'none';
+      }
+    }
+
+    function clearAllRouteServices() {
+      if (driving) {
+        driving.clear();
+      }
+      if (riding) {
+        riding.clear();
+      }
+      if (walking) {
+        walking.clear();
+      }
+      clearRoutePanel();
+    }
+
+    function clearRoute() {
+      clearAllRouteServices();
+      setStatus('路线已清除');
+    }
+
+    function planRoute(startKeyword, endKeyword, mode) {
+      const panel = document.getElementById('routePanel');
+      if (panel) {
+        panel.style.display = 'block';
+        panel.innerHTML = '';
+      }
+
+      clearAllRouteServices();
+
+      if (mode === 'driving') {
+        AMap.plugin(['AMap.Driving'], function() {
+          driving = new AMap.Driving({
+            map: map,
+            panel: 'routePanel',
+            policy: AMap.DrivingPolicy.LEAST_TIME,
+            showTraffic: true,
+            autoFitView: true
+          });
+
+          driving.search(
+            [{ keyword: startKeyword }, { keyword: endKeyword }],
+            function(status) {
+              setStatus(status === 'complete' ? '驾车路线规划成功' : '驾车路线规划失败');
+            }
+          );
+        });
+        return;
+      }
+
+      if (mode === 'riding') {
+        AMap.plugin(['AMap.Riding'], function() {
+          riding = new AMap.Riding({
+            map: map,
+            panel: 'routePanel',
+            autoFitView: true
+          });
+
+          riding.search(
+            [{ keyword: startKeyword }, { keyword: endKeyword }],
+            function(status) {
+              setStatus(status === 'complete' ? '骑行路线规划成功' : '骑行路线规划失败');
+            }
+          );
+        });
+        return;
+      }
+
+      AMap.plugin(['AMap.Walking'], function() {
+        walking = new AMap.Walking({
+          map: map,
+          panel: 'routePanel',
+          autoFitView: true
+        });
+
+        walking.search(
+          [{ keyword: startKeyword }, { keyword: endKeyword }],
+          function(status) {
+            setStatus(status === 'complete' ? '步行路线规划成功' : '步行路线规划失败');
+          }
+        );
+      });
+    }
+
+    function initAMap() {
+      try {
+        if (typeof AMap === 'undefined') {
+          setStatus('AMap 未定义：脚本未正确加载');
+          return;
+        }
+
+        map = new AMap.Map('container', {
+          zoom: 15,
+          center: [116.397428, 39.90923],
+          viewMode: '3D'
+        });
+
+        map.plugin(['AMap.ToolBar', 'AMap.Scale'], function () {
+          map.addControl(new AMap.ToolBar());
+          map.addControl(new AMap.Scale());
+        });
+
+        setStatus('高德地图加载成功');
+      } catch (e) {
+        setStatus('地图初始化失败：' + JSON.stringify(e));
+      }
+    }
+
+    window._AMapSecurityConfig = {
+      securityJsCode: 'a6b3a21770895d71f19b1ba127328d9b'
+    };
+
+    window.pushGnssObservation = pushGnssObservation;
+    window.refreshGnssRealtimePanels = refreshGnssRealtimePanels;
+    window.showCurrentLocationFromWGS84 = showCurrentLocationFromWGS84;
+    window.drawFenceFromWGS84 = drawFenceFromWGS84;
+    window.removeFence = removeFence;
+    window.drawTrackFromWGS84 = drawTrackFromWGS84;
+    window.clearTrack = clearTrack;
+    window.addPhotoMarkerFromWGS84 = addPhotoMarkerFromWGS84;
+    window.toggleSatellite = toggleSatellite;
+    window.searchPlace = searchPlace;
+    window.planRoute = planRoute;
+    window.clearRoute = clearRoute;
+    window.openGnssTool = openGnssTool;
+    window.closeGnssTool = closeGnssTool;
+    window.fillLatestCoord = fillLatestCoord;
+    window.runCoordTransform = runCoordTransform;
+    window.parseNmeaQuality = parseNmeaQuality;
+    window.toggleFusionMode = toggleFusionMode;
+    window.showFusedPointOnMap = showFusedPointOnMap;
+    window.showCorrectedPointOnMap = showCorrectedPointOnMap;
+    window.enableCorsMode = enableCorsMode;
+    window.enablePppMode = enablePppMode;
+    window.disableCorrectionMode = disableCorrectionMode;
+</script>
+
+<script
+        src="https://webapi.amap.com/maps?v=2.0&key=ff0dddeb675330a76de6022267b0d78b&plugin=AMap.PlaceSearch,AMap.AutoComplete,AMap.Driving,AMap.Riding,AMap.Walking"
+        onload="initAMap()"
+        onerror="loadAMapFailed()">
+</script>
+</body>
+</html>

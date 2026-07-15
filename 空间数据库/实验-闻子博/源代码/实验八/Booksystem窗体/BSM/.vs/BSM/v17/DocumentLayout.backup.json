@@ -1,0 +1,152 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|d:\\vs\u4E0A\u673A\u4F5C\u4E1A\\booksystem\u7A97\u4F53\\bsm\\bsm\\frmre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|solutionrelative:bsm\\frmre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B9AF727-950B-4E79-BEA8-C1AABF26F412}|BSM.DAL\\BSM.DAL.csproj|D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\bsm.dal\\dbhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B9AF727-950B-4E79-BEA8-C1AABF26F412}|BSM.DAL\\BSM.DAL.csproj|solutionrelative:bsm.dal\\dbhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\bsm\\frmre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|solutionrelative:bsm\\frmre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\bsm\\frmmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|solutionrelative:bsm\\frmmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\bsm\\frmadd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|solutionrelative:bsm\\frmadd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\bsm\\frm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|solutionrelative:bsm\\frm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\bsm\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|solutionrelative:bsm\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\bsm\\frmregister.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{13056FF1-F746-4DD7-8CA9-903AE70F1786}|BSM\\BSM.csproj|solutionrelative:bsm\\frmregister.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "frmRe.cs",
+              "DocumentMoniker": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frmRe.cs",
+              "RelativeDocumentMoniker": "BSM\\frmRe.cs",
+              "ToolTip": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frmRe.cs",
+              "RelativeToolTip": "BSM\\frmRe.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAiwGUAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T08:00:45.524Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DBHelper.cs",
+              "DocumentMoniker": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM.DAL\\DBHelper.cs",
+              "RelativeDocumentMoniker": "BSM.DAL\\DBHelper.cs",
+              "ToolTip": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM.DAL\\DBHelper.cs",
+              "RelativeToolTip": "BSM.DAL\\DBHelper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-07T11:03:20.463Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "frmRe.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frmRe.cs",
+              "RelativeDocumentMoniker": "BSM\\frmRe.cs",
+              "ToolTip": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frmRe.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "BSM\\frmRe.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-06T09:38:19.896Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "frmMain.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frmMain.cs",
+              "RelativeDocumentMoniker": "BSM\\frmMain.cs",
+              "ToolTip": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frmMain.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "BSM\\frmMain.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-06T09:38:18.188Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FrmAdd.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\FrmAdd.cs",
+              "RelativeDocumentMoniker": "BSM\\FrmAdd.cs",
+              "ToolTip": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\FrmAdd.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "BSM\\FrmAdd.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-06T09:38:15.889Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "frm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frm.cs",
+              "RelativeDocumentMoniker": "BSM\\frm.cs",
+              "ToolTip": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "BSM\\frm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-06T09:38:11.484Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Form1.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\Form1.cs",
+              "RelativeDocumentMoniker": "BSM\\Form1.cs",
+              "ToolTip": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\Form1.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "BSM\\Form1.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-06T09:38:01.833Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "frmRegister.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frmRegister.cs",
+              "RelativeDocumentMoniker": "BSM\\frmRegister.cs",
+              "ToolTip": "D:\\vs\u4E0A\u673A\u4F5C\u4E1A\\Booksystem\u7A97\u4F53\\BSM\\BSM\\frmRegister.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "BSM\\frmRegister.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-06T09:14:12.268Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

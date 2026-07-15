@@ -1,0 +1,28 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "label"
+    },
+    {
+      "name": "approx_location_permission_reason",
+      "value": "需要获取大致位置信息，用于定位功能"
+    },
+    {
+      "name": "location_permission_reason",
+      "value": "需要获取精确位置信息，用于显示当前位置和导航"
+    },
+    {
+      "name": "camera_permission_reason",
+      "value": "需要使用相机拍照，实现拍照定位功能"
+    }
+  ]
+}

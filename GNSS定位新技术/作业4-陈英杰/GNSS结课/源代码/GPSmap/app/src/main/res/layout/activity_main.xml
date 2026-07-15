@@ -1,0 +1,869 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    GPSmap 主界面布局文件（详细注释版）
+    ============================================================
+    文件作用：
+    1. 使用 FrameLayout 作为根布局，让 MapView 全屏铺底，再将顶部信息卡片、功能模块、围栏半径卡片、底部操作栏和回到当前位置按钮叠加在地图上。
+    2. 顶部卡片包含搜索栏、地址/坐标状态、三个核心摘要卡片和可展开的“功能模块”。
+    3. “功能模块”默认收起，点击展开后显示卫星质量、精度评价、坐标转换、误差源、异常检测和组合导航六个标签按钮。
+    4. 底部功能区保留围栏、拍照、轨迹及其对应清除按钮，保证原 App 基础功能仍然直观可用。
+    5. 右侧回到当前位置按钮略微放大并下移，避免与顶部功能面板视觉冲突。
+
+    修改原则：
+    - 只通过布局层次、控件尺寸、显示/隐藏状态和 Material 风格卡片优化展示，不改变 Java 中的业务逻辑。
+    - 各 TextView、Button 的 id 必须与 MainActivity.java 中 findViewById() 一一对应，否则会导致运行时空指针错误。
+-->
+<!--
+    主界面布局文件
+    整体采用 FrameLayout 作为根布局
+    这样可以让地图作为底层全屏显示
+    再把顶部卡片、底部功能区、侧边按钮叠加到地图之上
+-->
+<!--
+    布局层次说明
+    1. 最底层是高德地图 MapView
+    2. 顶部是搜索与状态信息卡片
+    3. 中下部是围栏半径调节卡片
+    4. 底部是两行功能按钮区
+    5. 右侧中间是回到当前位置按钮
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 地图主体区域，铺满整个屏幕，作为所有上层控件的背景 -->
+    <com.amap.api.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCenterMe"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:text="⌖"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:translationY="170dp"
+            app:backgroundTint="#475569"
+            app:cornerRadius="28dp" />
+    </com.amap.api.maps.MapView>
+
+    <!-- 顶部搜索与状态卡片 -->
+    <!-- 该卡片用于显示搜索框、搜索结果、路线操作按钮以及定位状态信息 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        app:cardBackgroundColor="#F7FFFFFF"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="5dp"
+        app:strokeColor="#E2E8F0"
+        app:strokeWidth="1dp">
+
+        <!-- 顶部卡片内部采用纵向线性布局 -->
+        <!-- 里面依次放标题栏、搜索栏、搜索扩展区 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- 顶部标题栏 -->
+            <!-- 左侧显示应用标题，右侧显示展开收起按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- 页面标题 -->
+                <!-- 宽度设为 0dp 并配合 weight=1，用来自动占满剩余空间 -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="GPSmap"
+                    android:textColor="#1F2937"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!-- 展开收起按钮 -->
+                <!-- 用于控制下面状态区和搜索结果区是否显示 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:paddingStart="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="收起"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    app:backgroundTint="#64748B"
+                    app:cornerRadius="14dp" />
+            </LinearLayout>
+
+            <!-- 搜索栏区域 -->
+            <!-- 左边是输入框，右边是搜索按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <!-- 搜索输入框外层卡片 -->
+                <!-- 使用卡片包裹输入框，界面更圆润统一 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="#F8FAFC"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#CBD5E1"
+                    app:strokeWidth="1dp">
+
+                    <!-- 输入框内部横向布局 -->
+                    <!-- 左边小图标，右边 EditText -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp">
+
+                        <!-- 搜索图标 -->
+                        <!-- 这里直接使用字符模拟图标 -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⌕"
+                            android:textColor="#64748B"
+                            android:textSize="14sp" />
+
+                        <!-- 搜索输入框 -->
+                        <!-- 用户在这里输入要查询的地点关键字 -->
+                        <EditText
+                            android:id="@+id/etKeyword"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:hint="搜索位置"
+                            android:textColor="#0F172A"
+                            android:textColorHint="#94A3B8"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- 搜索按钮 -->
+                <!-- 点击后触发 POI 搜索 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:minWidth="0dp"
+                    android:text="搜索"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    app:backgroundTint="#475569"
+                    app:cornerRadius="14dp" />
+            </LinearLayout>
+
+            <!-- 搜索扩展区域 -->
+            <!-- 这一块可以整体展开和收起 -->
+            <!-- 包含搜索结果列表、路线按钮和状态文本 -->
+            <LinearLayout
+                android:id="@+id/layoutSearchExtras"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 搜索结果列表 -->
+                <!-- 搜索到地点后在这里显示多个 POI 结果 -->
+                <!-- 默认隐藏，只有搜索到结果时才显示 -->
+                <ListView
+                    android:id="@+id/lvSearchResults"
+                    android:layout_width="match_parent"
+                    android:layout_height="190dp"
+                    android:layout_marginTop="8dp"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="6dp"
+                    android:padding="2dp"
+                    android:clipToPadding="false"
+                    android:visibility="gone" />
+
+                <!-- 路线操作区 -->
+                <!-- 只有用户选中目的地之后才显示 -->
+                <LinearLayout
+                    android:id="@+id/layoutRouteActions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <!-- 当前已选目的地文字提示 -->
+                    <TextView
+                        android:id="@+id/tvSelectedDestination"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="已选目的地：--"
+                        android:textColor="#0F172A"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <!-- 路线操作按钮行 -->
+                    <!-- 包含步行、驾车、清除路线三个按钮 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
+
+                        <!-- 步行路线按钮 -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnWalkRoute"
+                            android:layout_width="0dp"
+                            android:layout_height="34dp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:minWidth="0dp"
+                            android:text="步行"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            app:backgroundTint="#64748B"
+                            app:cornerRadius="14dp" />
+
+                        <!-- 驾车路线按钮 -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDriveRoute"
+                            android:layout_width="0dp"
+                            android:layout_height="34dp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_weight="1"
+                            android:minWidth="0dp"
+                            android:text="驾车"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            app:backgroundTint="#78716C"
+                            app:cornerRadius="14dp" />
+
+                        <!-- 清除路线按钮 -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnClearRoute"
+                            android:layout_width="0dp"
+                            android:layout_height="34dp"
+                            android:layout_weight="1"
+                            android:minWidth="0dp"
+                            android:text="清路"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            app:backgroundTint="#94A3B8"
+                            app:cornerRadius="14dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 状态文本区域 -->
+                <!-- 用于显示当前地址、经纬度、围栏状态、轨迹状态、路线状态 -->
+
+                <!-- 地址显示 -->
+                <TextView
+                    android:id="@+id/tvAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:maxLines="2"
+                    android:text="地址：定位中..."
+                    android:textColor="#475569"
+                    android:textSize="12sp" />
+
+                <!-- 经纬度与精度显示 -->
+                <TextView
+                    android:id="@+id/tvCoord"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="经纬度：--"
+                    android:textColor="#475569"
+                    android:textSize="12sp" />
+
+                <!-- 功能模块摘要：默认只显示核心状态，具体模块可按需展开 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="58dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="#F8FAFC"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="GNSS质量"
+                                android:textColor="#64748B"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tvQuickGnss"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="等待卫星"
+                                android:textColor="#0F172A"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="58dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="#F8FAFC"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="定位精度"
+                                android:textColor="#64748B"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tvQuickAccuracy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="等待定位"
+                                android:textColor="#0F172A"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="58dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="#F8FAFC"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#E2E8F0"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="异常检测"
+                                android:textColor="#64748B"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/tvQuickAnomaly"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="待检测"
+                                android:textColor="#0F172A"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- 功能模块标题行，默认收起，点击后显示具体功能按钮和详情卡片 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="功能模块"
+                        android:textColor="#334155"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnToggleFeatureModule"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="展开"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        app:backgroundTint="#64748B"
+                        app:cornerRadius="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutFeatureModuleContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:overScrollMode="never"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShowGnss"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="6dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:text="卫星质量"
+                                android:textAllCaps="false"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                app:backgroundTint="#475569"
+                                app:cornerRadius="16dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShowAccuracy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="6dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:text="精度评价"
+                                android:textAllCaps="false"
+                                android:textColor="#334155"
+                                android:textSize="11sp"
+                                app:backgroundTint="#E2E8F0"
+                                app:cornerRadius="16dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShowCoord"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="6dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:text="坐标转换"
+                                android:textAllCaps="false"
+                                android:textColor="#334155"
+                                android:textSize="11sp"
+                                app:backgroundTint="#E2E8F0"
+                                app:cornerRadius="16dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShowError"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="6dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:text="误差源"
+                                android:textAllCaps="false"
+                                android:textColor="#334155"
+                                android:textSize="11sp"
+                                app:backgroundTint="#E2E8F0"
+                                app:cornerRadius="16dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShowAnomaly"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="6dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:text="异常检测"
+                                android:textAllCaps="false"
+                                android:textColor="#334155"
+                                android:textSize="11sp"
+                                app:backgroundTint="#E2E8F0"
+                                app:cornerRadius="16dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShowSensor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:text="组合导航"
+                                android:textAllCaps="false"
+                                android:textColor="#334155"
+                                android:textSize="11sp"
+                                app:backgroundTint="#E2E8F0"
+                                app:cornerRadius="16dp" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardFeatureDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:cardBackgroundColor="#F8FAFC"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#CBD5E1"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/tvFeatureTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="卫星质量评估"
+                                android:textColor="#0F172A"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvFeatureContent"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:lineSpacingExtra="2dp"
+                                android:maxLines="4"
+                                android:text="点击上方功能标签查看详细评估结果"
+                                android:textColor="#475569"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- 以下 TextView 用于保存各项功能的完整文字，界面通过上方详情卡片按需显示 -->
+                <TextView
+                    android:id="@+id/tvCoordConverted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="坐标转换：--"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvGnssQuality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GNSS质量：等待卫星数据"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvAccuracyEval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="定位精度评价：等待定位数据"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvErrorAnalysis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="误差源分析：等待定位数据"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvAnomalyDetect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="异常/欺骗初筛：待检测"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvSensorFusion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="组合导航：等待传感器数据"
+                    android:visibility="gone" />
+
+                <!-- 围栏状态显示 -->
+                <TextView
+                    android:id="@+id/tvFenceStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="围栏：未设置"
+                    android:textColor="#64748B"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <!-- 轨迹状态显示 -->
+                <TextView
+                    android:id="@+id/tvTrackStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="轨迹：未记录"
+                    android:textColor="#64748B"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <!-- 路线状态显示 -->
+                <TextView
+                    android:id="@+id/tvRouteStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="路线：未规划"
+                    android:textColor="#64748B"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 围栏半径调节卡片 -->
+    <!-- 当开启围栏模式后显示，用于调节电子围栏半径 -->
+    <!-- 默认隐藏 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardFenceRadius"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="86dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#F7FFFFFF"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:strokeColor="#E2E8F0"
+        app:strokeWidth="1dp">
+
+        <!-- 围栏半径卡片内部布局 -->
+        <LinearLayout
+            android:id="@+id/layoutFenceRadius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <!-- 当前围栏半径文字 -->
+            <TextView
+                android:id="@+id/tvFenceRadius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="围栏半径：100m"
+                android:textColor="#334155"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <!-- 围栏半径调节条 -->
+            <!-- 用户拖动后可改变电子围栏的大小 -->
+            <SeekBar
+                android:id="@+id/seekFenceRadius"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 底部功能区卡片 -->
+    <!-- 包含围栏、拍照、轨迹及其对应的清除按钮 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="18dp"
+        app:cardBackgroundColor="#F7FFFFFF"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="5dp"
+        app:strokeColor="#E2E8F0"
+        app:strokeWidth="1dp">
+
+        <!-- 底部卡片内部纵向布局 -->
+        <!-- 分成上下两行按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- 第一行按钮 -->
+            <!-- 围栏、拍照、轨迹 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- 开启或关闭围栏模式按钮 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFenceMode"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="围栏"
+                    android:textAllCaps="false"
+                    android:textColor="#334155"
+                    android:textSize="10sp"
+                    app:backgroundTint="#E2E8F0"
+                    app:cornerRadius="14dp" />
+
+                <!-- 拍照定位按钮 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTakePhoto"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="拍照"
+                    android:textAllCaps="false"
+                    android:textColor="#334155"
+                    android:textSize="10sp"
+                    app:backgroundTint="#E2E8F0"
+                    app:cornerRadius="14dp" />
+
+                <!-- 轨迹记录开始或停止按钮 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTrack"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="轨迹"
+                    android:textAllCaps="false"
+                    android:textColor="#334155"
+                    android:textSize="10sp"
+                    app:backgroundTint="#E2E8F0"
+                    app:cornerRadius="14dp" />
+            </LinearLayout>
+
+            <!-- 第二行按钮 -->
+            <!-- 清围、清拍、清轨 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <!-- 清除电子围栏按钮 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClearFence"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="清围"
+                    android:textAllCaps="false"
+                    android:textColor="#334155"
+                    android:textSize="10sp"
+                    app:backgroundTint="#E2E8F0"
+                    app:cornerRadius="14dp" />
+
+                <!-- 清除拍照点按钮 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClearPhotos"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="清拍"
+                    android:textAllCaps="false"
+                    android:textColor="#334155"
+                    android:textSize="10sp"
+                    app:backgroundTint="#E2E8F0"
+                    app:cornerRadius="14dp" />
+
+                <!-- 清除轨迹按钮 -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClearTrack"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="清轨"
+                    android:textAllCaps="false"
+                    android:textColor="#334155"
+                    android:textSize="10sp"
+                    app:backgroundTint="#E2E8F0"
+                    app:cornerRadius="14dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 侧边回到当前位置按钮 -->
+    <!-- 点击后地图镜头重新移动到当前定位点 -->
+
+</FrameLayout>

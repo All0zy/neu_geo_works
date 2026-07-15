@@ -1,0 +1,135 @@
+/*
+ * GPSmap 模块构建配置文件（详细注释版）
+ * ============================================================
+ * 文件作用：
+ * 1. 声明当前模块为 Android Application，可被编译、安装并运行在 Android 设备上。
+ * 2. 配置 namespace、applicationId、minSdk、targetSdk、versionCode、versionName 等基础构建信息。
+ * 3. 限定 NDK ABI 架构，减少不必要的 so 库体积。
+ * 4. 引入 AppCompat、Material、JUnit、Espresso 以及高德 3D 地图/定位/搜索一体化 SDK。
+ *
+ * 注意事项：
+ * - 高德依赖使用 latest.integration，便于课程开发阶段快速接入，但正式项目更建议固定具体版本号以避免依赖自动升级带来的兼容性问题。
+ * - 当前 compileSdk/targetSdk 为 36，如本地 Android Studio 没有安装相应 SDK，需要在 SDK Manager 中安装或根据本机环境调整。
+ */
+plugins {
+    // 通过版本目录（Version Catalog）里的别名引入 Android Application 插件。
+    // 这说明当前模块是一个“可安装的 Android 应用模块”，而不是普通的 Java 库或 Android Library。
+    alias(libs.plugins.android.application)
+}
+
+// Android 模块的核心构建配置都写在 android { } 代码块中。
+android {
+    // 设置当前应用的命名空间（namespace）。
+    // 它通常对应生成的 R 类、BuildConfig 类所在的包名空间。
+    // 这里使用 com.example.gpsmap，和你的应用包结构保持一致。
+    namespace 'com.example.gpsmap'
+
+    // 配置编译 SDK 版本。
+    // compileSdk 决定项目在编译时使用哪一版 Android SDK API。
+    // 编译 SDK 越高，越可以使用新的系统 API。
+    compileSdk {
+        // 指定主 SDK 版本号为 36。
+        // release(36) 表示使用 Android API 36 的正式发布版本配置。
+        version = release(36) {
+            // 指定 minorApiLevel 为 1。
+            // 这是更细粒度的 API 版本控制，用于一些新式 SDK/预览发布配置场景。
+            minorApiLevel = 1
+        }
+    }
+
+    // defaultConfig 是默认构建配置。
+    // 这里面的配置会作用于所有构建变体（如 debug、release），除非被其他构建类型单独覆盖。
+    defaultConfig {
+        // 设置应用的唯一包名标识（Application ID）。
+        // 应用安装到手机后，系统实际识别的就是这个 ID。
+        applicationId "com.example.gpsmap"
+
+        // 指定应用支持的最低 Android 系统版本。
+        // minSdk 24 表示 Android 7.0（Nougat）及以上设备才能安装。
+        minSdk 24
+
+        // 指定应用面向适配的目标 Android 版本。
+        // targetSdk 越高，表示应用越按新系统行为规范运行。
+        targetSdk 36
+
+        // 设置应用内部版本号。
+        // versionCode 必须是整数，主要给系统和应用商店用于版本升级判断。
+        versionCode 1
+
+        // 设置应用对用户可见的版本名。
+        // 这个字符串通常会显示在应用详情页中。
+        versionName "1.0"
+
+        // 指定仪器化测试（Instrumentation Test）运行器。
+        // 当你运行 androidTest 目录下的测试代码时，会由这个 Runner 启动测试环境。
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // 配置 NDK（Native Development Kit）相关参数。
+        // 如果项目依赖到带有 native so 库的第三方 SDK，这里常常需要限制 ABI。
+        ndk {
+            // 指定仅打包这两种 CPU 架构的 so 库：
+            // armeabi-v7a：32 位 ARM
+            // arm64-v8a：64 位 ARM
+            // 这样可以减少 APK/AAB 体积，也避免打包不需要的架构。
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+
+    // 配置不同的构建类型（Build Types）。
+    // 常见的有 debug 和 release。
+    buildTypes {
+        // release 表示正式发布版本的配置。
+        release {
+            // 是否开启代码压缩、混淆、优化。
+            // false 表示当前不启用混淆，也不会删除未使用代码。
+            // 对课程作业或调试阶段比较方便，但正式发布一般会考虑开启。
+            minifyEnabled false
+
+            // 指定混淆规则文件。
+            // getDefaultProguardFile(...)：使用 Android 默认提供的优化混淆规则模板。
+            // 'proguard-rules.pro'：项目自定义混淆规则文件。
+            // 虽然当前 minifyEnabled 为 false，这两项暂时不会生效，但保留配置是常见做法。
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // 配置 Java 编译选项。
+    compileOptions {
+        // 指定源代码使用的 Java 语言版本为 Java 11。
+        // 这决定了你可以在代码中使用哪些 Java 语法特性。
+        sourceCompatibility JavaVersion.VERSION_11
+
+        // 指定编译后目标字节码版本也为 Java 11。
+        // 通常应与 sourceCompatibility 保持一致。
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+// 声明项目依赖库。
+dependencies {
+    // 引入 AndroidX AppCompat 支持库。
+    // 提供向下兼容的 Activity、主题、控件等基础能力。
+    implementation libs.appcompat
+
+    // 引入 Material Design 组件库。
+    // 你的 MaterialButton、MaterialCardView 等控件就依赖这个库。
+    implementation libs.material
+
+    // 引入本地单元测试框架 JUnit。
+    // 用于 test 目录下的 JVM 单元测试。
+    testImplementation libs.junit
+
+    // 引入 AndroidX 扩展 JUnit 测试库。
+    // 用于 androidTest 仪器化测试中的 JUnit 支持。
+    androidTestImplementation libs.ext.junit
+
+    // 引入 Espresso UI 测试框架核心库。
+    // 可用于编写界面自动化测试，例如点击按钮、检查文本显示等。
+    androidTestImplementation libs.espresso.core
+
+    // 引入高德地图 3D 地图 + 定位 + 搜索 一体化 SDK。
+    // 这个依赖是你当前地图显示、定位、POI 搜索、路线规划等功能的核心基础。
+    // latest.integration 表示始终使用该依赖的最新集成版本。
+    // 优点是方便快速接入；缺点是版本不可完全固定，后期可能因远程更新带来兼容性变化。
+    implementation 'com.amap.api:3dmap-location-search:latest.integration'
+}

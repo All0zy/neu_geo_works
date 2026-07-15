@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    GPSmap 应用清单文件（详细注释版）
+    ============================================================
+    文件作用：
+    1. 声明 App 所需权限，例如网络、定位、WiFi 状态、保持唤醒和相机权限。
+    2. 声明 GPS/GNSS 与相机硬件特性，并通过 required=false 保证缺少部分硬件的设备仍可安装。
+    3. 配置高德地图 SDK 的 API Key，使地图、定位、搜索和路线服务能够正常使用。
+    4. 声明 MainActivity 为应用入口，保证用户点击桌面图标后进入主地图界面。
+
+    注意事项：
+    - ACCESS_FINE_LOCATION 是读取高精度定位和 GNSS 卫星状态的关键权限。
+    - CAMERA 权限用于拍照定位；如果不使用拍照功能，可在功能裁剪时删除该权限和对应代码。
+    - API Key 应与包名、SHA1 等高德开放平台配置保持一致，否则地图服务可能无法加载。
+-->
+<!-- Android 应用清单文件，负责声明权限、硬件特性、应用信息和入口 Activity -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 允许应用访问网络，地图加载、POI 搜索、路径规划等都需要联网 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- 允许应用获取当前网络连接状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- 允许应用获取 WiFi 状态信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 允许应用获取粗略位置信息 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- 允许应用获取精确位置信息，这是定位导航功能的核心权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- 允许应用修改 WiFi 状态 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- 允许应用保持设备唤醒，避免定位过程中设备休眠影响功能 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- 允许应用调用相机，用于拍照定位功能 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- 声明应用可使用 GNSS/GPS 硬件 -->
+    <!-- required=false 表示没有独立 GNSS 芯片时应用依然可以安装，只是定位质量评估信息可能不完整 -->
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+
+    <!-- 声明应用可使用摄像头硬件 -->
+    <!-- required=false 表示没有摄像头时应用依然可以安装，只是相关功能不可用 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- application 节点定义整个应用的全局属性 -->
+    <!-- allowBackup 表示允许系统备份应用数据 -->
+    <!-- dataExtractionRules 和 fullBackupContent 是备份相关配置文件 -->
+    <!-- icon 和 roundIcon 分别是普通图标和圆形图标 -->
+    <!-- label 是应用名称 -->
+    <!-- supportsRtl 表示支持从右到左布局 -->
+    <!-- theme 指定应用主题 -->
+    <!-- tools:targetApi 表示这里的配置面向的目标 API 版本 -->
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.GPSmap"
+        tools:targetApi="31">
+
+        <!-- 配置高德地图 SDK 的 API Key -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="86c47ce5ea1ed02ff40457e316d0c6a8" />
+
+        <!-- 声明主界面 Activity -->
+        <!-- exported=true 表示该 Activity 可被系统启动，因为它是桌面入口 -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+
+            <!-- intent-filter 表示该 Activity 的启动方式 -->
+            <!-- MAIN 表示主入口动作 -->
+            <!-- LAUNCHER 表示会出现在桌面启动器中 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

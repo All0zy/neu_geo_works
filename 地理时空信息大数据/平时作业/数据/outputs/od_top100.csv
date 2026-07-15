@@ -1,0 +1,101 @@
+﻿PULocationID,DOLocationID,flow_count,PU_Borough,PU_Zone,PU_service_zone,DO_Borough,DO_Zone,DO_service_zone
+237,236,28881,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+236,237,24689,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+237,237,19181,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+236,236,16978,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+161,237,13392,Manhattan,Midtown Center,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+237,161,12480,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+161,236,10792,Manhattan,Midtown Center,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+237,162,9756,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Midtown East,Yellow Zone
+236,161,9474,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+142,239,9314,Manhattan,Lincoln Square East,Yellow Zone,Manhattan,Upper West Side South,Yellow Zone
+239,142,9061,Manhattan,Upper West Side South,Yellow Zone,Manhattan,Lincoln Square East,Yellow Zone
+141,236,8591,Manhattan,Lenox Hill West,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+132,230,8564,Queens,JFK Airport,Airports,Manhattan,Times Sq/Theatre District,Yellow Zone
+239,238,8507,Manhattan,Upper West Side South,Yellow Zone,Manhattan,Upper West Side North,Yellow Zone
+162,237,8317,Manhattan,Midtown East,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+132,265,8284,Queens,JFK Airport,Airports,,Outside of NYC,
+236,141,8169,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Lenox Hill West,Yellow Zone
+237,141,8052,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Lenox Hill West,Yellow Zone
+142,237,8034,Manhattan,Lincoln Square East,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+237,142,7882,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Lincoln Square East,Yellow Zone
+236,239,7666,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Upper West Side South,Yellow Zone
+142,236,7587,Manhattan,Lincoln Square East,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+161,234,7515,Manhattan,Midtown Center,Yellow Zone,Manhattan,Union Sq,Yellow Zone
+238,239,7490,Manhattan,Upper West Side North,Yellow Zone,Manhattan,Upper West Side South,Yellow Zone
+186,230,7482,Manhattan,Penn Station/Madison Sq West,Yellow Zone,Manhattan,Times Sq/Theatre District,Yellow Zone
+237,263,7452,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Yorkville West,Yellow Zone
+138,230,7418,Queens,LaGuardia Airport,Airports,Manhattan,Times Sq/Theatre District,Yellow Zone
+142,238,7385,Manhattan,Lincoln Square East,Yellow Zone,Manhattan,Upper West Side North,Yellow Zone
+236,142,7308,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Lincoln Square East,Yellow Zone
+239,236,7238,Manhattan,Upper West Side South,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+163,237,7203,Manhattan,Midtown North,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+141,237,7133,Manhattan,Lenox Hill West,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+236,162,6968,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Midtown East,Yellow Zone
+162,236,6954,Manhattan,Midtown East,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+236,238,6828,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Upper West Side North,Yellow Zone
+186,161,6785,Manhattan,Penn Station/Madison Sq West,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+140,236,6727,Manhattan,Lenox Hill East,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+263,236,6726,Manhattan,Yorkville West,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+163,236,6701,Manhattan,Midtown North,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+161,161,6564,Manhattan,Midtown Center,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+262,236,6541,Manhattan,Yorkville East,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+161,164,6400,Manhattan,Midtown Center,Yellow Zone,Manhattan,Midtown South,Yellow Zone
+236,263,6341,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Yorkville West,Yellow Zone
+48,68,6303,Manhattan,Clinton East,Yellow Zone,Manhattan,East Chelsea,Yellow Zone
+236,262,6298,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Yorkville East,Yellow Zone
+237,140,6294,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Lenox Hill East,Yellow Zone
+263,141,6164,Manhattan,Yorkville West,Yellow Zone,Manhattan,Lenox Hill West,Yellow Zone
+237,239,6142,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Upper West Side South,Yellow Zone
+234,170,6141,Manhattan,Union Sq,Yellow Zone,Manhattan,Murray Hill,Yellow Zone
+238,236,6077,Manhattan,Upper West Side North,Yellow Zone,Manhattan,Upper East Side North,Yellow Zone
+237,163,5992,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Midtown North,Yellow Zone
+142,161,5943,Manhattan,Lincoln Square East,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+238,142,5915,Manhattan,Upper West Side North,Yellow Zone,Manhattan,Lincoln Square East,Yellow Zone
+237,229,5872,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Sutton Place/Turtle Bay North,Yellow Zone
+186,234,5849,Manhattan,Penn Station/Madison Sq West,Yellow Zone,Manhattan,Union Sq,Yellow Zone
+230,186,5825,Manhattan,Times Sq/Theatre District,Yellow Zone,Manhattan,Penn Station/Madison Sq West,Yellow Zone
+140,237,5797,Manhattan,Lenox Hill East,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+107,170,5796,Manhattan,Gramercy,Yellow Zone,Manhattan,Murray Hill,Yellow Zone
+186,170,5774,Manhattan,Penn Station/Madison Sq West,Yellow Zone,Manhattan,Murray Hill,Yellow Zone
+163,161,5767,Manhattan,Midtown North,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+236,140,5730,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Lenox Hill East,Yellow Zone
+161,163,5719,Manhattan,Midtown Center,Yellow Zone,Manhattan,Midtown North,Yellow Zone
+237,262,5632,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Yorkville East,Yellow Zone
+161,142,5520,Manhattan,Midtown Center,Yellow Zone,Manhattan,Lincoln Square East,Yellow Zone
+161,186,5492,Manhattan,Midtown Center,Yellow Zone,Manhattan,Penn Station/Madison Sq West,Yellow Zone
+161,141,5455,Manhattan,Midtown Center,Yellow Zone,Manhattan,Lenox Hill West,Yellow Zone
+162,141,5449,Manhattan,Midtown East,Yellow Zone,Manhattan,Lenox Hill West,Yellow Zone
+239,239,5440,Manhattan,Upper West Side South,Yellow Zone,Manhattan,Upper West Side South,Yellow Zone
+239,237,5423,Manhattan,Upper West Side South,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+161,170,5384,Manhattan,Midtown Center,Yellow Zone,Manhattan,Murray Hill,Yellow Zone
+236,75,5294,Manhattan,Upper East Side North,Yellow Zone,Manhattan,East Harlem South,Boro Zone
+141,263,5250,Manhattan,Lenox Hill West,Yellow Zone,Manhattan,Yorkville West,Yellow Zone
+236,163,5205,Manhattan,Upper East Side North,Yellow Zone,Manhattan,Midtown North,Yellow Zone
+263,237,5204,Manhattan,Yorkville West,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+142,163,5183,Manhattan,Lincoln Square East,Yellow Zone,Manhattan,Midtown North,Yellow Zone
+161,230,5117,Manhattan,Midtown Center,Yellow Zone,Manhattan,Times Sq/Theatre District,Yellow Zone
+132,132,5109,Queens,JFK Airport,Airports,Queens,JFK Airport,Airports
+229,237,5096,Manhattan,Sutton Place/Turtle Bay North,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+249,79,5090,Manhattan,West Village,Yellow Zone,Manhattan,East Village,Yellow Zone
+79,170,5089,Manhattan,East Village,Yellow Zone,Manhattan,Murray Hill,Yellow Zone
+164,161,5055,Manhattan,Midtown South,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+170,234,5029,Manhattan,Murray Hill,Yellow Zone,Manhattan,Union Sq,Yellow Zone
+142,48,5023,Manhattan,Lincoln Square East,Yellow Zone,Manhattan,Clinton East,Yellow Zone
+234,161,4951,Manhattan,Union Sq,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+262,237,4945,Manhattan,Yorkville East,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+230,68,4896,Manhattan,Times Sq/Theatre District,Yellow Zone,Manhattan,East Chelsea,Yellow Zone
+141,229,4888,Manhattan,Lenox Hill West,Yellow Zone,Manhattan,Sutton Place/Turtle Bay North,Yellow Zone
+138,161,4849,Queens,LaGuardia Airport,Airports,Manhattan,Midtown Center,Yellow Zone
+142,142,4843,Manhattan,Lincoln Square East,Yellow Zone,Manhattan,Lincoln Square East,Yellow Zone
+170,237,4818,Manhattan,Murray Hill,Yellow Zone,Manhattan,Upper East Side South,Yellow Zone
+230,142,4801,Manhattan,Times Sq/Theatre District,Yellow Zone,Manhattan,Lincoln Square East,Yellow Zone
+161,68,4740,Manhattan,Midtown Center,Yellow Zone,Manhattan,East Chelsea,Yellow Zone
+239,143,4739,Manhattan,Upper West Side South,Yellow Zone,Manhattan,Lincoln Square West,Yellow Zone
+141,141,4716,Manhattan,Lenox Hill West,Yellow Zone,Manhattan,Lenox Hill West,Yellow Zone
+162,170,4692,Manhattan,Midtown East,Yellow Zone,Manhattan,Murray Hill,Yellow Zone
+237,238,4633,Manhattan,Upper East Side South,Yellow Zone,Manhattan,Upper West Side North,Yellow Zone
+68,68,4614,Manhattan,East Chelsea,Yellow Zone,Manhattan,East Chelsea,Yellow Zone
+230,161,4614,Manhattan,Times Sq/Theatre District,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+170,161,4606,Manhattan,Murray Hill,Yellow Zone,Manhattan,Midtown Center,Yellow Zone
+68,230,4559,Manhattan,East Chelsea,Yellow Zone,Manhattan,Times Sq/Theatre District,Yellow Zone

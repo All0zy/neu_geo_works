@@ -1,0 +1,15 @@
+HKSL task2 PPP daily summary
+
+Method: Python static PPP core + weekly-reference constrained multi-profile rerun.
+Strongest ionospheric impact day: 2026-01-20, iono_index=0.851
+Best formal precision day: 2026-01-18, formal_3d=13.78 mm
+Worst formal precision day: 2026-01-17, formal_3d=22.19 mm
+Worst sub-daily repeatability day: 2026-01-20, stable_effective_3d=1613.01 mm
+
+2026-01-16: profile=balanced, quality=优秀, formal_3d=16.51 mm, stable_effective_3d=209.40 mm, d3D=2444.60 mm, iono_idx=0.440, impact_score=0.210, rank=7
+2026-01-17: profile=robust, quality=一般, formal_3d=22.19 mm, stable_effective_3d=574.51 mm, d3D=3648.00 mm, iono_idx=0.081, impact_score=0.404, rank=3
+2026-01-18: profile=tight, quality=良好, formal_3d=13.78 mm, stable_effective_3d=425.74 mm, d3D=4219.77 mm, iono_idx=0.604, impact_score=0.254, rank=6
+2026-01-19: profile=tight, quality=一般, formal_3d=13.90 mm, stable_effective_3d=514.26 mm, d3D=1337.30 mm, iono_idx=0.515, impact_score=0.263, rank=5
+2026-01-20: profile=balanced, quality=较差, formal_3d=16.62 mm, stable_effective_3d=1613.01 mm, d3D=3447.27 mm, iono_idx=0.851, impact_score=0.834, rank=1
+2026-01-21: profile=robust, quality=较差, formal_3d=21.98 mm, stable_effective_3d=1383.39 mm, d3D=5720.54 mm, iono_idx=0.001, impact_score=0.662, rank=2
+2026-01-22: profile=balanced, quality=良好, formal_3d=16.24 mm, stable_effective_3d=368.71 mm, d3D=1286.12 mm, iono_idx=0.689, impact_score=0.332, rank=4

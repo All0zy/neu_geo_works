@@ -1,0 +1,56 @@
+数据文件包括：
+- RINEX 2.11 观测文件(.o)
+- SP3 精密轨道文件*3
+- CLK 精密钟差文件
+- I20.ATX 天线文件
+- BIA 偏差文件
+
+二、工程目录说明
+1. 根目录
+   - run_ppp_suwn.m      : 主程序入口
+   - ppp_config_suwn.m   : 统一配置文件
+   - README.txt          : 使用说明
+
+2. io/
+   - read_rinex2_obs_gps.m : 观测文件读取
+   - read_sp3_multi.m      : SP3 轨道文件读取与拼接
+   - read_clk_whu.m        : CLK 文件读取
+   - read_atx_igs.m        : ATX 天线文件读取
+   - read_bia_osb.m        : BIA/OSB 文件读取
+
+3. models/
+   - apply_bia_osb.m          : 偏差改正应用
+   - detect_cycle_slip_basic.m: 周跳探测
+   - hatch_smooth_obs.m       : Hatch 平滑
+   - phase_windup_simple.m    : 相位缠绕改正
+   - preprocess_obs.m         : 预处理总控
+   - sat_clock_interp.m       : 卫星钟差插值
+   - sp3_interp.m             : 轨道插值
+   - trop_saastamoinen.m      : 对流层模型
+
+4. solver/
+   - run_static_ppp_filter.m  : 静态 PPP 滤波核心
+
+5. utils/
+   - 各种数学与坐标转换工具函数
+
+三、运行步骤
+1. 将所有数据文件放到 data 文件夹。
+2. 修改 ppp_config_suwn.m 中的文件路径与标准坐标。
+3. 在 MATLAB 中进入工程根目录。
+4. 运行 run_ppp_suwn。
+5. 程序会输出：
+   - 有效历元数
+   - ZWD
+   - 坐标 STD
+   - 最终解算坐标 XYZ
+   - 与标准坐标的 dXYZ / ENU / 3D 误差
+
+四、算法流程
+1. 读取观测与精密产品
+2. 应用 BIA/OSB 偏差改正
+3. 进行周跳探测与伪距平滑
+4. 逐历元建立 PPP 观测方程并进行滤波
+5. 从收敛后稳定段中提取最终坐标
+6. 与标准坐标比较并输出误差
+

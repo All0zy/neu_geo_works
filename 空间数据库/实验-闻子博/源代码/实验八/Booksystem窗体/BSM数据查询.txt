@@ -1,0 +1,29 @@
+CREATE TABLE [dbo].[Book] (
+    [图书编号] INT           IDENTITY (2020, 1) NOT NULL,
+    [书名]   NVARCHAR (10) NULL,
+    [主编]   NVARCHAR (50) NULL,
+    [出版社]  NVARCHAR (50) NULL,
+    [分类]   NVARCHAR (50) NULL,
+    [数量]   NVARCHAR (50) NULL,
+    [来源]   NVARCHAR (50) NULL,
+    [封面]   IMAGE         NULL,
+    PRIMARY KEY CLUSTERED ([图书编号] ASC)
+);
+
+CREATE TABLE [dbo].[Login] (
+    [账号] NVARCHAR (50) NOT NULL,
+    [密码] NVARCHAR (50) NULL,
+    [昵称] NVARCHAR (50) NULL,
+    PRIMARY KEY CLUSTERED ([账号] ASC)
+);
+
+
+SET IDENTITY_INSERT [dbo].[Book] ON
+INSERT INTO [dbo].[Book] ([图书编号], [书名], [主编], [出版社], [分类], [数量], [来源], [封面]) VALUES (2020, N'C语言', N'王海', N'重庆大学出版社', N'科技', N'56', N'社会', NULL)
+INSERT INTO [dbo].[Book] ([图书编号], [书名], [主编], [出版社], [分类], [数量], [来源], [封面]) VALUES (2021, N'计算机网络', N'李明', N'重庆大学出版社', N'教育', N'166', N'其他', NULL)
+INSERT INTO [dbo].[Book] ([图书编号], [书名], [主编], [出版社], [分类], [数量], [来源], [封面]) VALUES (2022, N'专业英语', N'夏至', N'重庆大学出版社', N'外刊', N'88', N'其他', NULL)
+INSERT INTO [dbo].[Book] ([图书编号], [书名], [主编], [出版社], [分类], [数量], [来源], [封面]) VALUES (2023, N'软件体系结构', N'铭泰', N'清华大学出版社', N'教育', N'95', N'其他', NULL)
+INSERT INTO [dbo].[Book] ([图书编号], [书名], [主编], [出版社], [分类], [数量], [来源], [封面]) VALUES (2024, N'操作系统', N'丹迪', N'清华大学出版社', N'科技', N'787', N'其他', NULL)
+SET IDENTITY_INSERT [dbo].[Book] OFF
+
+

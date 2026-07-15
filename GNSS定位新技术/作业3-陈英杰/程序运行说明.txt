@@ -1,0 +1,193 @@
+一、建议目录结构
+建议把 5 个代码文件和对应原始数据放在同一个总目录下，例如：
+
+GNSS_TEC_Project/
+│
+├─ task1_vtec_latitude_comparison_30s.py
+├─ task1_hongkong_polynomial_model_24h_fitcurve.py
+├─ task2_hksl_vtec_only_fixed_parser.py
+├─ task2_hksl_ppp_python_only_v2.py
+├─ ppp_core_real_kf.py
+│
+├─ task1_data/
+│  ├─ salu0270.26o
+│  ├─ hkws0270.26o
+│  ├─ coso0270.26o
+│  ├─ nrc10270.26o
+│  ├─ novm0270.26o
+│  ├─ holm0270.26o
+│  └─ WUM0MGXRAP_20260270000_01D_05M_ORB.SP3
+│
+├─ hk_model_data/
+│  ├─ hkws0270.26o
+│  ├─ HKCL00HKG_R_20260270000_01D_30S_MO.26o
+│  ├─ HKKT00HKG_R_20260270000_01D_30S_MO.26o
+│  ├─ HKMW00HKG_R_20260270000_01D_30S_MO.26o
+│  ├─ HKOH00HKG_R_20260270000_01D_30S_MO.26o
+│  ├─ HKSC00HKG_R_20260270000_01D_30S_MO.26o
+│  ├─ HKST00HKG_R_20260270000_01D_30S_MO.26o
+│  └─ WUM0MGXRAP_20260270000_01D_05M_ORB.SP3
+│
+└─ task2_data/
+   ├─ hksl0160.26o
+   ├─ hksl0170.26o
+   ├─ hksl0180.26o
+   ├─ hksl0190.26o
+   ├─ hksl0200.26o
+   ├─ hksl0210.26o
+   ├─ hksl0220.26o
+   ├─ brdc0160.26n ~ brdc0220.26n
+   ├─ WUM0MGXRAP_20260160000_01D_05M_ORB.SP3 ~ 20260220000_01D_05M_ORB.SP3
+   ├─ WUM0MGXRAP_20260160000_01D_30S_CLK.CLK ~ 20260220000_01D_30S_CLK.CLK
+   ├─ WUM0MGXRAP_20260160000_01D_01D_OSB.BIA ~ 20260220000_01D_01D_OSB.BIA
+   └─ I20.ATX
+
+说明：
+ 5 个代码文件不一定必须放在同一目录，但 task2_hksl_ppp_python_only_v2.py 和 ppp_core_real_kf.py 必须放在同一目录。
+
+
+二、每个文件的作用
+1. task1_vtec_latitude_comparison_30s.py
+   功能：
+   - 完成任务一第 1 问；
+   - 对 6 个不同纬度测站进行 VTEC 反演与对比；
+   - 生成不同纬度测站 30 s 历元 VTEC 对比图；
+   - 生成 VTEC 统计随纬度变化图；
+   - 输出结果表格（CSV）和图片（PNG）。
+
+2. task1_hongkong_polynomial_model_24h_fitcurve.py
+   功能：
+   - 完成任务一第 2 问；
+   - 使用香港区域多个测站观测，构建区域电离层多项式模型；
+   - 按历元拟合模型系数；
+   - 输出拟合曲线、残差统计、24 小时区域模型图、RMS 时序图等。
+
+3. task2_hksl_vtec_only_fixed_parser.py
+   功能：
+   - 完成任务二第 1 问；
+   - 以 HKSL 单站为对象，分析 2026-01-19 磁暴前后各三天（01-16 ~ 01-22）的 VTEC 变化；
+   - 输出 7 天 VTEC 曲线图和每日统计结果；
+   - 只做 VTEC，不做 PPP。
+
+4. ppp_core_real_kf.py
+   功能：
+   - PPP 核心求解文件；
+   - 负责读取 RINEX 观测文件、导航文件、SP3 精密轨道、CLK 精密钟差、BIA 偏差、ATX 天线文件；
+   - 实现静态 PPP 滤波解算；
+   - 是 task2_hksl_ppp_python_only_v2.py 的底层依赖，不能单独缺失。
+
+5. task2_hksl_ppp_python_only_v2.py
+   功能：
+   - 完成任务二第 2 问；
+   - 调用 ppp_core_real_kf.py 对 HKSL 一周数据进行静态 PPP 解算；
+   - 采用“自由解 + 周参考约束 + 多参数配置重算”的方式，比较每天 PPP 精度；
+   - 自动合并 task2_vtec_daily_summary.csv（如果存在），用于分析电离层扰动与 PPP 精度之间的关系；
+   - 输出 PPP 日精度图、稳定段散布图、电离层影响对比图和最终汇总表。
+
+
+三、每个程序所需数据文件
+（一）task1_vtec_latitude_comparison_30s.py
+必需数据：
+- 6 个不同纬度测站的 RINEX 2 观测文件：
+  salu0270.26o
+  hkws0270.26o
+  coso0270.26o
+  nrc10270.26o
+  novm0270.26o
+  holm0270.26o
+- 1 个精密轨道文件：
+  WUM0MGXRAP_20260270000_01D_05M_ORB.SP3
+
+说明：
+- 本程序主要利用双频伪距组合和 SP3 精密轨道计算 VTEC。
+- 当前代码不强制要求 DCB 文件。
+
+（二）task1_hongkong_polynomial_model_24h_fitcurve.py
+必需数据：
+- 香港区域 7 个测站观测文件：
+  hkws0270.26o
+  HKCL00HKG_R_20260270000_01D_30S_MO.26o
+  HKKT00HKG_R_20260270000_01D_30S_MO.26o
+  HKMW00HKG_R_20260270000_01D_30S_MO.26o
+  HKOH00HKG_R_20260270000_01D_30S_MO.26o
+  HKSC00HKG_R_20260270000_01D_30S_MO.26o
+  HKST00HKG_R_20260270000_01D_30S_MO.26o
+- 1 个精密轨道文件：
+  WUM0MGXRAP_20260270000_01D_05M_ORB.SP3
+
+说明：
+- 本程序用香港区域多个测站的 IPP 点做多项式拟合。
+- 需要测站数量足够，否则模型秩不足，不能稳定拟合。
+
+（三）task2_hksl_vtec_only_fixed_parser.py
+必需数据：
+- HKSL 一周的 7 个观测文件：
+  hksl0160.26o
+  hksl0170.26o
+  hksl0180.26o
+  hksl0190.26o
+  hksl0200.26o
+  hksl0210.26o
+  hksl0220.26o
+- 对应 7 天的 SP3 精密轨道：
+  WUM0MGXRAP_20260160000_01D_05M_ORB.SP3
+  ...
+  WUM0MGXRAP_20260220000_01D_05M_ORB.SP3
+
+说明：
+- 此程序只需要观测文件和精密轨道即可运行。
+- 主要输出 task2_vtec_daily_summary.csv，后续 PPP 程序会自动调用这个文件。
+
+（四）task2_hksl_ppp_python_only_v2.py
+必需数据：
+- HKSL 一周观测文件：
+  hksl0160.26o ~ hksl0220.26o
+- 广播星历文件：
+  brdc0160.26n ~ brdc0220.26n
+- 精密轨道文件：
+  WUM0MGXRAP_20260160000_01D_05M_ORB.SP3 ~ 20260220000_01D_05M_ORB.SP3
+- 精密钟差文件：
+  WUM0MGXRAP_20260160000_01D_30S_CLK.CLK ~ 20260220000_01D_30S_CLK.CLK
+- 偏差文件：
+  WUM0MGXRAP_20260160000_01D_01D_OSB.BIA ~ 20260220000_01D_01D_OSB.BIA
+- 天线文件：
+  I20.ATX
+- 核心文件：
+  ppp_core_real_kf.py
+
+
+
+说明：
+- 这个 PPP 程序是五个程序里数据需求最多的一个。
+- 缺少 .n、.SP3、.CLK、.BIA、.ATX 中任意关键文件，都可能导致运行失败或结果异常。
+
+
+
+四、主要输出结果文件说明
+1. task1_vtec_latitude_comparison_30s.py 输出
+- station_vtec_comparison_lst_30s.png：6 个测站 VTEC 30 s 对比图
+- station_vtec_statistics_vs_latitude.png：VTEC 统计量随纬度变化图
+- task1_station_summary_for_report.csv：报告用汇总表
+- task1_30s_lst_vtec.csv：30 s 历元 VTEC 序列
+- task1_hourly_lst_vtec.csv：整点统计序列
+
+2. task1_hongkong_polynomial_model_24h_fitcurve.py 输出
+- hk_regional_model_rms_timeseries.png：区域模型按历元 RMS 时序图
+- hk_regional_model_fit_curve_overall.png：总体拟合曲线
+- hk_regional_polynomial_model_24h.png：24 小时区域模型图
+- hk_regional_model_metrics.csv：RMS、MAE 等精度指标
+- hk_regional_model_coefficients_by_epoch.csv：历元系数文件
+
+3. task2_hksl_vtec_only_fixed_parser.py 输出
+- task2_vtec_7days_curve.png：磁暴前后 7 天 VTEC 曲线图
+- task2_vtec_daily_statistics.png：每日统计图
+- task2_vtec_daily_summary.csv：每日统计表
+- task2_vtec_report_text.txt：文字结果摘要
+
+4. task2_hksl_ppp_python_only_v2.py 输出
+- task2_ppp_daily_precision_final.png：PPP 日形式精度图
+- task2_ppp_daily_effective_scatter_final.png：稳定段散布图
+- task2_ppp_iono_vs_quality_final.png：电离层扰动与 PPP 精度对比图
+- task2_ppp_daily_quality_final.csv：PPP 每日结果总表
+- task2_ppp_report_text_final.txt：PPP 结果文字摘要
+

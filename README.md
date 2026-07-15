@@ -26,3 +26,7 @@ git sparse-checkout set "工程测量学"
 ```SVN
 svn export https://github.com/All0zy/neu_geo_works/trunk/工程测量学
 ```
+
+##### 更新：20260716
+
+新增贡献者：闻子博、陈英杰同学

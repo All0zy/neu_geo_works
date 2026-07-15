@@ -1,0 +1,28 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "基于HarmonyOS的卫星导航与GNSS增强APP模块"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "卫星导航APP主入口能力"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "鸿蒙导航定位APP"
+    },
+    {
+      "name": "approx_location_permission_reason",
+      "value": "需要获取大致位置信息，用于定位功能"
+    },
+    {
+      "name": "location_permission_reason",
+      "value": "需要获取精确位置信息，用于显示当前位置、导航与GNSS分析"
+    },
+    {
+      "name": "camera_permission_reason",
+      "value": "需要使用相机拍照，实现拍照定位功能"
+    }
+  ]
+}

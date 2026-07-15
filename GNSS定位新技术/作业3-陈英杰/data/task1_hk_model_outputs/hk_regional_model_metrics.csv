@@ -1,0 +1,5 @@
+metric,value
+sample_count,112697.0
+epoch_count,24.0
+rms_tecu,5.768156923889234
+mae_tecu,4.244977282622984

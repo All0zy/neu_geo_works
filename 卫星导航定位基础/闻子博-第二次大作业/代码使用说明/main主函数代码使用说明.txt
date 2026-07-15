@@ -1,0 +1,133 @@
+以下是对该代码库的详细使用说明：
+
+### 代码概述
+此代码库主要用于处理RINEX（Receiver Independent Exchange Format）格式的GNSS（Global Navigation Satellite System）数据，涵盖读取RINEX观测文件与导航/星历文件、载波相位平滑伪距、计算测站位置、评估定位精度、计算DOP（Dilution of Precision）值以及输出结果等功能。
+
+### 主要函数及功能
+
+#### 1. 文件读取函数
+- **`read_rinex_observation_file(file_path)`**：读取RINEX观测文件（`.o/.rnx`），不过函数体暂未实现。
+- **`check_rinex_version(file_path)`**：检查RINEX文件版本，函数体暂未实现。
+- **`read_rinex_v211_plus(file_path)`**：读取RINEX 2.11及以上版本观测文件（`.25o`），函数体暂未实现。
+- **`read_observation_file(file_path)`**：完全重写的观测文件读取函数，函数体暂未实现。
+- **`read_rinex_before_v211(file_path)`**：读取RINEX 2.11之前版本观测文件（`.25o`），函数体暂未实现。
+- **`read_ephemeris(file_path)`**：读取RINEX格式的导航/星历文件（`.rnx`, `.nav`, `.n`），函数体暂未实现。
+- **`read_rinex2_nav(file_handle)`**：读取RINEX 2.x版本的导航消息文件。
+    - **参数**：已打开的文件句柄，位置需在头部之后。
+    - **返回值**：字典，键为卫星PRN，值为该卫星的星历参数。
+- **`read_rinex3_nav(file_handle)`**：读取RINEX 3.x版本的导航消息文件。
+    - **参数**：已打开的文件句柄，位置需在头部之后。
+    - **返回值**：字典，键为卫星PRN，值为该卫星的星历参数。
+
+#### 2. 数据处理函数
+- **`carrier_phase_smoothing(pseudorange, carrier_phase, wavelength=0.19029367, M=60)`**：载波相位平滑伪距算法。
+    - **参数**：
+        - `pseudorange`：伪距观测值序列。
+        - `carrier_phase`：载波相位观测值序列。
+        - `wavelength`：载波波长（m），默认为L1频率的波长。
+        - `M`：平滑时间常数（历元数）。
+    - **返回值**：平滑后的伪距序列。
+- **`create_manual_prn_mapping(observations, ephemeris_data)`**：创建手动PRN映射，尝试多种策略强制匹配卫星。
+    - **参数**：
+        - `observations`：观测数据。
+        - `ephemeris_data`：星历数据。
+    - **返回值**：PRN映射字典。
+- **`simple_position_calculation(observations, ephemeris_data, prn_mapping)`**：使用简化方法计算测站位置，直接处理原始伪距。
+    - **参数**：
+        - `observations`：观测数据。
+        - `ephemeris_data`：星历数据。
+        - `prn_mapping`：PRN映射关系。
+    - **返回值**：测站位置序列。
+- **`improve_prn_mapping(observations, ephemeris_data)`**：改进的PRN映射策略，专注于找到有效的卫星，函数体暂未实现。
+- **`process_epoch_observations(time, prns, ranges, prn_mapping, ephemeris_data)`**：处理单个历元的观测数据，函数体暂未实现。
+- **`calculate_station_position(observations, ephemeris_data)`**：计算测站位置 - 修改版。
+    - **参数**：
+        - `observations`：观测数据。
+        - `ephemeris_data`：星历数据。
+    - **返回值**：测站位置序列和精度评估。
+- **`match_prn_formats(obs_prns, nav_prns)`**：尝试匹配观测数据和星历数据中的PRN格式，函数体暂未实现。
+- **`evaluate_precision(positions)`**：评估定位精度。
+    - **参数**：位置列表。
+    - **返回值**：精度指标字典。
+- **`compute_position(smoothed_ranges, ephemeris_data, time)`**：使用最小二乘法计算测站位置。
+    - **参数**：
+        - `smoothed_ranges`：字典，键为卫星PRN，值为平滑后的伪距。
+        - `ephemeris_data`：星历数据，用于计算卫星位置。
+        - `time`：观测时间。
+    - **返回值**：测站位置 `[X, Y, Z]`（ECEF坐标系，单位：米）。
+- **`compute_satellite_position(prn, time, ephemeris_data)`**：计算卫星位置和钟差。
+    - **参数**：
+        - `prn`：卫星PRN。
+        - `time`：观测时间。
+        - `ephemeris_data`：星历数据。
+    - **返回值**：卫星ECEF坐标和钟差 `[X, Y, Z, clock_bias]`。
+- **`ecef_to_enu(position, reference, ref_lat, ref_lon)`**：将ECEF坐标转换为局部东北天（ENU）坐标系，函数体暂未实现。
+- **`ecef_to_geodetic(x, y, z)`**：将ECEF坐标转换为大地坐标（纬度、经度、高程），函数体暂未实现。
+
+#### 3. 结果输出与可视化函数
+- **`output_results(results, observations=None, ephemeris_data=None)`**：输出结果，使用实际数据计算DOP值和测站位置。
+    - **参数**：
+        - `results`：计算结果，包含位置和精度。
+        - `observations`：观测数据（可选）。
+        - `ephemeris_data`：星历数据（可选）。
+- **`calculate_dop_values(positions, observations, ephemeris_data, time_points)`**：使用实际的观测数据和星历数据计算DOP值，函数体暂未实现。
+- **`simulate_dop_values(positions, num_points)`**：模拟合理的DOP值，函数体暂未实现。
+- **`visualize_results(results)`**：可视化结果，函数体暂未实现。
+
+#### 4. 调试函数
+- **`debug_data(observations, ephemeris_data)`**：打印观测数据和星历数据的详细信息，辅助调试。
+    - **参数**：
+        - `observations`：观测数据。
+        - `ephemeris_data`：星历数据。
+
+### 使用步骤
+
+#### 1. 读取RINEX文件
+若要读取RINEX 2.x版本的导航消息文件，可按如下方式操作：
+```python
+# 打开文件
+with open('your_rinex2_nav_file.nav', 'r') as file:
+    # 跳过文件头部
+    # 这里需要根据实际文件头部内容进行处理
+    for _ in range(10):  # 假设头部有10行
+        next(file)
+    # 读取星历数据
+    ephemeris_data = read_rinex2_nav(file)
+```
+若要读取RINEX 3.x版本的导航消息文件，可按如下方式操作：
+```python
+# 打开文件
+with open('your_rinex3_nav_file.rnx', 'r') as file:
+    # 跳过文件头部
+    # 这里需要根据实际文件头部内容进行处理
+    for _ in range(10):  # 假设头部有10行
+        next(file)
+    # 读取星历数据
+    ephemeris_data = read_rinex3_nav(file)
+```
+
+#### 2. 读取观测文件
+由于部分读取观测文件的函数体暂未实现，你需要自行完成文件头部处理和数据解析。例如：
+```python
+observations = read_rinex_observation_file('your_rinex_observation_file.o')
+```
+
+#### 3. 创建PRN映射
+```python
+prn_mapping = create_manual_prn_mapping(observations, ephemeris_data)
+```
+
+#### 4. 计算测站位置
+```python
+results = calculate_station_position(observations, ephemeris_data)
+```
+
+#### 5. 输出结果
+```python
+output_results(results, observations, ephemeris_data)
+```
+
+### 注意事项
+- 部分函数的函数体暂未实现，你需要根据实际需求进行补充。
+- 在读取文件时，要确保正确处理文件头部，避免解析错误。
+- 代码中的时间处理和数值计算可能需要根据具体的RINEX文件格式进行调整。

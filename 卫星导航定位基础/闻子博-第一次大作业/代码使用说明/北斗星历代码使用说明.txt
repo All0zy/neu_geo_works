@@ -1,0 +1,103 @@
+ 代码功能概述
+此代码主要用于处理北斗卫星的星历数据，实现从读取原始星历文件，提取北斗卫星数据，将数据存储为新文件，再将数据解析为字典格式，最后计算卫星位置等一系列操作，并将结果保存到 CSV 文件中。
+
+代码使用说明
+
+ 1. 环境准备
+确保你已经安装了 Python 环境，并且安装了所需的库：
+```bash
+pip install numpy
+```
+
+2. 数据准备
+- 确保你有一个北斗卫星的星历文件，文件格式为 `RNX`，例如 `BRDC00GOP_R_20250590000_01D_MN.rnx`。
+- 将星历文件的路径修改为你实际文件的路径，代码中默认的文件路径为：
+```python
+infile = open(r"D:\python\BRDC00GOP_R_20250590000_01D_MN.rnx\BRDC00GOP_R_20250590000_01D_MN.rnx", "r")
+```
+请将上述路径修改为你实际的文件路径。
+
+3. 代码运行步骤
+
+3.1 提取北斗卫星数据
+代码会自动读取原星历文件，并提取其中的北斗卫星数据，将其保存为 `all_C.txt` 文件。
+
+```python
+infile = open(r"D:\python\BRDC00GOP_R_20250590000_01D_MN.rnx\BRDC00GOP_R_20250590000_01D_MN.rnx", "r")
+content = infile.readlines()
+infile.close()
+start_num = 0
+all_C = []  # 存储北斗星历数据块
+for i in range(len(content)):
+    if content[i].find("END OF HEADER") != -1:
+        start_num = i + 1
+for i in range(len(content) - start_num):
+    line = content[start_num + i]
+    if line[0] == 'C':
+        for j in range(0, 8):
+            all_C.append(content[start_num + i + j])
+outFile = open("all_C.txt", 'w')  # 存储为新的文件（只含有北斗卫星）
+outFile.writelines(all_C)
+outFile.close()
+```
+
+ 3.2 解析数据并保存为 CSV 文件
+代码会读取 `all_C.txt` 文件，将数据解析为字典格式，并保存为 `北斗卫星.csv` 文件。
+
+```python
+with open(
+        'all_C.txt', 'r') as f:
+    if f == 0:
+        print("不能打开文件！")
+    else:
+        print("导航文件打开成功！")
+    nfile_lines = f.readlines()  # 按行读取N文件
+    print(len(nfile_lines))
+    f.close()
+
+n_dic_list = []
+n_data_lines_nums = int((len(nfile_lines) - start_num()) / 8)
+print("一共%d组数据" % (n_data_lines_nums))
+
+第j组，第i行
+for j in range(n_data_lines_nums):
+    n_dic = {}
+    for i in range(8):
+        data_content = nfile_lines[start_num() + 8 * j + i]
+        n_dic['数据组数'] = j + 1
+        # ... 其他数据解析代码 ...
+
+with open('北斗卫星.csv', 'w', newline='') as f:
+    header = ['数据组数', '卫星PRN号', '历元', ..., 'X', 'Y', 'Z']
+    writer = csv.DictWriter(f, fieldnames=header)
+    writer.writeheader()
+    writer.writerows(n_dic_list)
+f.close()
+```
+
+ 3.3 计算卫星位置
+代码会读取 `北斗卫星.csv` 文件，计算卫星的位置，并将结果存储在 `prn_x_y_z` 列表中。
+
+```python
+prn_x_y_z = []
+with open('北斗卫星.csv', 'rt') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        # ... 读取数据并计算卫星位置的代码 ...
+        # 1. 计算卫星运行平均角速度
+        GM = 398600500000000
+        n_0 = m.sqrt(GM) / m.pow(sqrt_A, 3)
+        n = n_0 + δn
+        # ... 其他计算步骤 ...
+        # 9. 计算卫星在轨道平面坐标系的坐标
+        x_k = r * m.cos(u)
+        y_k = r * m.sin(u)
+```
+ 4. 注意事项
+- **`start_num` 函数**：代码中定义了 `start_num` 函数，但函数体为空，需要根据实际情况实现该函数，以确定数据记录的起始行。
+- **`rx` 和 `rz` 函数**：代码中定义了 `rx` 和 `rz` 函数，但函数体为空，如果你需要使用这两个函数，需要根据实际情况实现它们。
+- **观测时间 `t1`**：代码中 `t1` 变量赋值为 `None`，并且在计算归化时间 `t_k` 时，由于没有接收机的观测时间，为了练手设 `t_k = -14`，实际使用时需要根据接收机接收到的时间进行计算。
+
+ 5. 代码调试和优化
+- 可以在代码中添加更多的打印语句，以便查看中间结果，进行调试。
+- 可以对代码进行优化，例如将一些重复的计算封装成函数，提高代码的可读性和可维护性。
